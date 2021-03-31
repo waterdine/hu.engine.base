@@ -8,14 +8,15 @@
 import AVKit
 import SpriteKit
 
-class GameScene: SKScene {
+@available(iOS 10.0, *)
+open class GameScene: SKScene {
 
-	var gameLogic: GameLogic?
-	var data: NSDictionary?
+	open var gameLogic: GameLogic?
+	open var data: NSDictionary?
 	var nextSceneNode: SKSpriteNode?
 	var sceneNumberLabel: SKLabelNode?
 	
-    override func didMove(to view: SKView) {
+	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!
 		if (logic.sceneDebug) {
 			let sceneNumber: Int = logic.currentSceneIndex!
@@ -50,35 +51,31 @@ class GameScene: SKScene {
 		disableNextSceneIndicator()
     }
     
-	func enableNextSceneIndicator() {
+	open func enableNextSceneIndicator() {
 		//nextSceneNode?.isHidden = false
 		//nextSceneNode!.run(SKAction.repeatForever(SKAction.sequence([SKAction.fadeIn(withDuration: 0.5), SKAction.fadeOut(withDuration: 0.5)])))
 	}
 	
-	func disableNextSceneIndicator() {
+	open func disableNextSceneIndicator() {
 		nextSceneNode!.isHidden = true
 		nextSceneNode?.removeAllActions()
 		nextSceneNode!.alpha = 0.0
 	}
 	
-    override func update(_ currentTime: TimeInterval) {
+	open override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
-}
-
-// Touch-based event handling
-extension GameScene {
-
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+	
+	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+	}
+ 
+	open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+	}
+ 
+	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		gameLogic?.nextScene()
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
+	}
+ 
+	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+	}
 }

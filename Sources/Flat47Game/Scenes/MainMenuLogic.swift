@@ -8,6 +8,7 @@
 import SpriteKit
 import GameplayKit
 
+@available(iOS 10.0, *)
 class MainMenuLogic: GameScene {
 	
 	var buttonsNode: SKNode?

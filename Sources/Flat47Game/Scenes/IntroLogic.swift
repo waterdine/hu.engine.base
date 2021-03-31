@@ -9,6 +9,7 @@ import AVKit
 import SpriteKit
 import GameplayKit
 
+@available(iOS 10.0, *)
 class IntroLogic: GameScene {
 
 	var loaded: Bool = false

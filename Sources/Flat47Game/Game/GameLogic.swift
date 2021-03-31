@@ -9,58 +9,59 @@ import AVKit
 import SpriteKit
 import GameplayKit
 
-enum TextSpeed: Int {
+public enum TextSpeed: Int {
 	case Slow, Normal, Fast
 }
 
-class GameLogic: NSObject {
+@available(iOS 10.0, *)
+open class GameLogic: NSObject {
 	
 	var sceneTypes: [GameScene] = []
 	var transition: ((GameScene, SKTransition?) -> Void)?
 	
 	// current storyline (saveable)
-	var currentSceneIndex: Int?
-	var currentChapterIndex: Int?
-	var flags: [String] = []
-	var variables: [String:String] = [:]
-	var textDelay: Double = 1.0
-	var textFadeTime: Double = 0.075
-	var actionDelay: Double = 0.1
-	var usedSquares: [Int] = []
+	open var currentSceneIndex: Int?
+	open var currentChapterIndex: Int?
+	open var flags: [String] = []
+	open var variables: [String:String] = [:]
+	open var textDelay: Double = 1.0
+	open var textFadeTime: Double = 0.075
+	open var actionDelay: Double = 0.1
+	open var usedSquares: [Int] = []
 	
-	var sceneDebug: Bool = false
-	var skipPuzzles: Bool = false
-	var player: AVAudioPlayer?
-	var fadePlayer: AVAudioPlayer?
-	var loopSound: AVAudioPlayer?
-	var currentScene: GameScene?
-	var tempCutScene: GameScene?
+	open var sceneDebug: Bool = false
+	open var skipPuzzles: Bool = false
+	open var player: AVAudioPlayer?
+	open var fadePlayer: AVAudioPlayer?
+	open var loopSound: AVAudioPlayer?
+	open var currentScene: GameScene?
+	open var tempCutScene: GameScene?
 	
-	var textSpeed: TextSpeed = TextSpeed.Normal
+	open var textSpeed: TextSpeed = TextSpeed.Normal
 	
-	class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?) -> GameLogic {
+	public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?) -> GameLogic {
 		let gameLogic = GameLogic()
 
 		gameLogic.sceneTypes = [
 			UnknownLogic.newScene(gameLogic: gameLogic),
 			MainMenuLogic.newScene(gameLogic: gameLogic),
 			IntroLogic.newScene(gameLogic: gameLogic),
-			ChapterTransitionLogic.newScene(gameLogic: gameLogic),
-			CutSceneLogic.newScene(gameLogic: gameLogic),
-			StoryLogic.newScene(gameLogic: gameLogic),
-			GameOverLogic.newScene(gameLogic: gameLogic),
-			ZenPuzzleLogic.newScene(gameLogic: gameLogic),
-			DatePuzzleLogic.newScene(gameLogic: gameLogic),
-			ChoiceLogic.newScene(gameLogic: gameLogic),
+			//ChapterTransitionLogic.newScene(gameLogic: gameLogic),
+			//CutSceneLogic.newScene(gameLogic: gameLogic),
+			//StoryLogic.newScene(gameLogic: gameLogic),
+			//GameOverLogic.newScene(gameLogic: gameLogic),
+			//ZenPuzzleLogic.newScene(gameLogic: gameLogic),
+			//DatePuzzleLogic.newScene(gameLogic: gameLogic),
+			//ChoiceLogic.newScene(gameLogic: gameLogic),
 			CreditsLogic.newScene(gameLogic: gameLogic),
-			PipePuzzleLogic.newScene(gameLogic: gameLogic),
-			SearchPuzzleLogic.newScene(gameLogic: gameLogic),
-			TVLogic.newScene(gameLogic: gameLogic),
-			JankenLogic.newScene(gameLogic: gameLogic),
-			CharacterChoiceLogic.newScene(gameLogic: gameLogic)
+			//PipePuzzleLogic.newScene(gameLogic: gameLogic),
+			//SearchPuzzleLogic.newScene(gameLogic: gameLogic),
+			//TVLogic.newScene(gameLogic: gameLogic),
+			//JankenLogic.newScene(gameLogic: gameLogic),
+			//CharacterChoiceLogic.newScene(gameLogic: gameLogic)
 		]
 		
-		gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
+		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
 		gameLogic.currentSceneIndex = -1;
 		gameLogic.currentChapterIndex = 0;
@@ -70,7 +71,7 @@ class GameLogic: NSObject {
 		return gameLogic
 	}
 	
-	func transitionToScene(forceTransition: SKTransition?)
+	open func transitionToScene(forceTransition: SKTransition?)
 	{
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
@@ -304,7 +305,7 @@ class GameLogic: NSObject {
 		currentScene = scene
 	}
 	
-	func saveState()
+	open func saveState()
 	{
 		UserDefaults.standard.setValue(self.currentSceneIndex, forKey: "currentSceneIndex")
 		UserDefaults.standard.setValue(self.currentChapterIndex, forKey: "currentChapterIndex")
@@ -315,7 +316,7 @@ class GameLogic: NSObject {
 		UserDefaults.standard.setValue(self.variables, forKey: "variables")
 	}
 	
-	func loadState()
+	open func loadState()
 	{
 		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
 		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
@@ -360,26 +361,26 @@ class GameLogic: NSObject {
 		}
 	}
 	
-	func setScene(index: Int)
+	open func setScene(index: Int)
 	{
 		self.currentSceneIndex! = index
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
 	
-	func nextScene() {
+	open func nextScene() {
 		self.currentSceneIndex! += 1
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
 	
-	func start() {
+	open func start() {
 		self.currentSceneIndex! += 1
 		saveState()
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
 	
-	func restart() {
+	open func restart() {
 		self.currentSceneIndex! = 0
 		self.currentChapterIndex! = 0
 		self.flags = []
@@ -388,19 +389,19 @@ class GameLogic: NSObject {
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
 	
-	func rollCredits() {
+	open func rollCredits() {
 		let credits = self.sceneTypes[10] as! CreditsLogic
 		credits.skipable = true
 		self.transition?(self.sceneTypes[10], SKTransition.fade(withDuration: 1.0))
 		currentScene = self.sceneTypes[10]
 	}
 	
-	func backToMenu() {
+	open func backToMenu() {
 		self.transition?(self.sceneTypes[1], SKTransition.fade(withDuration: 1.0))
 		currentScene = self.sceneTypes[1]
 	}
 	
-	func gameOver() {
+	open func gameOver() {
 		self.transition?(self.sceneTypes[6], SKTransition.fade(withDuration: 1.0))
 		currentScene = self.sceneTypes[6]
 	}
@@ -422,7 +423,7 @@ class GameLogic: NSObject {
 		}
 	}
 		
-	func nextTextSpeed() {
+	open func nextTextSpeed() {
 		switch textSpeed {
 		case .Slow:
 			textSpeed = .Normal
@@ -438,7 +439,7 @@ class GameLogic: NSObject {
 		alignTextSpeed()
 	}
 	
-	func getAspectSuffix() -> String {
+	open func getAspectSuffix() -> String {
 		let aspect = Int(UIScreen.main.bounds.width / UIScreen.main.bounds.height * 10)
 		switch aspect {
 		case 4:
@@ -458,7 +459,7 @@ class GameLogic: NSObject {
 		}
 	}
 	
-	func getChapterTable() -> String {
+	open func getChapterTable() -> String {
 		let chapterListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Story", ofType: "plist")!)
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
 		
@@ -469,7 +470,7 @@ class GameLogic: NSObject {
 		return "Story"
 	}
 	
-	func unwrapVariables(text: String) -> String {
+	open func unwrapVariables(text: String) -> String {
 		var returnText = text
 		if (returnText.contains("$")) {
 			for variable in variables {
