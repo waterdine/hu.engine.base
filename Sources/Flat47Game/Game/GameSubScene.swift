@@ -8,6 +8,7 @@
 import SpriteKit
 
 // Obvious what goes here!
+@available(iOS 10.0, *)
 class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into here to remove dependance for later porting if needed.
 
 	var gameLogic: GameLogic?

@@ -27,6 +27,12 @@ class MainMenuLogic: GameScene {
 	var puzzleModeLabel: SKLabelNode?
 	var textSpeedNode: SKNode?
 	var textSpeedLabel: SKLabelNode?
+	
+	// Restart Popup
+	var restartPopupNode: SKNode?
+	var yesNode: SKNode?
+	var noNode: SKNode?
+	
 	var loaded: Bool = false
 	var pressToContinue: Bool = false
 	

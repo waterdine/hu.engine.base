@@ -13,17 +13,18 @@ typealias UIColor = NSColor
 typealias UIFont = NSFont
 #endif
 
-class GameScene: SKScene {
+@available(iOS 10.0, *)
+open class GameScene: SKScene {
 
-	var gameLogic: GameLogic?
-	var data: NSDictionary?
+	open var gameLogic: GameLogic?
+	open var data: NSDictionary?
 	var nextSceneNode: SKSpriteNode?
 	var prevSceneNode: SKSpriteNode?
 	var toolbarButtons: [SKSpriteNode] = []
 	var gameMenu: GameSubScene?
 	var sceneNumberLabel: SKLabelNode?
 	
-	override func didMove(to view: SKView) {
+	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!
 		if (logic.sceneDebug) {
 			let sceneNumber: Int = logic.currentSceneIndex!
@@ -94,24 +95,24 @@ class GameScene: SKScene {
 		// TODO check for presses before this function has run!!!!!
 	}
 	
-	func enablePrevSceneIndicator() {
+	open func enablePrevSceneIndicator() {
 		// Only allow one move back.
 		//prevSceneNode?.isHidden = false
 		//prevSceneNode!.run(SKAction.repeatForever(SKAction.sequence([SKAction.fadeIn(withDuration: 0.5), SKAction.fadeOut(withDuration: 0.5)])))
 	}
 	
-	func enableNextSceneIndicator() {
+	open func enableNextSceneIndicator() {
 		//nextSceneNode?.isHidden = false
 		//nextSceneNode!.run(SKAction.repeatForever(SKAction.sequence([SKAction.fadeIn(withDuration: 0.5), SKAction.fadeOut(withDuration: 0.5)])))
 	}
 	
-	func disablePrevSceneIndicator() {
+	open func disablePrevSceneIndicator() {
 		prevSceneNode!.isHidden = true
 		//prevSceneNode?.removeAllActions()
 		//prevSceneNode!.alpha = 0.0
 	}
 	
-	func disableNextSceneIndicator() {
+	open func disableNextSceneIndicator() {
 		nextSceneNode!.isHidden = true
 		//nextSceneNode?.removeAllActions()
 		//nextSceneNode!.alpha = 0.0
@@ -123,7 +124,7 @@ class GameScene: SKScene {
 		//}
 	}
 	
-	override func update(_ currentTime: TimeInterval) {
+	open override func update(_ currentTime: TimeInterval) {
 		// Called before each frame is rendered
 	}
 	
@@ -141,15 +142,15 @@ class GameScene: SKScene {
 		return false
 	}
 	
-	func interactionBegan(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionBegan(_ point: CGPoint, timestamp: TimeInterval) {
 		
 	}
 	
-	func interactionMoved(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionMoved(_ point: CGPoint, timestamp: TimeInterval) {
 		
 	}
 	
-	func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		if (handleToolbar(point)) {
 			return
 		}
@@ -159,41 +160,35 @@ class GameScene: SKScene {
 			gameLogic?.nextScene()
 		}
 	}
-}
 
 #if os(iOS) || os(tvOS)
-extension GameScene {
-
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if (touches.first != nil) {
 			let point: CGPoint = (touches.first?.location(in: self))!
 			interactionBegan(point, timestamp: event!.timestamp)
 		}
 	}
 	
-	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+	open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if (touches.first != nil) {
 			let point: CGPoint = (touches.first?.location(in: self))!
 			interactionMoved(point, timestamp: event!.timestamp)
 		}
 	}
 	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if (touches.first != nil) {
 			let point: CGPoint = (touches.first?.location(in: self))!
 			interactionEnded(point, timestamp: event!.timestamp)
 		}
 	}
 	
-	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
 	}
-}
 #endif
 
 #if os(OSX)
 // Mouse-based event handling
-extension GameScene {
-
 	override func mouseDown(with event: NSEvent) {
 		let point: CGPoint = event.location(in: self)
 		interactionBegan(point, timestamp: event.timestamp)
@@ -208,6 +203,6 @@ extension GameScene {
 		let point: CGPoint = event.location(in: self)
 		interactionEnded(point, timestamp: event.timestamp)
 	}
-
-}
 #endif
+	
+}

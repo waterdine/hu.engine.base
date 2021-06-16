@@ -36,7 +36,7 @@ class IntroLogic: GameScene {
 		}
 	}
 	
-	override func interactionEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 	}
 	
 	override func update(_ currentTime: TimeInterval) {
