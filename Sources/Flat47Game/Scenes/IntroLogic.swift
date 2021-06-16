@@ -7,7 +7,6 @@
 
 import AVKit
 import SpriteKit
-import GameplayKit
 
 @available(iOS 10.0, *)
 class IntroLogic: GameScene {
@@ -37,7 +36,7 @@ class IntroLogic: GameScene {
 		}
 	}
 	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+	override func interactionEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 	}
 	
 	override func update(_ currentTime: TimeInterval) {

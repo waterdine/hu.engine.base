@@ -7,7 +7,6 @@
 
 import AVKit
 import SpriteKit
-import GameplayKit
 
 public enum TextSpeed: Int {
 	case Slow, Normal, Fast
@@ -71,6 +70,52 @@ open class GameLogic: NSObject {
 		return gameLogic
 	}
 	
+	func loadMusic(musicFile: String?, transitionType: String?, sceneData: NSDictionary?) {
+		if (musicFile != nil) {
+			do {
+				if (musicFile! != "") {
+					let file = Bundle.main.url(forResource: musicFile!, withExtension: ".mp3")
+					if (file != nil) {
+						let restartMusic: Bool? = sceneData?["RestartMusic"] as? Bool
+						let fadeMusic: Bool = (transitionType != nil && (transitionType! == "Fade" || transitionType! == "CrossFade" || transitionType! == "Flash"))
+						if (player != nil && (player!.url != file || (restartMusic != nil && restartMusic! == true))) {
+							if (fadeMusic) {
+								if (fadePlayer != nil) {
+									fadePlayer?.stop()
+								}
+								fadePlayer = player
+								fadePlayer?.setVolume(0, fadeDuration: 1.0)
+							} else {
+								player?.stop()
+							}
+							player = nil
+						} else if (fadePlayer != nil) {
+							fadePlayer?.stop()
+							fadePlayer = nil
+						}
+						
+						if (player == nil) {
+							try player = AVAudioPlayer(contentsOf: file!)
+							player?.numberOfLoops = -1
+							player?.play()
+						}
+					} else {
+						if (player != nil) {
+							player?.stop()
+							player = nil
+						}
+					}
+				} else {
+					if (player != nil) {
+						player?.stop()
+						player = nil
+					}
+				}
+			} catch  {
+			}
+		}
+	}
+
 	open func transitionToScene(forceTransition: SKTransition?)
 	{
 		self.variables["LondonTime"] = "13:20"
@@ -84,12 +129,10 @@ open class GameLogic: NSObject {
 		var sceneData: NSDictionary? = nil
 		
 		var reloadSceneData = true
-		while (reloadSceneData)
-		{
+		while (reloadSceneData) {
 			reloadSceneData = false
 			
-			if (chapterList != nil && chapterList!.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
-			{
+			if (chapterList != nil && chapterList!.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
 				let chapterFileName = chapterList?[self.currentChapterIndex!] as? String
 				let sceneListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
 				sceneList = sceneListPlist?["Scenes"] as? NSArray
@@ -146,9 +189,15 @@ open class GameLogic: NSObject {
 			scene = self.sceneTypes[7]
 			break
 		case "DatePuzzle":
+			if (musicFile == nil) {
+				musicFile = "Music"
+			}
 			scene = self.sceneTypes[8]
 			break
 		case "Choice":
+			if (musicFile == nil) {
+				musicFile = "Music"
+			}
 			scene = self.sceneTypes[9]
 			break
 		case "SkipTo":
@@ -181,6 +230,8 @@ open class GameLogic: NSObject {
 			return
 		case "Credits":
 			scene = self.sceneTypes[10]
+			let credits = scene as! CreditsLogic
+			credits.skipable = false
 			break
 		case "PipePuzzle":
 			scene = self.sceneTypes[11]
@@ -255,50 +306,8 @@ open class GameLogic: NSObject {
 				scene = self.sceneTypes[4]
 			}
 		}
-		
-		if (musicFile != nil) {
-			do {
-				if (musicFile! != "") {
-					let file = Bundle.main.url(forResource: musicFile!, withExtension: ".mp3")
-					if (file != nil) {
-						let restartMusic: Bool? = sceneData?["RestartMusic"] as? Bool
-						let fadeMusic: Bool = (transitionType != nil && transitionType! == "Fade")
-						if (player != nil && (player!.url != file || (restartMusic != nil && restartMusic! == true))) {
-							if (fadeMusic) {
-								if (fadePlayer != nil) {
-									fadePlayer?.stop()
-								}
-								fadePlayer = player
-								fadePlayer?.setVolume(0, fadeDuration: 1.0)
-							} else {
-								player?.stop()
-							}
-							player = nil
-						} else if (fadePlayer != nil) {
-							fadePlayer?.stop()
-							fadePlayer = nil
-						}
-						
-						if (player == nil) {
-							try player = AVAudioPlayer(contentsOf: file!)
-							player?.numberOfLoops = -1
-							player?.play()
-						}
-					} else {
-						if (player != nil) {
-							player?.stop()
-							player = nil
-						}
-					}
-				} else {
-					if (player != nil) {
-						player?.stop()
-						player = nil
-					}
-				}
-			} catch  {
-			}
-		}
+
+		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: sceneData)
 		
 		scene!.data = sceneData
 		self.transition?(scene!, transition)
@@ -374,6 +383,12 @@ open class GameLogic: NSObject {
 		transitionToScene(forceTransition: nil)
 	}
 	
+	func prevScene() {
+		self.currentSceneIndex! -= 1
+		saveState()
+		transitionToScene(forceTransition: nil)
+	}
+
 	open func start() {
 		self.currentSceneIndex! += 1
 		saveState()
@@ -397,8 +412,10 @@ open class GameLogic: NSObject {
 	}
 	
 	open func backToMenu() {
+		loadMusic(musicFile: "Main", transitionType: nil, sceneData: nil)
 		self.transition?(self.sceneTypes[1], SKTransition.fade(withDuration: 1.0))
 		currentScene = self.sceneTypes[1]
+		loadState()
 	}
 	
 	open func gameOver() {
@@ -440,7 +457,11 @@ open class GameLogic: NSObject {
 	}
 	
 	open func getAspectSuffix() -> String {
+#if os(OSX)
+		let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
+#else
 		let aspect = Int(UIScreen.main.bounds.width / UIScreen.main.bounds.height * 10)
+#endif
 		switch aspect {
 		case 4:
 			return "_Odd"
@@ -454,7 +475,9 @@ open class GameLogic: NSObject {
 			return "_iPad"
 		case 13:
 			return "_iPad"
-		default: // case 17
+		case 17:
+			return "_AppleTV"
+		default: // case 5
 			return ""
 		}
 	}

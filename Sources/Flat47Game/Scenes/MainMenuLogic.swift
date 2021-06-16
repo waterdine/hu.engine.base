@@ -6,7 +6,6 @@
 //
 
 import SpriteKit
-import GameplayKit
 
 @available(iOS 10.0, *)
 class MainMenuLogic: GameScene {
@@ -62,14 +61,22 @@ class MainMenuLogic: GameScene {
 		puzzleModeLabel = self.childNode(withName: "//PuzzleModeLabel") as? SKLabelNode
 		textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
 		
-		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
+		// Restart Popup
+		restartPopupNode = self.childNode(withName: "//RestartPopup")
+		yesNode = self.childNode(withName: "//Yes")
+		noNode = self.childNode(withName: "//No")
+		
+		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
-		let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
 		playResumeLabel!.text = fromTheTopNode!.isHidden ? "Play" : "Continue"
-		playResumeLabelShadow!.text = playResumeLabel!.text
 		
 		configPopupNode?.isHidden = true
 		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
+		#if DEBUG
+			debugModeLabel!.isHidden = false
+		#else
+			debugModeLabel!.isHidden = true
+		#endif
 		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
 		switch self.gameLogic!.textSpeed {
 		case .Slow:
@@ -86,14 +93,17 @@ class MainMenuLogic: GameScene {
 		pressToContinue = true
 		pressNode?.isHidden = false
 		let pos = backgroundNode?.userData!["OriginalPos"] as! Int
+		backgroundNode?.removeAllActions()
 		backgroundNode?.position = CGPoint(x: pos, y: 0)
+		buttonsNode?.removeAllActions()
 		buttonsNode?.alpha = 0.0
+		pressNode?.removeAllActions()
 		pressNode?.run(SKAction(named: "PressToContinueFade")!)
+		restartPopupNode?.isHidden = true
 	}
 	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		let point: CGPoint = (touches.first?.location(in: self))!
-		
+	// TODO combine the GameMenu and MainMenuConfig into a coherant menu system.
+	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		if (pressToContinue) {
 			if (pressNode!.alpha > 0.0) {
 				pressToContinue = false
@@ -108,20 +118,28 @@ class MainMenuLogic: GameScene {
 			} else {
 				pressNode?.run(SKAction.fadeIn(withDuration: 0.3))
 			}
-		} else if (buttonsNode?.alpha == 1.0 && configPopupNode!.isHidden) {
-			if (playResumeNode!.frame.contains(point))
-			{
+		} else if (!restartPopupNode!.isHidden) {
+			if (yesNode!.frame.contains(point)) {
+				self.gameLogic?.restart()
+				restartPopupNode?.isHidden = true
+				buttonsNode!.isHidden = false
+			} else if (noNode!.frame.contains(point)) {
+				restartPopupNode?.isHidden = true
+				buttonsNode!.isHidden = false
+			}
+		} else if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
+			if (playResumeNode!.frame.contains(point)) {
 				self.gameLogic?.start()
 			} else if (!fromTheTopNode!.isHidden && fromTheTopNode!.frame.contains(point)) {
-				self.gameLogic?.restart()
+				restartPopupNode?.isHidden = false
+				buttonsNode!.isHidden = true
 			} else if (configNode!.frame.contains(point)) {
 				configPopupNode?.isHidden = false
 			} else if (creditsNode!.frame.contains(point)) {
 				self.gameLogic?.rollCredits()
 			}
-		} else if (buttonsNode?.alpha == 1.0) {
-			if (configCloseNode!.frame.contains(point))
-			{
+		} else if (buttonsNode!.alpha >= 0.5) {
+			if (configCloseNode!.frame.contains(point)) {
 				configPopupNode?.isHidden = true
 			} else if (debugModeNode!.frame.contains(point)) {
 				self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
