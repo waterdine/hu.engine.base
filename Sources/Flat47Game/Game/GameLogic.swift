@@ -15,7 +15,7 @@ public enum TextSpeed: Int {
 @available(iOS 10.0, *)
 open class GameLogic: NSObject {
 	
-	var sceneTypes: [GameScene] = []
+	var sceneTypes: NSDictionary
 	var transition: ((GameScene, SKTransition?) -> Void)?
 	
 	// current storyline (saveable)
@@ -41,24 +41,10 @@ open class GameLogic: NSObject {
 	public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?) -> GameLogic {
 		let gameLogic = GameLogic()
 
-		gameLogic.sceneTypes = [
-			UnknownLogic.newScene(gameLogic: gameLogic),
-			MainMenuLogic.newScene(gameLogic: gameLogic),
-			IntroLogic.newScene(gameLogic: gameLogic),
-			//ChapterTransitionLogic.newScene(gameLogic: gameLogic),
-			//CutSceneLogic.newScene(gameLogic: gameLogic),
-			//StoryLogic.newScene(gameLogic: gameLogic),
-			//GameOverLogic.newScene(gameLogic: gameLogic),
-			//ZenPuzzleLogic.newScene(gameLogic: gameLogic),
-			//DatePuzzleLogic.newScene(gameLogic: gameLogic),
-			//ChoiceLogic.newScene(gameLogic: gameLogic),
-			CreditsLogic.newScene(gameLogic: gameLogic),
-			//PipePuzzleLogic.newScene(gameLogic: gameLogic),
-			//SearchPuzzleLogic.newScene(gameLogic: gameLogic),
-			//TVLogic.newScene(gameLogic: gameLogic),
-			//JankenLogic.newScene(gameLogic: gameLogic),
-			//CharacterChoiceLogic.newScene(gameLogic: gameLogic)
-		]
+		// TODO this probably does not need to be instances, could just be state struct + a static class.
+		gameLogic.sceneTypes["MainMenuLogic"] = MainMenuLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["IntroLogic"] = IntroLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["CreditsLogic"] = CreditsLogic.newScene(gameLogic: gameLogic)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
@@ -125,7 +111,7 @@ open class GameLogic: NSObject {
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
 		
 		var sceneList: NSArray? = nil
-		var sceneType = "MainMenu"
+		var sceneTypeName = "MainMenu"
 		var sceneData: NSDictionary? = nil
 		
 		var reloadSceneData = true
@@ -140,7 +126,7 @@ open class GameLogic: NSObject {
 			
 			if (sceneList != nil && sceneList!.count > self.currentSceneIndex! && self.currentSceneIndex! >= 0) {
 				sceneData = sceneList?[self.currentSceneIndex!] as? NSDictionary
-				sceneType = sceneData!["Scene"] as! String
+				sceneTypeName = sceneData!["Scene"] as! String
 			} else if (sceneList != nil && self.currentSceneIndex! >= sceneList!.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! += 1
@@ -153,106 +139,26 @@ open class GameLogic: NSObject {
 		
 		var transition: SKTransition? = forceTransition
 		var scene: GameScene? = nil
-		switch sceneType {
-		case "MainMenu":
-			if (musicFile == nil) {
-				musicFile = "Main"
-			}
-			scene = self.sceneTypes[1]
-			break
-		case "Intro":
-			scene = self.sceneTypes[2]
-			break
-		case "ChapterTransition":
-			scene = self.sceneTypes[3]
-			transition = SKTransition.fade(withDuration: 1.0)
-			break
-		case "CutScene":
-			if (musicFile == nil) {
-				musicFile = "Music"
-			}
-			scene = self.sceneTypes[4]
-			break
-		case "Story":
-			if (musicFile == nil) {
-				musicFile = "Music"
-			}
-			scene = self.sceneTypes[5]
-			break
-		case "GameOver":
-			scene = self.sceneTypes[6]
-			break
-		case "ZenPuzzle":
-			if (musicFile == nil) {
-				musicFile = "Music"
-			}
-			scene = self.sceneTypes[7]
-			break
-		case "DatePuzzle":
-			if (musicFile == nil) {
-				musicFile = "Music"
-			}
-			scene = self.sceneTypes[8]
-			break
-		case "Choice":
-			if (musicFile == nil) {
-				musicFile = "Music"
-			}
-			scene = self.sceneTypes[9]
-			break
-		case "SkipTo":
-			let skipToScene: Int = sceneData?["SkipTo"] as! Int
-			let flag: String? = (sceneData?["Flag"] as? String?)!
-			
-			var shouldSkip: Bool = true;
-			
-			if (flag != nil) {
-				shouldSkip = !flags.contains(flag!)
-			}
-			
-			if (shouldSkip) {
-				setScene(index: skipToScene)
-			} else {
-				setScene(index: self.currentSceneIndex! + 1)
-			}
-			return
-		case "RandomChoice":
-			let variableName: String = sceneData?["VariableToSet"] as! String
-			let possibleFlags: [String] = sceneData?["Flags"] as! [String]
-			let variableTextLookups: [String] = sceneData?["VariableText"] as! [String]
-			let index = Int.random(in: 0 ... possibleFlags.count - 1)
-			
-			let variableText = Bundle.main.localizedString(forKey: variableTextLookups[index], value: nil, table: getChapterTable())
-			variables[variableName] = variableText
-			flags.append(possibleFlags[index])
-			
-			setScene(index: self.currentSceneIndex! + 1)
-			return
-		case "Credits":
-			scene = self.sceneTypes[10]
-			let credits = scene as! CreditsLogic
-			credits.skipable = false
-			break
-		case "PipePuzzle":
-			scene = self.sceneTypes[11]
-			break
-		case "SearchPuzzle":
-			scene = self.sceneTypes[12]
-			break
-		case "TV":
-			scene = self.sceneTypes[13]
-			break
-		case "Janken":
-			scene = self.sceneTypes[14]
-			break
-		case "CharacterChoice":
-			scene = self.sceneTypes[15]
-			break
-		default:
-			scene = self.sceneTypes[0]
-			break
+		var sceneType = sceneTypes[sceneTypeName]
+		if (sceneType == nil) {
+			sceneType = UnknownLogic.newScene(gameLogic: gameLogic)
 		}
 		
+		// TODO tidy this up!
+		if (sceneType.requiresMusic && musicFile == nil) {
+			musicFile = "Main"
+		}
+		if (sceneType.defaultTransition) {
+			transition = SKTransition.fade(withDuration: 1.0)
+		}
+		if (sceneType.allowSkipCredits) {
+			credits.skipable = false
+		}
+		if (sceneType.customLogic()) {
+			return
+		}
+		
+		// TODO Convert to NSDictionary to make extendable as well.
 		var rotateScene = false
 		let transitionType: String? = ((sceneData?["Transition"] as? String?)!)
 		if (transition == nil && transitionType != nil) {
