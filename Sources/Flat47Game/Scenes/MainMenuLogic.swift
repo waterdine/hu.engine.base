@@ -176,9 +176,9 @@ class MainMenuLogic: GameScene {
 		if (!loaded) {
 			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 			let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
-			let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
+			//let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
 			playResumeLabel!.text = fromTheTopNode!.isHidden ? "Play" : "Continue"
-			playResumeLabelShadow!.text = playResumeLabel!.text
+			//playResumeLabelShadow!.text = playResumeLabel!.text
 			debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
 			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
 			switch self.gameLogic!.textSpeed {
