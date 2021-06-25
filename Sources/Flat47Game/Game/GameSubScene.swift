@@ -9,7 +9,7 @@ import SpriteKit
 
 // Obvious what goes here!
 @available(iOS 11.0, *)
-class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into here to remove dependance for later porting if needed.
+open class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into here to remove dependance for later porting if needed.
 
 	var gameLogic: GameLogic?
 	
@@ -18,16 +18,16 @@ class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into h
 		self.gameLogic = gameLogic
 	}
 	
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	func interactionBegan(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionBegan(_ point: CGPoint, timestamp: TimeInterval) {
 	}
 	
-	func interactionMoved(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionMoved(_ point: CGPoint, timestamp: TimeInterval) {
 	}
 	
-	func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
+	open func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 	}
 }

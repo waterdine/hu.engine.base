@@ -21,7 +21,7 @@ open class GameScene: SKScene {
 	var nextSceneNode: SKSpriteNode?
 	var prevSceneNode: SKSpriteNode?
 	var toolbarButtons: [SKSpriteNode] = []
-	var gameMenu: GameSubScene?
+	open var gameMenu: GameSubScene?
 	var sceneNumberLabel: SKLabelNode?
 	
 	var requiresMusic: Bool = false
@@ -136,7 +136,7 @@ open class GameScene: SKScene {
 		return false
 	}
 	
-	func handleToolbar(_ point: CGPoint) -> Bool {
+	open func handleToolbar(_ point: CGPoint) -> Bool {
 		for button in toolbarButtons {
 			if (button.frame.contains(point)) {
 				gameMenu?.isHidden = false
