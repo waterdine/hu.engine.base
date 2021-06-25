@@ -42,10 +42,10 @@ open class GameLogic: NSObject {
 		let gameLogic = GameLogic()
 
 		// TODO this probably does not need to be instances, could just be state struct + a static class.
-		gameLogic.sceneTypes["MainMenuLogic"] = MainMenuLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["IntroLogic"] = IntroLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["SkipToLogic"] = SkipToLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["CreditsLogic"] = CreditsLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["SkipTo"] = SkipToLogic.newScene(gameLogic: gameLogic)
+		gameLogic.sceneTypes["Credits"] = CreditsLogic.newScene(gameLogic: gameLogic)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
