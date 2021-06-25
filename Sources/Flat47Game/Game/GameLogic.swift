@@ -206,11 +206,12 @@ open class GameLogic: NSObject {
 		}
 		
 		if (rotateScene) {
-			if (scene == self.sceneTypes["CutScene"] || scene == tempCutScene) {
-				let temp = self.sceneTypes["CutScene"]
-				self.sceneTypes["CutScene"] = tempCutScene!
-				tempCutScene = temp
-				scene = self.sceneTypes["CutScene"]
+			if (scene == self.sceneTypes["CutScene"] || scene == self.sceneTypes["TempCutScene"]) {
+				if (currentScene == self.sceneTypes["TempCutScene"]) {
+					scene = self.sceneTypes["CutScene"]
+				} else {
+					scene = self.sceneTypes["TempCutScene"]
+				}
 			}
 		}
 
