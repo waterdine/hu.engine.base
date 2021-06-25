@@ -215,7 +215,9 @@ open class GameLogic: NSObject {
 
 		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: sceneData)
 		
-		scene!.data = sceneData
+		if (scene != nil) {
+			scene!.data = sceneData
+		}
 		self.transition?(scene!, transition)
 		currentScene = scene
 	}
