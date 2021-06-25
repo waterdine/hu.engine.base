@@ -156,9 +156,6 @@ open class GameLogic: NSObject {
 		if (scene!.allowSkipCredits) {
 			//credits.skipable = false
 		}
-		if (scene!.customLogic()) {
-			return
-		}
 		
 		// TODO Convert to NSDictionary to make extendable as well.
 		var rotateScene = false
@@ -219,6 +216,9 @@ open class GameLogic: NSObject {
 		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: sceneData)
 		
 		scene!.data = sceneData
+		if (scene!.customLogic()) {
+			return
+		}
 		self.transition?(scene!, transition)
 		currentScene = scene
 	}
