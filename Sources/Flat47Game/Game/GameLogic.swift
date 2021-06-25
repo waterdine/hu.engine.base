@@ -138,10 +138,9 @@ open class GameLogic: NSObject {
 		var musicFile: String? = sceneData?["Music"] as? String
 		
 		var transition: SKTransition? = forceTransition
-		var scene: GameScene? = nil
-		var sceneType = sceneTypes[sceneTypeName]
-		if (sceneType == nil) {
-			sceneType = UnknownLogic.newScene(gameLogic: self)
+		var scene: GameScene? = sceneTypes[sceneTypeName]
+		if (scene == nil) {
+			scene = UnknownLogic.newScene(gameLogic: self)
 		}
 		
 		// TODO tidy this up!
@@ -215,9 +214,7 @@ open class GameLogic: NSObject {
 
 		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: sceneData)
 		
-		if (scene != nil) {
-			scene!.data = sceneData
-		}
+		scene!.data = sceneData
 		self.transition?(scene!, transition)
 		currentScene = scene
 	}
