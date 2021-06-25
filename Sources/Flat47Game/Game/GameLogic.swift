@@ -104,8 +104,10 @@ open class GameLogic: NSObject {
 
 	open func transitionToScene(forceTransition: SKTransition?)
 	{
+		// TODO REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
+		self.flags.append("intercepted")
 		
 		let chapterListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Story", ofType: "plist")!)
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
