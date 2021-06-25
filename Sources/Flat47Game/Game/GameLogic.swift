@@ -144,16 +144,16 @@ open class GameLogic: NSObject {
 		}
 		
 		// TODO tidy this up!
-		if (sceneType!.requiresMusic && musicFile == nil) {
+		if (scene!.requiresMusic && musicFile == nil) {
 			musicFile = "Main"
 		}
-		if (sceneType!.defaultTransition) {
+		if (scene!.defaultTransition) {
 			transition = SKTransition.fade(withDuration: 1.0)
 		}
-		if (sceneType!.allowSkipCredits) {
+		if (scene!.allowSkipCredits) {
 			//credits.skipable = false
 		}
-		if (sceneType!.customLogic()) {
+		if (scene!.customLogic()) {
 			return
 		}
 		
