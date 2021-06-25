@@ -7,9 +7,9 @@
 
 import SpriteKit
 
-@available(iOS 10.0, *)
+@available(iOS 11.0, *)
 class UnknownLogic: GameScene {
-
+	
 	class func newScene(gameLogic: GameLogic) -> UnknownLogic {
 		guard let scene = UnknownLogic(fileNamed: "Unknown" + gameLogic.getAspectSuffix()) else {
 			print("Failed to load Unknown.sks")

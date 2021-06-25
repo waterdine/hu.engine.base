@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+/*
 case "SkipTo":
 	let skipToScene: Int = sceneData?["SkipTo"] as! Int
 	let flag: String? = (sceneData?["Flag"] as? String?)!
@@ -23,3 +23,4 @@ case "SkipTo":
 		setScene(index: self.currentSceneIndex! + 1)
 	}
 	return
+*/

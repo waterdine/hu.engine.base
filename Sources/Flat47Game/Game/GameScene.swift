@@ -13,7 +13,7 @@ typealias UIColor = NSColor
 typealias UIFont = NSFont
 #endif
 
-@available(iOS 10.0, *)
+@available(iOS 11.0, *)
 open class GameScene: SKScene {
 
 	open var gameLogic: GameLogic?
@@ -23,6 +23,10 @@ open class GameScene: SKScene {
 	var toolbarButtons: [SKSpriteNode] = []
 	var gameMenu: GameSubScene?
 	var sceneNumberLabel: SKLabelNode?
+	
+	var requiresMusic: Bool = false
+	var defaultTransition: Bool = false
+	var allowSkipCredits: Bool = false
 	
 	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!
@@ -126,6 +130,10 @@ open class GameScene: SKScene {
 	
 	open override func update(_ currentTime: TimeInterval) {
 		// Called before each frame is rendered
+	}
+	
+	open func customLogic() -> Bool {
+		return false
 	}
 	
 	func handleToolbar(_ point: CGPoint) -> Bool {

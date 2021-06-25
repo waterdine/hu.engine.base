@@ -12,11 +12,11 @@ public enum TextSpeed: Int {
 	case Slow, Normal, Fast
 }
 
-@available(iOS 10.0, *)
+@available(iOS 11.0, *)
 open class GameLogic: NSObject {
 	
-	var sceneTypes: NSDictionary
-	var transition: ((GameScene, SKTransition?) -> Void)?
+	open var sceneTypes: [String:GameScene] = [:]
+	open var transition: ((GameScene, SKTransition?) -> Void)?
 	
 	// current storyline (saveable)
 	open var currentSceneIndex: Int?
@@ -141,20 +141,20 @@ open class GameLogic: NSObject {
 		var scene: GameScene? = nil
 		var sceneType = sceneTypes[sceneTypeName]
 		if (sceneType == nil) {
-			sceneType = UnknownLogic.newScene(gameLogic: gameLogic)
+			sceneType = UnknownLogic.newScene(gameLogic: self)
 		}
 		
 		// TODO tidy this up!
-		if (sceneType.requiresMusic && musicFile == nil) {
+		if (sceneType!.requiresMusic && musicFile == nil) {
 			musicFile = "Main"
 		}
-		if (sceneType.defaultTransition) {
+		if (sceneType!.defaultTransition) {
 			transition = SKTransition.fade(withDuration: 1.0)
 		}
-		if (sceneType.allowSkipCredits) {
-			credits.skipable = false
+		if (sceneType!.allowSkipCredits) {
+			//credits.skipable = false
 		}
-		if (sceneType.customLogic()) {
+		if (sceneType!.customLogic()) {
 			return
 		}
 		
@@ -205,11 +205,11 @@ open class GameLogic: NSObject {
 		}
 		
 		if (rotateScene) {
-			if (scene == self.sceneTypes[4] || scene == tempCutScene) {
-				let temp = self.sceneTypes[4]
-				self.sceneTypes[4] = tempCutScene!
+			if (scene == self.sceneTypes["CutScene"] || scene == tempCutScene) {
+				let temp = self.sceneTypes["CutScene"]
+				self.sceneTypes["CutScene"] = tempCutScene!
 				tempCutScene = temp
-				scene = self.sceneTypes[4]
+				scene = self.sceneTypes["CutScene"]
 			}
 		}
 
@@ -311,22 +311,22 @@ open class GameLogic: NSObject {
 	}
 	
 	open func rollCredits() {
-		let credits = self.sceneTypes[10] as! CreditsLogic
+		let credits = self.sceneTypes["Credits"] as! CreditsLogic
 		credits.skipable = true
-		self.transition?(self.sceneTypes[10], SKTransition.fade(withDuration: 1.0))
-		currentScene = self.sceneTypes[10]
+		self.transition?(self.sceneTypes["Credits"]!, SKTransition.fade(withDuration: 1.0))
+		currentScene = self.sceneTypes["Credits"]
 	}
 	
 	open func backToMenu() {
 		loadMusic(musicFile: "Main", transitionType: nil, sceneData: nil)
-		self.transition?(self.sceneTypes[1], SKTransition.fade(withDuration: 1.0))
-		currentScene = self.sceneTypes[1]
+		self.transition?(self.sceneTypes["MainMenu"]!, SKTransition.fade(withDuration: 1.0))
+		currentScene = self.sceneTypes["MainMenu"]
 		loadState()
 	}
 	
 	open func gameOver() {
-		self.transition?(self.sceneTypes[6], SKTransition.fade(withDuration: 1.0))
-		currentScene = self.sceneTypes[6]
+		self.transition?(self.sceneTypes["GameOver"]!, SKTransition.fade(withDuration: 1.0))
+		currentScene = self.sceneTypes["GameOver"]
 	}
 	
 	func alignTextSpeed() {
