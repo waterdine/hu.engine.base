@@ -25,7 +25,7 @@ open class GameLogic: NSObject {
 	open var variables: [String:String] = [:]
 	open var textDelay: Double = 1.0
 	open var textFadeTime: Double = 0.075
-	open var actionDelay: Double = 0.1
+	open var actionDelay: Double = 0.5
 	open var usedSquares: [Int] = []
 	
 	open var sceneDebug: Bool = false
