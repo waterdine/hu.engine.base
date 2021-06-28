@@ -197,17 +197,17 @@ open class GameScene: SKScene {
 
 #if os(OSX)
 // Mouse-based event handling
-	override func mouseDown(with event: NSEvent) {
+	open override func mouseDown(with event: NSEvent) {
 		let point: CGPoint = event.location(in: self)
 		interactionBegan(point, timestamp: event.timestamp)
 	}
 	
-	override func mouseDragged(with event: NSEvent) {
+	open override func mouseDragged(with event: NSEvent) {
 		let point: CGPoint = event.location(in: self)
 		interactionMoved(point, timestamp: event.timestamp)
 	}
 	
-	override func mouseUp(with event: NSEvent) {
+	open override func mouseUp(with event: NSEvent) {
 		let point: CGPoint = event.location(in: self)
 		interactionEnded(point, timestamp: event.timestamp)
 	}
