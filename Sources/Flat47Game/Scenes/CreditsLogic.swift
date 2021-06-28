@@ -38,7 +38,7 @@ class CreditsLogic: GameScene {
 		}
 	}
 	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		let credits = self.childNode(withName: "//Credits")
 		if (skipable) {
 			self.gameLogic?.backToMenu()
