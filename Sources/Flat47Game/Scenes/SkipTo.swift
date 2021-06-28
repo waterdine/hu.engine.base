@@ -7,6 +7,7 @@
 
 import SpriteKit
 
+@available(OSX 10.12, *)
 @available(iOS 11.0, *)
 class SkipToLogic: GameScene {
 	

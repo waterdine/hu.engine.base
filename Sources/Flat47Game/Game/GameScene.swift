@@ -13,6 +13,7 @@ typealias UIColor = NSColor
 typealias UIFont = NSFont
 #endif
 
+@available(OSX 10.12, *)
 @available(iOS 11.0, *)
 open class GameScene: SKScene {
 
