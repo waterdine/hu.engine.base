@@ -73,7 +73,7 @@ class MainMenuLogic: GameScene {
 		yesNode = self.childNode(withName: "//Yes")
 		noNode = self.childNode(withName: "//No")
 		
-		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1
+		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 		playResumeLabel!.text = fromTheTopNode!.isHidden ? "Play" : "Continue"
 		

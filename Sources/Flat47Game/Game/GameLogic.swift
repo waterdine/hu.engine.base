@@ -104,8 +104,7 @@ open class GameLogic: NSObject {
 		}
 	}
 
-	open func transitionToScene(forceTransition: SKTransition?)
-	{
+	open func transitionToScene(forceTransition: SKTransition?) {
 		// TODO REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
@@ -126,6 +125,13 @@ open class GameLogic: NSObject {
 				let chapterFileName = chapterList?[self.currentChapterIndex!] as? String
 				let sceneListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
 				sceneList = sceneListPlist?["Scenes"] as? NSArray
+			} else if (chapterList != nil && self.currentChapterIndex! >= chapterList!.count) {
+				self.currentSceneIndex! = 0
+				self.currentChapterIndex! = 0
+				self.flags = []
+				self.variables = [:]
+				saveState()
+				self.currentSceneIndex! = -1
 			}
 			
 			if (sceneList != nil && sceneList!.count > self.currentSceneIndex! && self.currentSceneIndex! >= 0) {
@@ -224,8 +230,7 @@ open class GameLogic: NSObject {
 		currentScene = scene
 	}
 	
-	open func saveState()
-	{
+	open func saveState() {
 		UserDefaults.standard.setValue(self.currentSceneIndex, forKey: "currentSceneIndex")
 		UserDefaults.standard.setValue(self.currentChapterIndex, forKey: "currentChapterIndex")
 		UserDefaults.standard.setValue(self.flags, forKey: "flags")
@@ -235,8 +240,7 @@ open class GameLogic: NSObject {
 		UserDefaults.standard.setValue(self.variables, forKey: "variables")
 	}
 	
-	open func loadState()
-	{
+	open func loadState() {
 		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
 		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
 		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
