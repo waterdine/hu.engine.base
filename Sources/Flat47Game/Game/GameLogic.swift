@@ -293,7 +293,7 @@ open class GameLogic: NSObject {
 		transitionToScene(forceTransition: nil)
 	}
 	
-	func prevScene() {
+	open func prevScene() {
 		self.currentSceneIndex! -= 1
 		saveState()
 		transitionToScene(forceTransition: nil)

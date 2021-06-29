@@ -19,8 +19,8 @@ open class GameScene: SKScene {
 
 	open var gameLogic: GameLogic?
 	open var data: NSDictionary?
-	var nextSceneNode: SKSpriteNode?
-	var prevSceneNode: SKSpriteNode?
+	open var nextSceneNode: SKSpriteNode?
+	open var prevSceneNode: SKSpriteNode?
 	var toolbarButtons: [SKSpriteNode] = []
 	open var gameMenu: GameSubScene?
 	var sceneNumberLabel: SKLabelNode?
