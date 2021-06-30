@@ -231,8 +231,8 @@ open class GameLogic: NSObject {
 	}
 	
 	open func saveState() {
-		UserDefaults.standard.setValue(self.currentSceneIndex, forKey: "currentSceneIndex")
-		UserDefaults.standard.setValue(self.currentChapterIndex, forKey: "currentChapterIndex")
+		UserDefaults.standard.setValue(max(0, self.currentSceneIndex!), forKey: "currentSceneIndex")
+		UserDefaults.standard.setValue(max(0, self.currentChapterIndex!), forKey: "currentChapterIndex")
 		UserDefaults.standard.setValue(self.flags, forKey: "flags")
 		UserDefaults.standard.setValue(self.textSpeed.rawValue, forKey: "textSpeed")
 		UserDefaults.standard.setValue(self.sceneDebug, forKey: "sceneDebug")

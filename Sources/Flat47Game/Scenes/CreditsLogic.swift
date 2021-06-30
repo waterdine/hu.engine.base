@@ -28,7 +28,8 @@ class CreditsLogic: GameScene {
 	override func didMove(to view: SKView) {
 		let credits = self.childNode(withName: "//Credits")
 		credits?.removeAllActions()
-		credits!.position = CGPoint(x: 0.0, y: -320.0)
+		let startPos = credits?.userData!["startPos"]
+		credits!.position = CGPoint(x: 0.0, y: startPos != nil ? startPos! as! Double : -320.0)
 		credits!.run(SKAction.init(named: "CreditsRoll")!)
 		let finalFade = self.childNode(withName: "//FinalFade")
 		finalFade?.removeAllActions()
