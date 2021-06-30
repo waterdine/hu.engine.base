@@ -152,16 +152,18 @@ open class GameLogic: NSObject {
 		if (scene == nil) {
 			scene = UnknownLogic.newScene(gameLogic: self)
 		}
-		
-		// TODO tidy this up!
+
 		if (scene!.requiresMusic && musicFile == nil) {
 			musicFile = "Main"
 		}
+		
 		if (scene!.defaultTransition) {
 			transition = SKTransition.fade(withDuration: 1.0)
 		}
-		if (scene!.allowSkipCredits) {
-			//credits.skipable = false
+		
+		let credits = scene as? CreditsLogic
+		if (credits != nil) {
+			credits!.skipable = scene!.allowSkipCredits
 		}
 		
 		// TODO Convert to NSDictionary to make extendable as well.

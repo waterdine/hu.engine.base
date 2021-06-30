@@ -25,9 +25,9 @@ open class GameScene: SKScene {
 	open var gameMenu: GameSubScene?
 	var sceneNumberLabel: SKLabelNode?
 	
-	var requiresMusic: Bool = false
-	var defaultTransition: Bool = false
-	var allowSkipCredits: Bool = false
+	open var requiresMusic: Bool = false
+	open var defaultTransition: Bool = false
+	open var allowSkipCredits: Bool = true
 	
 	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!

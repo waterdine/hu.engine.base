@@ -20,7 +20,8 @@ class CreditsLogic: GameScene {
 		}
 
 		scene.scaleMode = .aspectFill
-		scene.gameLogic = gameLogic;
+		scene.gameLogic = gameLogic
+		scene.allowSkipCredits = false
 		
 		return scene
 	}
