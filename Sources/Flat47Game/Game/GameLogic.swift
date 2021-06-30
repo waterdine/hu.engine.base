@@ -243,8 +243,8 @@ open class GameLogic: NSObject {
 	}
 	
 	open func loadState() {
-		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
-		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
+		let savedCurrentSceneIndex: Int? = 51//UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
+		let savedCurrentChapterIndex: Int? = 1// UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
 		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
 		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
 		let savedTextSpeed: Int? = UserDefaults.standard.value(forKey: "textSpeed") as? Int
