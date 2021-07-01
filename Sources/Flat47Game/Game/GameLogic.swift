@@ -204,8 +204,10 @@ open class GameLogic: NSObject {
 				break
 			case "Open":
 				transition = SKTransition.doorway(withDuration: 1.0)
+				rotateScene = true
 			case "Close":
 				transition =  SKTransition.doorsCloseHorizontal(withDuration: 1.0)
+				rotateScene = true
 				break
 			default:
 				break
