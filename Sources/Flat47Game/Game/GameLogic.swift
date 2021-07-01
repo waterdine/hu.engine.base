@@ -108,7 +108,6 @@ open class GameLogic: NSObject {
 		// TODO REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
-		self.flags.append("Intercepted")
 		
 		let chapterListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Story", ofType: "plist")!)
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
@@ -245,8 +244,8 @@ open class GameLogic: NSObject {
 	}
 	
 	open func loadState() {
-		let savedCurrentSceneIndex: Int? = 89//UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
-		let savedCurrentChapterIndex: Int? = 1// UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
+		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
+		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
 		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
 		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
 		let savedTextSpeed: Int? = UserDefaults.standard.value(forKey: "textSpeed") as? Int
