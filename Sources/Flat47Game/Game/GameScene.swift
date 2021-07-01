@@ -82,7 +82,8 @@ open class GameScene: SKScene {
 				menuButton.size = CGSize(width: 40, height: 40)
 				menuButton.position = toolbarPlaceholder!.position
 				menuButton.zPosition = 200
-				menuButton.scale(to: CGSize(width: toolbarPlaceholder!.xScale, height: toolbarPlaceholder!.yScale))
+				menuButton.xScale = toolbarPlaceholder!.xScale
+				menuButton.yScale = toolbarPlaceholder!.yScale
 				self.addChild(menuButton)
 				toolbarButtons.append(menuButton)
 			}
