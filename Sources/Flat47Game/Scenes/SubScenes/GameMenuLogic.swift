@@ -52,6 +52,8 @@ class GameMenuLogic : GameSubScene {
 	   #if !DEBUG
 		   debugModeNode?.isHidden = true
 	   #endif
+		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
+		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
