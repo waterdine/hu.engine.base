@@ -375,10 +375,11 @@ open class GameLogic: NSObject {
 	
 	open func getAspectSuffix() -> String {
 #if os(OSX)
-		let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
+		//let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
+		return "_AppleTV"
 #else
 		let aspect = Int(UIScreen.main.bounds.width / UIScreen.main.bounds.height * 10)
-#endif
+
 		switch aspect {
 		case 4:
 			return "_Odd"
@@ -397,6 +398,7 @@ open class GameLogic: NSObject {
 		default: // case 5
 			return ""
 		}
+#endif
 	}
 	
 	open func getChapterTable() -> String {
