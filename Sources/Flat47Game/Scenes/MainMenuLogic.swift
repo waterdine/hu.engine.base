@@ -46,6 +46,7 @@ class MainMenuLogic: GameScene {
 		scene.scaleMode = .aspectFill
 		scene.gameLogic = gameLogic
 		scene.requiresMusic = true
+		scene.defaultMusicFile = "Main"
 		
 		return scene
 	}
@@ -81,9 +82,9 @@ class MainMenuLogic: GameScene {
 		configPopupNode?.isHidden = true
 		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
 		#if DEBUG
-			debugModeLabel!.isHidden = false
+			debugModeNode!.isHidden = false
 		#else
-			debugModeLabel!.isHidden = true
+			debugModeNode!.isHidden = true
 		#endif
 		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
 		switch self.gameLogic!.textSpeed {
@@ -105,6 +106,7 @@ class MainMenuLogic: GameScene {
 		backgroundNode?.position = CGPoint(x: pos, y: 0)
 		buttonsNode?.removeAllActions()
 		buttonsNode?.alpha = 0.0
+		buttonsNode!.isHidden = false
 		pressNode?.removeAllActions()
 		pressNode?.run(SKAction(named: "PressToContinueFade")!)
 		restartPopupNode?.isHidden = true
@@ -130,7 +132,7 @@ class MainMenuLogic: GameScene {
 			if (yesNode!.frame.contains(point)) {
 				self.gameLogic?.restart()
 				restartPopupNode?.isHidden = true
-				buttonsNode!.isHidden = false
+				buttonsNode!.isHidden = true
 			} else if (noNode!.frame.contains(point)) {
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = false

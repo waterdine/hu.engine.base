@@ -28,6 +28,7 @@ open class GameScene: SKScene {
 	open var requiresMusic: Bool = false
 	open var defaultTransition: Bool = false
 	open var allowSkipCredits: Bool = true
+	open var defaultMusicFile: String = "Music"
 	
 	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!

@@ -153,7 +153,7 @@ open class GameLogic: NSObject {
 		}
 
 		if (scene!.requiresMusic && musicFile == nil) {
-			musicFile = "Main"
+			musicFile = scene!.defaultMusicFile
 		}
 		
 		if (scene!.defaultTransition) {
