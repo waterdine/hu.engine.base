@@ -176,6 +176,30 @@ class MainMenuLogic: GameScene {
 		}
 	}
 	
+	override open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+		if (button == GamePadButton.CROSS) {
+			if (restartPopupNode!.isHidden == false) {
+				restartPopupNode?.isHidden = true
+				buttonsNode!.isHidden = false
+			} else if (configPopupNode!.isHidden == false) {
+				configPopupNode!.isHidden = true
+			} else if (buttonsNode!.alpha > 0) {
+				pressToContinue = true
+				pressNode?.isHidden = false
+				let pos = backgroundNode?.userData!["OriginalPos"] as! Int
+				backgroundNode?.removeAllActions()
+				backgroundNode?.position = CGPoint(x: pos, y: 0)
+				buttonsNode?.removeAllActions()
+				buttonsNode?.alpha = 0.0
+				buttonsNode!.isHidden = false
+				pressNode?.removeAllActions()
+				pressNode?.run(SKAction(named: "PressToContinueFade")!)
+			} else if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
+				view?.window?.toggleFullScreen(self)
+			}
+		}
+	}
+	
 	override func update(_ currentTime: TimeInterval) {
 		if (!loaded) {
 			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0

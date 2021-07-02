@@ -13,6 +13,16 @@ typealias UIColor = NSColor
 typealias UIFont = NSFont
 #endif
 
+public enum GamePadButton {
+	case UP
+	case DOWN
+	case LEFT
+	case RIGHT
+	case CIRCLE
+	case CROSS
+	case UNKNOWN
+}
+
 @available(OSX 10.12, *)
 @available(iOS 11.0, *)
 open class GameScene: SKScene {
@@ -143,7 +153,6 @@ open class GameScene: SKScene {
 	open func handleToolbar(_ point: CGPoint) -> Bool {
 		for button in toolbarButtons {
 			if (button.frame.contains(point)) {
-				gameMenu?.isHidden = false
 				return true
 			}
 		}
@@ -164,6 +173,7 @@ open class GameScene: SKScene {
 	
 	open func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		if (handleToolbar(point)) {
+			gameMenu?.isHidden = false
 			return
 		}
 		if (gameMenu?.isHidden == false) {
@@ -172,7 +182,17 @@ open class GameScene: SKScene {
 			gameLogic?.nextScene()
 		}
 	}
-
+	
+	open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+		if (button == GamePadButton.CROSS) {
+			if (gameMenu?.isHidden == false) {
+				gameMenu?.isHidden = true
+			} else if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
+				view?.window?.toggleFullScreen(self)
+			}
+		}
+	}
+	
 #if os(iOS) || os(tvOS)
 	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if (touches.first != nil) {
@@ -214,6 +234,32 @@ open class GameScene: SKScene {
 	open override func mouseUp(with event: NSEvent) {
 		let point: CGPoint = event.location(in: self)
 		interactionEnded(point, timestamp: event.timestamp)
+	}
+
+	open override func keyDown(with event: NSEvent) {
+		var button: GamePadButton
+		switch event.keyCode {
+		case 126:
+			button = GamePadButton.UP
+			break
+		case 125:
+			button = GamePadButton.DOWN
+			break
+		case 123:
+			button = GamePadButton.LEFT
+			break
+		case 124:
+			button = GamePadButton.RIGHT
+			break
+		case 76,  36, 49:
+			button = GamePadButton.CIRCLE
+		case 53:
+			button = GamePadButton.CROSS
+			break
+		default:
+			button = GamePadButton.UNKNOWN
+		}
+		interactionButton(button, timestamp: event.timestamp)
 	}
 #endif
 	
