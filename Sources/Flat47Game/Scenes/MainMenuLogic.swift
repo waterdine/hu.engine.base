@@ -177,6 +177,7 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+#if os(OSX)
 		if (button == GamePadButton.CROSS) {
 			if (restartPopupNode!.isHidden == false) {
 				restartPopupNode?.isHidden = true
@@ -198,6 +199,7 @@ class MainMenuLogic: GameScene {
 				view?.window?.toggleFullScreen(self)
 			}
 		}
+#endif
 	}
 	
 	override func update(_ currentTime: TimeInterval) {

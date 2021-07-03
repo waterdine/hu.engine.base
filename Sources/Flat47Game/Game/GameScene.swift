@@ -184,6 +184,7 @@ open class GameScene: SKScene {
 	}
 	
 	open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+#if os(OSX)
 		if (button == GamePadButton.CROSS) {
 			if (gameMenu?.isHidden == false) {
 				gameMenu?.isHidden = true
@@ -191,6 +192,7 @@ open class GameScene: SKScene {
 				view?.window?.toggleFullScreen(self)
 			}
 		}
+#endif
 	}
 	
 #if os(iOS) || os(tvOS)
