@@ -401,6 +401,14 @@ open class GameLogic: NSObject {
 #endif
 	}
 	
+	open func getScaleMode() -> SKSceneScaleMode {
+#if os(OSX)
+		return .aspectFit
+#else
+		return .aspectFill
+#endif
+	}
+	
 	open func getChapterTable() -> String {
 		let chapterListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Story", ofType: "plist")!)
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray

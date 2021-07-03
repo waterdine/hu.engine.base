@@ -20,7 +20,7 @@ class IntroLogic: GameScene {
             abort()
         }
 
-        scene.scaleMode = .aspectFill
+        scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic;
 		
         return scene

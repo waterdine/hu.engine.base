@@ -14,8 +14,8 @@ class SkipToLogic: GameScene {
 	class func newScene(gameLogic: GameLogic) -> SkipToLogic {
 		let scene = SkipToLogic()
 
-		scene.scaleMode = .aspectFill
-		scene.gameLogic = gameLogic;
+		scene.scaleMode = gameLogic.getScaleMode()
+		scene.gameLogic = gameLogic
 		
 		return scene
 	}

@@ -19,7 +19,7 @@ class CreditsLogic: GameScene {
 			abort()
 		}
 
-		scene.scaleMode = .aspectFill
+		scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic
 		scene.allowSkipCredits = false
 		
