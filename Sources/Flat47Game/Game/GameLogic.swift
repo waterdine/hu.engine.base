@@ -16,6 +16,7 @@ public enum TextSpeed: Int {
 @available(iOS 11.0, *)
 open class GameLogic: NSObject {
 	
+    open var baseDir: URL? = nil
 	open var sceneTypes: [String:GameScene] = [:]
 	open var transition: ((GameScene, SKTransition?) -> Void)?
 	
@@ -109,7 +110,7 @@ open class GameLogic: NSObject {
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
 		
-		let chapterListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Story", ofType: "plist")!)
+        let chapterListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent("Chapters").appendingPathExtension("plist") : Bundle.main.path(forResource: "Story", ofType: "plist")!)
 		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
 		
 		var sceneList: NSArray? = nil
@@ -122,7 +123,7 @@ open class GameLogic: NSObject {
 			
 			if (chapterList != nil && chapterList!.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
 				let chapterFileName = chapterList?[self.currentChapterIndex!] as? String
-				let sceneListPlist = NSDictionary(contentsOfFile: Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
+                let sceneListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent("Scenes").appendingPathExtension("plist") : Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
 				sceneList = sceneListPlist?["Scenes"] as? NSArray
 			} else if (chapterList != nil && self.currentChapterIndex! >= chapterList!.count) {
 				self.currentSceneIndex! = 0
