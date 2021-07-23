@@ -40,7 +40,7 @@ open class GameLogic: NSObject {
 	
 	open var textSpeed: TextSpeed = TextSpeed.Normal
 	
-	public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
 		let gameLogic = GameLogic()
 
 		// TODO this probably does not need to be instances, could just be state struct + a static class.
@@ -51,6 +51,7 @@ open class GameLogic: NSObject {
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
+        gameLogic.baseDir = baseDir
 		gameLogic.currentSceneIndex = -1;
 		gameLogic.currentChapterIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
