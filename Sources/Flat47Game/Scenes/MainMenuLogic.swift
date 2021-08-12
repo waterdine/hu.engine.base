@@ -81,6 +81,7 @@ class MainMenuLogic: GameScene {
         configLabel?.text = Bundle.main.localizedString(forKey: "Setup", value: nil, table: "Story")
         let creditsLabel = self.childNode(withName: "//CreditsLabel") as? SKLabelNode
         creditsLabel?.text = Bundle.main.localizedString(forKey: "Credits", value: nil, table: "Story")
+        pressNode?.text = Bundle.main.localizedString(forKey: "Press to continue...", value: nil, table: "Story")
 		
 		// Config Popup
 		configPopupNode = self.childNode(withName: "//ConfigPopup")
