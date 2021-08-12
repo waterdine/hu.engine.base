@@ -60,13 +60,13 @@ class MainMenuLogic: GameScene {
         let titleShadow2Label = self.childNode(withName: "//TitleShadow2") as? SKLabelNode
         titleShadow2Label?.attributedText = titleShadow1Label?.attributedText
         
-        let subTitle = Bundle.main.localizedString(forKey: "SubTitle", value: nil, table: "Story")
-        let subTitleLabel = self.childNode(withName: "//SubTitle") as? SKLabelNode
-        subTitleLabel?.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
-        let subTitleShadow1Label = self.childNode(withName: "//SubTitleShadow1") as? SKLabelNode
-        subTitleShadow1Label?.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
-        let subTitleShadow2Label = self.childNode(withName: "//SubTitleShadow2") as? SKLabelNode
-        subTitleShadow2Label?.attributedText = subTitleShadow1Label?.attributedText
+        let subTitle = Bundle.main.localizedString(forKey: "Subtitle", value: nil, table: "Story")
+        let subTitleLabel = self.childNode(withName: "//Subtitle") as? SKLabelNode
+        subTitleLabel?.text = subTitle
+        let subTitleShadow1Label = self.childNode(withName: "//SubtitleShadow1") as? SKLabelNode
+        subTitleShadow1Label?.text = subTitleLabel?.text
+        let subTitleShadow2Label = self.childNode(withName: "//SubtitleShadow2") as? SKLabelNode
+        subTitleShadow2Label?.text = subTitleLabel?.text
        
 		buttonsNode = self.childNode(withName: "//Buttons")
 		backgroundNode = self.childNode(withName: "//Background")
