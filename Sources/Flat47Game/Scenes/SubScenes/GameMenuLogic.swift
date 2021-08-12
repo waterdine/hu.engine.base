@@ -37,6 +37,7 @@ class GameMenuLogic : GameSubScene {
 	   // Bake down the entire codebase (which includes raw text driven assets).
 	   // That is then aligned to a physical layer format, which can be loaded into memory in chunks as requested. Or all at once.
 	   // Etc.
+       let buttonFont = Bundle.main.localizedString(forKey: "ButtonFontName", value: nil, table: "Story")
 	   let subScene = SKNode(fileNamed: "GameMenu" + (gameLogic?.getAspectSuffix())!)
 	   let gameMenu = subScene?.childNode(withName: "//ConfigPopup")
 	   gameMenu?.removeFromParent()
@@ -47,12 +48,16 @@ class GameMenuLogic : GameSubScene {
 	   closeNode = self.childNode(withName: "//Close")
        let closeLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
        closeLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
+       closeLabel?.fontName = buttonFont
 	   debugModeNode = self.childNode(withName: "//DebugMode")
 	   debugModeLabel = self.childNode(withName: "//DebugModeLabel") as? SKLabelNode
+       debugModeLabel?.fontName = buttonFont
 	   puzzleModeNode = self.childNode(withName: "//PuzzleMode")
 	   puzzleModeLabel = self.childNode(withName: "//PuzzleModeLabel") as? SKLabelNode
+       puzzleModeLabel?.fontName = buttonFont
 	   textSpeedNode = self.childNode(withName: "//TextSpeed")
 	   textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
+       textSpeedLabel?.fontName = buttonFont
 	   #if !DEBUG
 		   debugModeNode?.isHidden = true
 	   #endif

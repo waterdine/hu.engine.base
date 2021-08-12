@@ -67,7 +67,8 @@ class MainMenuLogic: GameScene {
         subTitleShadow1Label?.text = subTitleLabel?.text
         let subTitleShadow2Label = self.childNode(withName: "//SubtitleShadow2") as? SKLabelNode
         subTitleShadow2Label?.text = subTitleLabel?.text
-       
+        
+        let buttonFont = Bundle.main.localizedString(forKey: "ButtonFontName", value: nil, table: "Story")
 		buttonsNode = self.childNode(withName: "//Buttons")
 		backgroundNode = self.childNode(withName: "//Background")
 		pressNode = self.childNode(withName: "//Press") as? SKLabelNode
@@ -77,10 +78,13 @@ class MainMenuLogic: GameScene {
 		creditsNode = self.childNode(withName: "//Credits")
         let fromTheTopLabel = self.childNode(withName: "//FromTheTopLabel") as? SKLabelNode
         fromTheTopLabel?.text = Bundle.main.localizedString(forKey: "Restart", value: nil, table: "Story")
+        fromTheTopLabel?.fontName = buttonFont
         let configLabel = self.childNode(withName: "//ConfigLabel") as? SKLabelNode
         configLabel?.text = Bundle.main.localizedString(forKey: "Setup", value: nil, table: "Story")
+        configLabel?.fontName = buttonFont
         let creditsLabel = self.childNode(withName: "//CreditsLabel") as? SKLabelNode
         creditsLabel?.text = Bundle.main.localizedString(forKey: "Credits", value: nil, table: "Story")
+        creditsLabel?.fontName = buttonFont
         pressNode?.text = Bundle.main.localizedString(forKey: "Press to continue...", value: nil, table: "Story")
 		
 		// Config Popup
@@ -94,6 +98,7 @@ class MainMenuLogic: GameScene {
 		textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
         let configCloseLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
         configCloseLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
+        configCloseLabel?.fontName = buttonFont
 		
 		// Restart Popup
 		restartPopupNode = self.childNode(withName: "//RestartPopup")
@@ -101,33 +106,44 @@ class MainMenuLogic: GameScene {
 		noNode = self.childNode(withName: "//No")
         let yesLabel = self.childNode(withName: "//YesLabel") as? SKLabelNode
         yesLabel?.text = Bundle.main.localizedString(forKey: "Yes", value: nil, table: "Story")
+        yesLabel?.fontName = buttonFont
         let noLabel = self.childNode(withName: "//NoLabel") as? SKLabelNode
         noLabel?.text = Bundle.main.localizedString(forKey: "No", value: nil, table: "Story")
+        noLabel?.fontName = buttonFont
         let restartGameLabel = self.childNode(withName: "//RestartText1") as? SKLabelNode
         restartGameLabel?.text = Bundle.main.localizedString(forKey: "Restart the game!", value: nil, table: "Story")
+        restartGameLabel?.fontName = buttonFont
         let restartGameShadow1Label = self.childNode(withName: "//RestartText1Shadow1") as? SKLabelNode
         restartGameShadow1Label?.text = restartGameLabel?.text
+        restartGameShadow1Label?.fontName = buttonFont
         let restartGameShadow2Label = self.childNode(withName: "//RestartText1Shadow2") as? SKLabelNode
         restartGameShadow2Label?.text = restartGameLabel?.text
+        restartGameShadow2Label?.fontName = buttonFont
         let areYouSureLabel = self.childNode(withName: "//RestartText2") as? SKLabelNode
         areYouSureLabel?.text = Bundle.main.localizedString(forKey: "Are you sure?", value: nil, table: "Story")
+        areYouSureLabel?.fontName = buttonFont
         let areYouSureShadow1Label = self.childNode(withName: "//RestartText2Shadow1") as? SKLabelNode
         areYouSureShadow1Label?.text = areYouSureLabel?.text
+        areYouSureShadow1Label?.fontName = buttonFont
         let areYouSureShadow2Label = self.childNode(withName: "//RestartText2Shadow2") as? SKLabelNode
         areYouSureShadow2Label?.text = areYouSureLabel?.text
+        areYouSureShadow2Label?.fontName = buttonFont
 		
 		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 		playResumeLabel!.text = fromTheTopNode!.isHidden ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
+        playResumeLabel?.fontName = buttonFont
 		
 		configPopupNode?.isHidden = true
 		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
+        debugModeLabel?.fontName = buttonFont
 		#if DEBUG
 			debugModeNode!.isHidden = false
 		#else
 			debugModeNode!.isHidden = true
 		#endif
 		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
+        puzzleModeLabel?.fontName = buttonFont
 		switch self.gameLogic!.textSpeed {
 		case .Slow:
 			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
@@ -139,6 +155,7 @@ class MainMenuLogic: GameScene {
 			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 			break
 		}
+        textSpeedLabel?.fontName = buttonFont
 		loaded = false
 		pressToContinue = true
 		pressNode?.isHidden = false
