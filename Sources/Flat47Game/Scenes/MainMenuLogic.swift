@@ -52,8 +52,21 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override func didMove(to view: SKView) {
-        let title = Bundle.main.localizedString(forKey: ((self.data?["Title"] as? String)!), value: nil, table: "Story")
-        let subTitle = Bundle.main.localizedString(forKey: ((self.data?["SubTitle"] as? String)!), value: nil, table: "Story")
+        let title = Bundle.main.localizedString(forKey: "Title", value: nil, table: "Story")
+        let titleLabel = self.childNode(withName: "//Title") as? SKLabelNode
+        titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        let titleShadow1Label = self.childNode(withName: "//TitleShadow1") as? SKLabelNode
+        titleShadow1Label?.attributedText = NSMutableAttributedString(string: title, attributes: titleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        let titleShadow2Label = self.childNode(withName: "//TitleShadow2") as? SKLabelNode
+        titleShadow2Label?.attributedText = titleShadow1Label?.attributedText
+        
+        let subTitle = Bundle.main.localizedString(forKey: "SubTitle", value: nil, table: "Story")
+        let subTitleLabel = self.childNode(withName: "//SubTitle") as? SKLabelNode
+        subTitleLabel?.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        let subTitleShadow1Label = self.childNode(withName: "//SubTitleShadow1") as? SKLabelNode
+        subTitleShadow1Label?.attributedText = NSMutableAttributedString(string: subTitle, attributes: subTitleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        let subTitleShadow2Label = self.childNode(withName: "//SubTitleShadow2") as? SKLabelNode
+        subTitleShadow2Label?.attributedText = subTitleShadow1Label?.attributedText
        
 		buttonsNode = self.childNode(withName: "//Buttons")
 		backgroundNode = self.childNode(withName: "//Background")
@@ -62,6 +75,12 @@ class MainMenuLogic: GameScene {
 		fromTheTopNode = self.childNode(withName: "//FromTheTop")
 		configNode = self.childNode(withName: "//Config")
 		creditsNode = self.childNode(withName: "//Credits")
+        let fromTheTopLabel = self.childNode(withName: "//FromTheTopLabel") as? SKLabelNode
+        fromTheTopLabel?.text = Bundle.main.localizedString(forKey: "Restart", value: nil, table: "Story")
+        let configLabel = self.childNode(withName: "//ConfigLabel") as? SKLabelNode
+        configLabel?.text = Bundle.main.localizedString(forKey: "Setup", value: nil, table: "Story")
+        let creditsLabel = self.childNode(withName: "//CreditsLabel") as? SKLabelNode
+        creditsLabel?.text = Bundle.main.localizedString(forKey: "Credits", value: nil, table: "Story")
 		
 		// Config Popup
 		configPopupNode = self.childNode(withName: "//ConfigPopup")
@@ -72,6 +91,8 @@ class MainMenuLogic: GameScene {
 		debugModeLabel = self.childNode(withName: "//DebugModeLabel") as? SKLabelNode
 		puzzleModeLabel = self.childNode(withName: "//PuzzleModeLabel") as? SKLabelNode
 		textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
+        let configCloseLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
+        configCloseLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
 		
 		// Restart Popup
 		restartPopupNode = self.childNode(withName: "//RestartPopup")

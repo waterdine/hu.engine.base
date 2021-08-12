@@ -42,7 +42,11 @@ class GameMenuLogic : GameSubScene {
 	   gameMenu?.removeFromParent()
 	   self.addChild(gameMenu!)
 	   mainMenuNode = self.childNode(withName: "//MainMenu")
+       let mainMenuLabel = self.childNode(withName: "//MainMenuLabel") as? SKLabelNode
+       mainMenuLabel?.text = Bundle.main.localizedString(forKey: "Main Menu", value: nil, table: "Story")
 	   closeNode = self.childNode(withName: "//Close")
+       let closeLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
+       closeLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
 	   debugModeNode = self.childNode(withName: "//DebugMode")
 	   debugModeLabel = self.childNode(withName: "//DebugModeLabel") as? SKLabelNode
 	   puzzleModeNode = self.childNode(withName: "//PuzzleMode")
