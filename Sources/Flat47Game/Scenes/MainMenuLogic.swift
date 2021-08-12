@@ -52,6 +52,9 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override func didMove(to view: SKView) {
+        let title = Bundle.main.localizedString(forKey: ((self.data?["Title"] as? String)!), value: nil, table: "Story")
+        let subTitle = Bundle.main.localizedString(forKey: ((self.data?["SubTitle"] as? String)!), value: nil, table: "Story")
+       
 		buttonsNode = self.childNode(withName: "//Buttons")
 		backgroundNode = self.childNode(withName: "//Background")
 		pressNode = self.childNode(withName: "//Press") as? SKLabelNode
@@ -77,7 +80,7 @@ class MainMenuLogic: GameScene {
 		
 		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
-		playResumeLabel!.text = fromTheTopNode!.isHidden ? "Play" : "Continue"
+		playResumeLabel!.text = fromTheTopNode!.isHidden ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
 		
 		configPopupNode?.isHidden = true
 		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
@@ -86,16 +89,16 @@ class MainMenuLogic: GameScene {
 		#else
 			debugModeNode!.isHidden = true
 		#endif
-		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
+		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
 		switch self.gameLogic!.textSpeed {
 		case .Slow:
-			textSpeedLabel!.text = "Text Speed: Slow"
+			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
 			break
 		case .Normal:
-			textSpeedLabel!.text = "Text Speed: Normal"
+			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
 			break
 		case .Fast:
-			textSpeedLabel!.text = "Text Speed: Fast"
+			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 			break
 		}
 		loaded = false
@@ -158,18 +161,18 @@ class MainMenuLogic: GameScene {
 			} else if (puzzleModeNode!.frame.contains(point)) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 				self.gameLogic!.saveState()
-				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
+				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
 			} else if (textSpeedNode!.frame.contains(point)) {
 				self.gameLogic!.nextTextSpeed()
 				switch self.gameLogic!.textSpeed {
 				case .Slow:
-					textSpeedLabel!.text = "Text Speed: Slow"
+					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
 					break
 				case .Normal:
-					textSpeedLabel!.text = "Text Speed: Normal"
+					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
 					break
 				case .Fast:
-					textSpeedLabel!.text = "Text Speed: Fast"
+					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 					break
 				}
 			}
@@ -207,19 +210,19 @@ class MainMenuLogic: GameScene {
 			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 			let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 			//let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
-			playResumeLabel!.text = fromTheTopNode!.isHidden ? "Play" : "Continue"
+			playResumeLabel!.text = fromTheTopNode!.isHidden ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
 			//playResumeLabelShadow!.text = playResumeLabel!.text
 			debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? "Skip Puzzles is On" : "Skip Puzzles is Off"
+			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 			switch self.gameLogic!.textSpeed {
-			case .Slow:
-				textSpeedLabel!.text = "Text Speed: Slow"
-				break
-			case .Normal:
-				textSpeedLabel!.text = "Text Speed: Normal"
-				break
-			case .Fast:
-				textSpeedLabel!.text = "Text Speed: Fast"
+            case .Slow:
+                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
+                break
+            case .Normal:
+                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
+                break
+            case .Fast:
+                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 				break
 			}
 			loaded = true
