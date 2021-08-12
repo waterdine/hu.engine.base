@@ -127,7 +127,7 @@ class MainMenuLogic: GameScene {
 		#else
 			debugModeNode!.isHidden = true
 		#endif
-		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
+		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 		switch self.gameLogic!.textSpeed {
 		case .Slow:
 			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
@@ -199,7 +199,7 @@ class MainMenuLogic: GameScene {
 			} else if (puzzleModeNode!.frame.contains(point)) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 				self.gameLogic!.saveState()
-				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
+				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 			} else if (textSpeedNode!.frame.contains(point)) {
 				self.gameLogic!.nextTextSpeed()
 				switch self.gameLogic!.textSpeed {
