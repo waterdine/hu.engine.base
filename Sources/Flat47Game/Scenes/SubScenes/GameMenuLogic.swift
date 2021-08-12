@@ -45,6 +45,7 @@ class GameMenuLogic : GameSubScene {
 	   mainMenuNode = self.childNode(withName: "//MainMenu")
        let mainMenuLabel = self.childNode(withName: "//MainMenuLabel") as? SKLabelNode
        mainMenuLabel?.text = Bundle.main.localizedString(forKey: "Main Menu", value: nil, table: "Story")
+       mainMenuLabel?.fontName = buttonFont
 	   closeNode = self.childNode(withName: "//Close")
        let closeLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
        closeLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
