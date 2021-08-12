@@ -99,6 +99,22 @@ class MainMenuLogic: GameScene {
 		restartPopupNode = self.childNode(withName: "//RestartPopup")
 		yesNode = self.childNode(withName: "//Yes")
 		noNode = self.childNode(withName: "//No")
+        let yesLabel = self.childNode(withName: "//YesLabel") as? SKLabelNode
+        yesLabel?.text = Bundle.main.localizedString(forKey: "Yes", value: nil, table: "Story")
+        let noLabel = self.childNode(withName: "//NoLabel") as? SKLabelNode
+        noLabel?.text = Bundle.main.localizedString(forKey: "No", value: nil, table: "Story")
+        let restartGameLabel = self.childNode(withName: "//RestartText1") as? SKLabelNode
+        restartGameLabel?.text = Bundle.main.localizedString(forKey: "Restart the game!", value: nil, table: "Story")
+        let restartGameShadow1Label = self.childNode(withName: "//RestartText1Shadow1") as? SKLabelNode
+        restartGameShadow1Label?.text = restartGameLabel?.text
+        let restartGameShadow2Label = self.childNode(withName: "//RestartText1Shadow2") as? SKLabelNode
+        restartGameShadow2Label?.text = restartGameLabel?.text
+        let areYouSureLabel = self.childNode(withName: "//RestartText2") as? SKLabelNode
+        areYouSureLabel?.text = Bundle.main.localizedString(forKey: "Are you sure?", value: nil, table: "Story")
+        let areYouSureShadow1Label = self.childNode(withName: "//RestartText2Shadow1") as? SKLabelNode
+        areYouSureShadow1Label?.text = areYouSureLabel?.text
+        let areYouSureShadow2Label = self.childNode(withName: "//RestartText2Shadow2") as? SKLabelNode
+        areYouSureShadow2Label?.text = areYouSureLabel?.text
 		
 		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
