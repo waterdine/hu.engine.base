@@ -59,7 +59,18 @@ class GameMenuLogic : GameSubScene {
 	   textSpeedNode = self.childNode(withName: "//TextSpeed")
 	   textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
        textSpeedLabel?.fontName = buttonFont
-	   #if !DEBUG
+        switch self.gameLogic!.textSpeed {
+       case .Slow:
+           textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
+           break
+       case .Normal:
+           textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
+           break
+       case .Fast:
+           textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
+           break
+       }
+    #if !DEBUG
 		   debugModeNode?.isHidden = true
 	   #endif
 		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
