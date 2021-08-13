@@ -12,7 +12,7 @@ public enum TextSpeed: Int {
 	case Slow, Normal, Fast
 }
 
-@available(OSX 10.12, *)
+@available(OSX 10.13, *)
 @available(iOS 11.0, *)
 open class GameLogic: NSObject {
 	

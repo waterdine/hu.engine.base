@@ -8,7 +8,7 @@
 import SpriteKit
 
 // Obvious what goes here!
-@available(OSX 10.12, *)
+@available(OSX 10.13, *)
 @available(iOS 11.0, *)
 open class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into here to remove dependance for later porting if needed.
 
