@@ -188,7 +188,7 @@ open class GameScene: SKScene {
 		if (button == GamePadButton.CROSS) {
 			if (gameMenu?.isHidden == false) {
 				gameMenu?.isHidden = true
-			} else if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
+            } else if (view != nil && view!.window != nil && view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
 				view?.window?.toggleFullScreen(self)
 			}
 		}
