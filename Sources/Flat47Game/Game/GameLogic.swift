@@ -13,7 +13,7 @@ public enum TextSpeed: Int {
 }
 
 @available(OSX 10.13, *)
-@available(iOS 11.0, *)
+@available(iOS 9.0, *)
 open class GameLogic: NSObject {
 	
     open var baseDir: URL? = nil
@@ -74,7 +74,11 @@ open class GameLogic: NSObject {
 									fadePlayer?.stop()
 								}
 								fadePlayer = player
-								fadePlayer?.setVolume(0, fadeDuration: 1.0)
+                                if #available(iOS 10.0, *) {
+                                    fadePlayer?.setVolume(0, fadeDuration: 1.0)
+                                } else {
+                                    fadePlayer?.volume = 0;
+                                }
 							} else {
 								player?.stop()
 							}

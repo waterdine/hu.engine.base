@@ -8,7 +8,7 @@
 import SpriteKit
 
 @available(OSX 10.13, *)
-@available(iOS 11.0, *)
+@available(iOS 9.0, *)
 class GameMenuLogic : GameSubScene {
 	
 	// TODO Do not do OOP, until plan for a more functionally driven engine has emerged use OOP.

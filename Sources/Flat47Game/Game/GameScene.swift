@@ -24,7 +24,7 @@ public enum GamePadButton {
 }
 
 @available(OSX 10.13, *)
-@available(iOS 11.0, *)
+@available(iOS 9.0, *)
 open class GameScene: SKScene {
 
 	open var gameLogic: GameLogic?

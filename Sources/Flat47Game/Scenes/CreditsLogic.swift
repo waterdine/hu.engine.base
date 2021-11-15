@@ -8,7 +8,7 @@
 import SpriteKit
 
 @available(OSX 10.13, *)
-@available(iOS 11.0, *)
+@available(iOS 9.0, *)
 class CreditsLogic: GameScene {
 	
 	var skipable: Bool = false

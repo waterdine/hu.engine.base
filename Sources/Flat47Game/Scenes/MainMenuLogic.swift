@@ -8,7 +8,7 @@
 import SpriteKit
 
 @available(OSX 10.13, *)
-@available(iOS 11.0, *)
+@available(iOS 9.0, *)
 class MainMenuLogic: GameScene {
 	
 	var buttonsNode: SKNode?
@@ -54,11 +54,23 @@ class MainMenuLogic: GameScene {
 	override func didMove(to view: SKView) {
         let title = Bundle.main.localizedString(forKey: "Title", value: nil, table: "Story")
         let titleLabel = self.childNode(withName: "//Title") as? SKLabelNode
-        titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        if #available(iOS 11.0, *) {
+            titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        } else {
+            // Fallback on earlier versions
+        }
         let titleShadow1Label = self.childNode(withName: "//TitleShadow1") as? SKLabelNode
-        titleShadow1Label?.attributedText = NSMutableAttributedString(string: title, attributes: titleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        if #available(iOS 11.0, *) {
+            titleShadow1Label?.attributedText = NSMutableAttributedString(string: title, attributes: titleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
+        } else {
+            // Fallback on earlier versions
+        }
         let titleShadow2Label = self.childNode(withName: "//TitleShadow2") as? SKLabelNode
-        titleShadow2Label?.attributedText = titleShadow1Label?.attributedText
+        if #available(iOS 11.0, *) {
+            titleShadow2Label?.attributedText = titleShadow1Label?.attributedText
+        } else {
+            // Fallback on earlier versions
+        }
         
         let subTitle = Bundle.main.localizedString(forKey: "Subtitle", value: nil, table: "Story")
         let subTitleLabel = self.childNode(withName: "//Subtitle") as? SKLabelNode
@@ -166,7 +178,7 @@ class MainMenuLogic: GameScene {
 		buttonsNode?.alpha = 0.0
 		buttonsNode!.isHidden = false
 		pressNode?.removeAllActions()
-		pressNode?.run(SKAction(named: "PressToContinueFade")!)
+		//pressNode?.run(SKAction(named: "PressToContinueFade")!)
 		restartPopupNode?.isHidden = true
 	}
 	
