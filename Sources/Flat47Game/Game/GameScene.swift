@@ -110,7 +110,7 @@ open class GameScene: SKScene {
 		disablePrevSceneIndicator()
 		disableNextSceneIndicator()
 		
-		// TODO check for presses before this function has run!!!!!
+		// atode: check for presses before this function has run!!!!!
 	}
 	
 	open func enablePrevSceneIndicator() {

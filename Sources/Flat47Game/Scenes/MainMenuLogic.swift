@@ -182,7 +182,7 @@ class MainMenuLogic: GameScene {
 		restartPopupNode?.isHidden = true
 	}
 	
-	// TODO combine the GameMenu and MainMenuConfig into a coherant menu system.
+	// atode: combine the GameMenu and MainMenuConfig into a coherant menu system.
 	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		if (pressToContinue) {
 			if (pressNode!.alpha > 0.0) {

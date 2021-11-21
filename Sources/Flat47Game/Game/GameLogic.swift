@@ -43,7 +43,7 @@ open class GameLogic: NSObject {
     public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
 		let gameLogic = GameLogic()
 
-		// TODO this probably does not need to be instances, could just be state struct + a static class.
+		// atode: this probably does not need to be instances, could just be state struct + a static class.
 		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
 		gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
 		gameLogic.sceneTypes["SkipTo"] = SkipToLogic.newScene(gameLogic: gameLogic)
@@ -111,7 +111,7 @@ open class GameLogic: NSObject {
 	}
 
 	open func transitionToScene(forceTransition: SKTransition?) {
-		// TODO REMOVVE!!
+		// atode: REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
 		
@@ -171,7 +171,7 @@ open class GameLogic: NSObject {
 			credits!.skipable = scene!.allowSkipCredits
 		}
 		
-		// TODO Convert to NSDictionary to make extendable as well.
+		// atode: Convert to NSDictionary to make extendable as well.
 		var rotateScene = false
 		let transitionType: String? = ((sceneData?["Transition"] as? String?)!)
 		if (transition == nil && transitionType != nil) {

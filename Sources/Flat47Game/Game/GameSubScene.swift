@@ -10,7 +10,7 @@ import SpriteKit
 // Obvious what goes here!
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
-open class GameSubScene : SKNode { // TODO Move more of SKNode's functionality into here to remove dependance for later porting if needed.
+open class GameSubScene : SKNode { // atode: Move more of SKNode's functionality into here to remove dependance for later porting if needed.
 
 	var gameLogic: GameLogic?
 	

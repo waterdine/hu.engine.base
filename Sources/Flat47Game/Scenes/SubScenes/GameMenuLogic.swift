@@ -11,7 +11,7 @@ import SpriteKit
 @available(iOS 9.0, *)
 class GameMenuLogic : GameSubScene {
 	
-	// TODO Do not do OOP, until plan for a more functionally driven engine has emerged use OOP.
+	// atode: Do not do OOP, until plan for a more functionally driven engine has emerged use OOP.
 	
 	// GameMenuButtons Popup
 	var mainMenuNode: SKNode? // GameButton (SubScene)
@@ -25,7 +25,7 @@ class GameMenuLogic : GameSubScene {
 	
 	public override init(gameLogic: GameLogic?) {
 		super.init(gameLogic: gameLogic)
-	   // TODO combine these into one thing GameSubScene and its logic.
+	   // atode: combine these into one thing GameSubScene and its logic.
 	   // Inheritance is still possible in functional design.
 	   // Firstly its like a struct, it can be extended. So create a dataset that has the positions or layouts of the items, to replace .sks files.
 	   // This will then work like SwiftUI (what hook in with crossplatform SwiftUI can there be?).
