@@ -22,9 +22,11 @@ class GameMenuLogic : GameSubScene {
 	var puzzleModeLabel: SKLabelNode?
 	var textSpeedNode: SKNode?
 	var textSpeedLabel: SKLabelNode?
+    var volumeNode: SKNode?
+    var volumeLabel: SKLabelNode?
 	
 	public override init(gameLogic: GameLogic?) {
-		super.init(gameLogic: gameLogic)
+       super.init(gameLogic: gameLogic)
 	   // atode: combine these into one thing GameSubScene and its logic.
 	   // Inheritance is still possible in functional design.
 	   // Firstly its like a struct, it can be extended. So create a dataset that has the positions or layouts of the items, to replace .sks files.
@@ -59,7 +61,7 @@ class GameMenuLogic : GameSubScene {
 	   textSpeedNode = self.childNode(withName: "//TextSpeed")
 	   textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
        textSpeedLabel?.fontName = buttonFont
-        switch self.gameLogic!.textSpeed {
+       switch self.gameLogic!.textSpeed {
        case .Slow:
            textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
            break
@@ -70,11 +72,28 @@ class GameMenuLogic : GameSubScene {
            textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
            break
        }
-    #if !DEBUG
+       volumeNode = self.childNode(withName: "//Volume")
+       volumeLabel = self.childNode(withName: "//VolumeLabel") as? SKLabelNode
+       volumeLabel?.fontName = buttonFont
+       switch self.gameLogic!.volume {
+       case .Off:
+           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+           break
+       case .Low:
+           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+           break
+       case .Medium:
+           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+           break
+       case .High:
+           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+           break
+       }
+       #if !DEBUG
 		   debugModeNode?.isHidden = true
 	   #endif
-		debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
+       debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
+       puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -108,6 +127,22 @@ class GameMenuLogic : GameSubScene {
                 textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
                 break
 			}
-		}
+		} else if (volumeNode!.frame.contains(point)) {
+            self.gameLogic!.nextVolumeLevel()
+            switch self.gameLogic!.volume {
+            case .Off:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                break
+            case .Low:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                break
+            case .Medium:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                break
+            case .High:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                break
+            }
+        }
 	}
 }

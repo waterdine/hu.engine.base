@@ -12,6 +12,10 @@ public enum TextSpeed: Int {
 	case Slow, Normal, Fast
 }
 
+public enum VolumeLevel: Int {
+    case Off, Low, Medium, High
+}
+
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
 open class GameLogic: NSObject {
@@ -39,6 +43,7 @@ open class GameLogic: NSObject {
 	open var tempCutScene: GameScene?
 	
 	open var textSpeed: TextSpeed = TextSpeed.Normal
+    open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
     public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
 		let gameLogic = GameLogic()
@@ -57,6 +62,7 @@ open class GameLogic: NSObject {
 		gameLogic.transitionToScene(forceTransition: nil)
 		gameLogic.loadState()
 		gameLogic.alignTextSpeed()
+        gameLogic.alignVolumeLevel()
 		return gameLogic
 	}
 	
@@ -362,7 +368,24 @@ open class GameLogic: NSObject {
 			break
 		}
 	}
-		
+    
+    func alignVolumeLevel() {
+        switch volumeLevel {
+        case .Off:
+            textSpeed = .Low
+            break
+        case .Low:
+            textSpeed = .Medium
+            break
+        case .Medium:
+            textSpeed = .High
+            break
+        case .High:
+            textSpeed = .Off
+            break
+        }
+    }
+    
 	open func nextTextSpeed() {
 		switch textSpeed {
 		case .Slow:
@@ -378,7 +401,26 @@ open class GameLogic: NSObject {
 		saveState()
 		alignTextSpeed()
 	}
-	
+    
+    open func nextVolumeLevel() {
+        switch volumeLevel {
+        case .Off:
+            textSpeed = .Low
+            break
+        case .Low:
+            textSpeed = .Medium
+            break
+        case .Medium:
+            textSpeed = .High
+            break
+        case .High:
+            textSpeed = .Off
+            break
+        }
+        saveState()
+        alignTextSpeed()
+    }
+    
 	open func getAspectSuffix() -> String {
 #if os(OSX)
 		//let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
