@@ -253,6 +253,7 @@ open class GameLogic: NSObject {
 		UserDefaults.standard.setValue(self.sceneDebug, forKey: "sceneDebug")
 		UserDefaults.standard.setValue(self.skipPuzzles, forKey: "skipPuzzles")
 		UserDefaults.standard.setValue(self.variables, forKey: "variables")
+        UserDefaults.standard.setValue(self.volumeLevel.rawValue, forKey: "volumeLevel")
 	}
 	
 	open func loadState() {
@@ -372,16 +373,12 @@ open class GameLogic: NSObject {
     func alignVolumeLevel() {
         switch volumeLevel {
         case .Off:
-            textSpeed = .Low
             break
         case .Low:
-            textSpeed = .Medium
             break
         case .Medium:
-            textSpeed = .High
             break
         case .High:
-            textSpeed = .Off
             break
         }
     }
@@ -405,16 +402,16 @@ open class GameLogic: NSObject {
     open func nextVolumeLevel() {
         switch volumeLevel {
         case .Off:
-            textSpeed = .Low
+            volumeLevel = .Low
             break
         case .Low:
-            textSpeed = .Medium
+            volumeLevel = .Medium
             break
         case .Medium:
-            textSpeed = .High
+            volumeLevel = .High
             break
         case .High:
-            textSpeed = .Off
+            volumeLevel = .Off
             break
         }
         saveState()
