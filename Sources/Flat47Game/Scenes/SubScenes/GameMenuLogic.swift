@@ -75,7 +75,7 @@ class GameMenuLogic : GameSubScene {
        volumeNode = self.childNode(withName: "//Volume")
        volumeLabel = self.childNode(withName: "//VolumeLabel") as? SKLabelNode
        volumeLabel?.fontName = buttonFont
-       switch self.gameLogic!.volume {
+       switch self.gameLogic!.volumeLevel {
        case .Off:
            volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
            break
@@ -129,7 +129,7 @@ class GameMenuLogic : GameSubScene {
 			}
 		} else if (volumeNode!.frame.contains(point)) {
             self.gameLogic!.nextVolumeLevel()
-            switch self.gameLogic!.volume {
+            switch self.gameLogic!.volumeLevel {
             case .Off:
                 volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
                 break

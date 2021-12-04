@@ -97,6 +97,7 @@ open class GameLogic: NSObject {
 						if (player == nil) {
 							try player = AVAudioPlayer(contentsOf: file!)
 							player?.numberOfLoops = -1
+                            alignVolumeLevel()
 							player?.play()
 						}
 					} else {
@@ -262,6 +263,7 @@ open class GameLogic: NSObject {
 		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
 		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
 		let savedTextSpeed: Int? = UserDefaults.standard.value(forKey: "textSpeed") as? Int
+        let savedVolume: Int? = UserDefaults.standard.value(forKey: "volumeLevel") as? Int
 		let savedSceneDebug: Bool? = UserDefaults.standard.value(forKey: "sceneDebug") as? Bool
 		let savedSkipPuzzles: Bool? = UserDefaults.standard.value(forKey: "skipPuzzles") as? Bool
 		
@@ -292,6 +294,24 @@ open class GameLogic: NSObject {
 				self.textSpeed = .Normal
 			}
 		}
+        if (savedVolume != nil) {
+            switch savedVolume! {
+            case VolumeLevel.Off.rawValue:
+                self.volumeLevel = .Off
+                break
+            case VolumeLevel.Low.rawValue:
+                self.volumeLevel = .Low
+                break
+            case VolumeLevel.Medium.rawValue:
+                self.volumeLevel = .Medium
+                break
+            case VolumeLevel.High.rawValue:
+                self.volumeLevel = .High
+                break
+            default:
+                self.volumeLevel = .Medium
+            }
+        }
 		if (savedSceneDebug != nil) {
 			self.sceneDebug = savedSceneDebug!
 		}
@@ -373,12 +393,16 @@ open class GameLogic: NSObject {
     func alignVolumeLevel() {
         switch volumeLevel {
         case .Off:
+            player?.setVolume(0.0, fadeDuration: 0.0)
             break
         case .Low:
+            player?.setVolume(0.1, fadeDuration: 0.0)
             break
         case .Medium:
+            player?.setVolume(0.5, fadeDuration: 0.0)
             break
         case .High:
+            player?.setVolume(1.0, fadeDuration: 0.0)
             break
         }
     }
@@ -415,7 +439,7 @@ open class GameLogic: NSObject {
             break
         }
         saveState()
-        alignTextSpeed()
+        alignVolumeLevel()
     }
     
 	open func getAspectSuffix() -> String {
