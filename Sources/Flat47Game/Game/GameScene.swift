@@ -1,6 +1,6 @@
 //
 //  GameScene.swift
-//  RevengeOfTheSamurai Shared
+//  RevengeOfTheSamurai Game
 //
 //  Created by x414e54 on 11/02/2021.
 //

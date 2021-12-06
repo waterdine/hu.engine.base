@@ -1,8 +1,8 @@
 //
 //  CreditsLogic.swift
-//  RevengeOfTheSamurai iOS
+//  Flat47Game
 //
-//  Created by x414e54 on 13/02/2021.
+//  Created by AABills on 13/02/2021.
 //
 
 import SpriteKit

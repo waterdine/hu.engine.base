@@ -1,6 +1,6 @@
 //
 //  GameSubScene.swift
-//  RevengeOfTheSamurai
+//  RevengeOfTheSamurai Game
 //
 //  Created by x414e54 on 16/06/2021.
 //

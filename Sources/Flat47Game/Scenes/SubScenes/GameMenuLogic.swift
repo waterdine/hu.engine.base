@@ -1,6 +1,6 @@
 //
 //  GameMenuLogic.swift
-//  RevengeOfTheSamurai
+//  Flat47Game Scenes
 //
 //  Created by x414e54 on 16/06/2021.
 //
@@ -74,20 +74,22 @@ class GameMenuLogic : GameSubScene {
        }
        volumeNode = self.childNode(withName: "//Volume")
        volumeLabel = self.childNode(withName: "//VolumeLabel") as? SKLabelNode
-       volumeLabel?.fontName = buttonFont
-       switch self.gameLogic!.volumeLevel {
-       case .Off:
-           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
-           break
-       case .Low:
-           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
-           break
-       case .Medium:
-           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
-           break
-       case .High:
-           volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
-           break
+       if (volumeLabel != nil) {
+           volumeLabel?.fontName = buttonFont
+           switch self.gameLogic!.volumeLevel {
+           case .Off:
+               volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+               break
+           case .Low:
+               volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+               break
+           case .Medium:
+               volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+               break
+           case .High:
+               volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+               break
+           }
        }
        #if !DEBUG
 		   debugModeNode?.isHidden = true

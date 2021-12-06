@@ -41,6 +41,8 @@ open class GameLogic: NSObject {
 	open var loopSound: AVAudioPlayer?
 	open var currentScene: GameScene?
 	open var tempCutScene: GameScene?
+    open var lives: Int?
+    //open var playerHealth: Vitamins, etc.
 	
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
@@ -393,16 +395,32 @@ open class GameLogic: NSObject {
     func alignVolumeLevel() {
         switch volumeLevel {
         case .Off:
-            player?.setVolume(0.0, fadeDuration: 0.0)
+            if #available(iOS 10.0, *) {
+                player?.setVolume(0.0, fadeDuration: 0.0)
+            } else {
+                player?.volume = 0.0
+            }
             break
         case .Low:
-            player?.setVolume(0.1, fadeDuration: 0.0)
+            if #available(iOS 10.0, *) {
+                player?.setVolume(0.1, fadeDuration: 0.0)
+            } else {
+                player?.volume = 0.1
+            }
             break
         case .Medium:
-            player?.setVolume(0.5, fadeDuration: 0.0)
+            if #available(iOS 10.0, *) {
+                player?.setVolume(0.5, fadeDuration: 0.0)
+            } else {
+                player?.volume = 0.5
+            }
             break
         case .High:
-            player?.setVolume(1.0, fadeDuration: 0.0)
+            if #available(iOS 10.0, *) {
+                player?.setVolume(1.0, fadeDuration: 0.0)
+            } else {
+                player?.volume = 1.0
+            }
             break
         }
     }
