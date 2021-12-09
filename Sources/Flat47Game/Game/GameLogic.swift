@@ -144,11 +144,11 @@ open class GameLogic: NSObject {
                 // loop sceneList to find sceneNames and add to dictionary, as index.
                 //sceneNames[name] = index
                 sceneNames.removeAll()
-                for <#item#> in <#items#> {
+                /*for <#item#> in <#items#> {
                     if (sceneName != nil) {
                         sceneNames[sceneName] =
                     }
-                }
+                }*/
 			} else if (chapterList != nil && self.currentChapterIndex! >= chapterList!.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! = 0
