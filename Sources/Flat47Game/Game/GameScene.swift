@@ -1,8 +1,8 @@
 //
 //  GameScene.swift
-//  RevengeOfTheSamurai Game
+//  Flat47Game Game
 //
-//  Created by x414e54 on 11/02/2021.
+//  Created by A. A. Bills on 11/02/2021.
 //
 
 import AVKit

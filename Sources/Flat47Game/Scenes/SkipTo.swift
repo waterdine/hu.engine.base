@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  SkipTo.swift
+//  Flat47Game 
 //
-//  Created by x414e54 on 17/06/2021.
+//  Created by A. A. Bills on 17/06/2021.
 //
 
 import SpriteKit

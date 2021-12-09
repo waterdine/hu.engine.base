@@ -2,7 +2,7 @@
 //  GameMenuLogic.swift
 //  Flat47Game Scenes
 //
-//  Created by x414e54 on 16/06/2021.
+//  Created by A. A. Bills on 16/06/2021.
 //
 
 import SpriteKit

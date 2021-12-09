@@ -2,7 +2,7 @@
 //  GameLogic.swift
 //  SpriteKitTest
 //
-//  Created by x414e54 on 11/02/2021.
+//  Created by A. A. Bills on 11/02/2021.
 //
 
 import AVKit
@@ -27,6 +27,7 @@ open class GameLogic: NSObject {
 	// current storyline (saveable)
 	open var currentSceneIndex: Int?
 	open var currentChapterIndex: Int?
+    open var sceneNames: [String:Int] = [:]
 	open var flags: [String] = []
 	open var variables: [String:String] = [:]
 	open var textDelay: Double = 1.0
@@ -139,6 +140,15 @@ open class GameLogic: NSObject {
 				let chapterFileName = chapterList?[self.currentChapterIndex!] as? String
                 let sceneListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName!).appendingPathComponent("Scenes").appendingPathExtension("plist").absoluteString : Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
 				sceneList = sceneListPlist?["Scenes"] as? NSArray
+                
+                // loop sceneList to find sceneNames and add to dictionary, as index.
+                //sceneNames[name] = index
+                sceneNames.removeAll()
+                for <#item#> in <#items#> {
+                    if (sceneName != nil) {
+                        sceneNames[sceneName] =
+                    }
+                }
 			} else if (chapterList != nil && self.currentChapterIndex! >= chapterList!.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! = 0
