@@ -9,11 +9,11 @@ import Foundation
 
 // Base Data Types
 
-enum CharacterAction: String, Codable {
+public enum CharacterAction: String, Codable {
     case None, EnterLeft, EnterRight, Jump
 }
 
-enum TextEvent: String, Codable {
+public enum TextEvent: String, Codable {
     case None, Instant
 }
 
@@ -83,22 +83,22 @@ struct Character: Identifiable, Codable {
     var name: String
 }
 
-class TextLine: Identifiable, Codable {
-    var id: UUID = UUID()
-    var character: String = ""
-    var characterAction: CharacterAction = CharacterAction.None
-    var textString: String = ""
-    var textEvent: TextEvent = TextEvent.None
+open class TextLine: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var character: String = ""
+    public var characterAction: CharacterAction = CharacterAction.None
+    public var textString: String = ""
+    public var textEvent: TextEvent = TextEvent.None
     
-    init() {
+    public init() {
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         textString = try container.decode(String.self)
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         //try container.encode(id, forKey: BaseSceneCodingKeys.id)
         //try container.encode(label, forKey: BaseSceneCodingKeys.label)
@@ -106,10 +106,10 @@ class TextLine: Identifiable, Codable {
     }
 }
 
-class BaseScene: Identifiable, Codable {
-    var id: UUID = UUID()
-    var Scene: String = "Unknown"
-    var Label: String? = nil
+open class BaseScene: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var Scene: String = "Unknown"
+    public var Label: String? = nil
     
     enum BaseSceneCodingKeys: String, CodingKey {
         case id
@@ -117,10 +117,10 @@ class BaseScene: Identifiable, Codable {
         case Label
     }
     
-    init() {
+    public init() {
     }
     
-    init(from scriptParameters: [String : String], strings: inout [String : String]) {
+    public init(from scriptParameters: [String : String], strings: inout [String : String]) {
         if (scriptParameters["Scene"] != nil) {
             Scene = scriptParameters["Scene"]!
         }
@@ -130,42 +130,42 @@ class BaseScene: Identifiable, Codable {
         }
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: BaseSceneCodingKeys.self)
         Scene = try container.decode(String.self, forKey: BaseSceneCodingKeys.Scene)
         Label = try container.decodeIfPresent(String.self, forKey: BaseSceneCodingKeys.Label)
         //id = try container.decode(UUID.self, forKey: BaseSceneCodingKeys.id)
     }
     
-    func encode(to encoder: Encoder) throws {
+    open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: BaseSceneCodingKeys.self)
         //try container.encode(id, forKey: BaseSceneCodingKeys.id)
         try container.encodeIfPresent(Label, forKey: BaseSceneCodingKeys.Label)
         try container.encode(Scene, forKey: BaseSceneCodingKeys.Scene)
     }
     
-    func getDescription() -> String{
+    open func getDescription() -> String{
         return Scene
     }
     
-    func toStringsHeader(index: Int, strings: [String : String]) -> String {
+    open func toStringsHeader(index: Int, strings: [String : String]) -> String {
         return "// Scene \(index) - " + Scene
     }
     
-    func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
+    open func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
         return "// Scene \(index) - " + Scene
     }
     
-    func toStringsLines(index: Int, strings: [String : String]) -> [String] {
+    open func toStringsLines(index: Int, strings: [String : String]) -> [String] {
         return (Label != nil) ? ["// Label: " + Label!, toStringsHeader(index: index, strings: strings)] : [toStringsHeader(index: index, strings: strings)]
     }
     
-    func toScriptLines(index: Int, strings: [String : String], indexMap: [Int : String]) -> [String] {
+    open func toScriptLines(index: Int, strings: [String : String], indexMap: [Int : String]) -> [String] {
         return (Label != nil) ? ["// Label: " + Label!, toScriptHeader(index: index, strings: strings, indexMap: indexMap)] : [toScriptHeader(index: index, strings: strings, indexMap: indexMap)]
     }
 }
 
-class IntroScene: BaseScene {
+open class IntroScene: BaseScene {
     //enum IntroCodingKeys: String, CodingKey {
     //}
     
@@ -177,19 +177,19 @@ class IntroScene: BaseScene {
         super.init(from: scriptParameters, strings: &strings)
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
     
-    override func encode(to encoder: Encoder) throws {
+    public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
 }
 
-class VisualScene: BaseScene {
-    var Music: String? = nil
-    var RestartMusic: Bool? = nil
-    var Transition: String? = nil
+open class VisualScene: BaseScene {
+    public var Music: String? = nil
+    public var RestartMusic: Bool? = nil
+    public var Transition: String? = nil
     
     enum VisualSceneCodingKeys: String, CodingKey {
         case Music
@@ -197,7 +197,7 @@ class VisualScene: BaseScene {
         case Transition
     }
     
-    override init(from scriptParameters: [String : String], strings: inout [String : String]) {
+    public override init(from scriptParameters: [String : String], strings: inout [String : String]) {
         super.init(from: scriptParameters, strings: &strings)
         
         if (scriptParameters["Music"] != nil) {
@@ -213,11 +213,11 @@ class VisualScene: BaseScene {
         }
     }
     
-    override init() {
+    public override init() {
         super.init()
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
         let container = try decoder.container(keyedBy: VisualSceneCodingKeys.self)
         Music = try container.decodeIfPresent(String.self, forKey: VisualSceneCodingKeys.Music)
@@ -225,7 +225,7 @@ class VisualScene: BaseScene {
         Transition = try container.decodeIfPresent(String.self, forKey: VisualSceneCodingKeys.Transition)
     }
     
-    override func encode(to encoder: Encoder) throws {
+    open override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: VisualSceneCodingKeys.self)
         try container.encodeIfPresent(Music, forKey: VisualSceneCodingKeys.Music)
@@ -233,7 +233,7 @@ class VisualScene: BaseScene {
         try container.encodeIfPresent(Transition, forKey: VisualSceneCodingKeys.Transition)
     }
     
-    override func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
+    open override func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
         var scriptLine: String = super.toScriptHeader(index: index, strings: strings, indexMap: indexMap)
         
         if (Music != nil) {
@@ -246,6 +246,66 @@ class VisualScene: BaseScene {
         
         if (Transition != nil) {
             scriptLine += ", Transition: " + Transition!
+        }
+        
+        return scriptLine
+    }
+}
+
+open class SkipToScene: BaseScene {
+    public var SkipTo: Int = 0
+    public var Flag: String? = nil
+    
+    enum SkipToCodingKeys: String, CodingKey {
+        case SkipTo
+        case Flag
+    }
+    
+    public override init() {
+        super.init()
+    }
+    
+    public override init(from scriptParameters: [String : String], strings: inout [String : String]) {
+        super.init(from: scriptParameters, strings: &strings)
+        
+        if (scriptParameters["SkipTo"] != nil) {
+            SkipTo = Int(scriptParameters["SkipTo"]!)!
+        }
+        
+        if (scriptParameters["Flag"] != nil) {
+            Flag = scriptParameters["Flag"]!
+        }
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+        let container = try decoder.container(keyedBy: SkipToCodingKeys.self)
+        SkipTo = try container.decode(Int.self, forKey: SkipToCodingKeys.SkipTo)
+        Flag = try container.decodeIfPresent(String.self, forKey: SkipToCodingKeys.Flag)
+    }
+    
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: SkipToCodingKeys.self)
+        try container.encode(SkipTo, forKey: SkipToCodingKeys.SkipTo)
+        try container.encodeIfPresent(Flag, forKey: SkipToCodingKeys.Flag)
+    }
+    
+    open override func getDescription() -> String{
+        return "SkipTo, \(SkipTo)"
+    }
+    
+    open override func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
+        var scriptLine: String = super.toScriptHeader(index: index, strings: strings, indexMap: indexMap)
+        
+        if (indexMap[SkipTo] != nil) {
+            scriptLine += ", SkipTo: \(indexMap[SkipTo]!)"
+        } else {
+            scriptLine += ", SkipTo: \(SkipTo)"
+        }
+        
+        if (Flag != nil) {
+            scriptLine += ", Flag: " + Flag!
         }
         
         return scriptLine

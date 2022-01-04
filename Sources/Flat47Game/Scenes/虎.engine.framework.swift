@@ -7,12 +7,14 @@
 
 import SwiftUI
 import Combine
-import Flat47Game
-import Flat47StoryGame
-import Flat47PuzzleGame
 import SpriteKit
 
 let FRAMEWORK_VERSION = 0
+
+class FrameworkParser
+{
+    
+}
 
 class SceneWrapper: Identifiable, Codable {
     var id: UUID = UUID()
@@ -26,7 +28,7 @@ class SceneWrapper: Identifiable, Codable {
         
     }
     
-    init(scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
+    init(frameworkParser: FrameworkParser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
         let scriptLineSplit = scriptLine.split(separator: ",")
         let sceneTypeSplit = scriptLineSplit[0].split(separator: "-")
         let sceneType: String = String(sceneTypeSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
@@ -69,7 +71,7 @@ class SceneWrapper: Identifiable, Codable {
             parameters["SkipTo"] = newSkipTo
         }
 
-        switch sceneType {
+        /*switch sceneType {
         case "Intro":
             data = IntroScene.init(from: parameters, strings: &strings)
             break
@@ -97,13 +99,14 @@ class SceneWrapper: Identifiable, Codable {
         default:
             data = BaseScene.init(from: parameters, strings: &strings)
             break
-        }
+        }*/
+        //data = frameworkParser.
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
-        switch Scene {
+/*        switch Scene {
         case "Intro":
             data = try IntroScene.init(from: decoder)
             break
@@ -131,11 +134,11 @@ class SceneWrapper: Identifiable, Codable {
         default:
             data = try BaseScene.init(from: decoder)
             break
-        }
+        }*/
     }
     
     func encode(to encoder: Encoder) throws {
-        switch data.Scene {
+/*        switch data.Scene {
         case "Intro":
             try (data as! IntroScene).encode(to: encoder)
             break
@@ -163,13 +166,13 @@ class SceneWrapper: Identifiable, Codable {
         default:
             try data.encode(to: encoder)
             break
-        }
+        }*/
     }
     
     func update()
     {
         var newData: BaseScene = data
-        switch data.Scene {
+/*        switch data.Scene {
         case "Intro":
             if (!(data is IntroScene)) {
                 newData = IntroScene()
@@ -213,14 +216,14 @@ class SceneWrapper: Identifiable, Codable {
         default:
             newData = BaseScene()
             break
-        }
+        }*/
         newData.Scene = data.Scene
         newData.Label = data.Label
         data = newData
     }
     
     func getDescription() -> String {
-        switch data.Scene {
+/*        switch data.Scene {
         case "Intro":
             return (data as! IntroScene).getDescription()
         case "Story":
@@ -239,7 +242,8 @@ class SceneWrapper: Identifiable, Codable {
             return (data as! ZenPuzzleScene).getDescription()
         default:
             return ""
-        }
+        }*/
+        return ""
     }
     
     func appendText(text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
@@ -248,7 +252,7 @@ class SceneWrapper: Identifiable, Codable {
         if (textBucket.isEmpty) {
             let lineString = "line_\(lineIndex)"
             let lineReference = chapter + "_" + scene + "_" + lineString
-            switch data.Scene {
+/*            switch data.Scene {
             case "Story":
                 if (!command) {
                     strings[lineReference] = String(text)
@@ -368,11 +372,11 @@ class SceneWrapper: Identifiable, Codable {
                     strings[(data as! ChapterTransitionScene).VerticalTitle] = text.replacingOccurrences(of: "VerticalTitle: ", with: "")
                 }
             default: break
-            }
+            }*/
         } else if (textBucket == "Solved") {
             let lineString = "solved_line_\(lineIndex)"
             let lineReference = chapter + "_" + scene + "_" + lineString
-            switch data.Scene {
+            /*switch data.Scene {
             case "ZenPuzzle":
                 if (!command) {
                     strings[lineReference] = String(text)
@@ -384,13 +388,13 @@ class SceneWrapper: Identifiable, Codable {
                 (data as! ZenPuzzleScene).SolvedText!.append(line)
                 break
             default: break
-            }
+            }*/
         }
     }
     
     func stringsLines(index: Int, strings: [String : String]) -> [String] {
         var stringsLines: [String] = []
-        switch data.Scene {
+    /*    switch data.Scene {
         case "Intro":
             stringsLines.append(contentsOf: (data as! IntroScene).toStringsLines(index: index, strings: strings))
             break
@@ -458,13 +462,13 @@ class SceneWrapper: Identifiable, Codable {
             break
         default:
             break
-        }
+        }*/
         
         return stringsLines
     }
 
     func resolveSkipToIndexes(indexMap: [Int : Int]) {
-        switch data.Scene {
+        /*switch data.Scene {
         case "Choice":
             // Lucia's Boop!
             for (index, item) in (data as! ChoiceScene).Choices!.enumerated() {
@@ -484,7 +488,7 @@ class SceneWrapper: Identifiable, Codable {
             }
             break
         default: break
-        }
+        }*/
     }
 }
 

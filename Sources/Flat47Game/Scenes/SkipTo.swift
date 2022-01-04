@@ -21,8 +21,8 @@ class SkipToLogic: GameScene {
 	}
 	
 	open override func customLogic() -> Bool {
-		let skipToScene: Int = data?["SkipTo"] as! Int
-		let flag: String? = (data?["Flag"] as? String?)!
+        let skipToScene: Int = (data as? SkipToScene)!.SkipTo
+        let flag: String? = (data as? SkipToScene)!.Flag
 		 
 		var shouldSkip: Bool = true;
 		 

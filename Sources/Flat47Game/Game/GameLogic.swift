@@ -74,13 +74,13 @@ open class GameLogic: NSObject {
 		return gameLogic
 	}
 	
-	func loadMusic(musicFile: String?, transitionType: String?, sceneData: NSDictionary?) {
+	func loadMusic(musicFile: String?, transitionType: String?, sceneData: VisualScene?) {
 		if (musicFile != nil) {
 			do {
 				if (musicFile! != "") {
 					let file = Bundle.main.url(forResource: musicFile!, withExtension: ".mp3")
 					if (file != nil) {
-						let restartMusic: Bool? = sceneData?["RestartMusic"] as? Bool
+                        let restartMusic: Bool? = sceneData?.RestartMusic
 						let fadeMusic: Bool = (transitionType != nil && (transitionType! == "Fade" || transitionType! == "CrossFade" || transitionType! == "Flash"))
 						if (player != nil && (player!.url != file || (restartMusic != nil && restartMusic! == true))) {
 							if (fadeMusic) {
@@ -155,9 +155,9 @@ open class GameLogic: NSObject {
             story = try! PropertyListDecoder().decode(Story.self, from: data)
         }
 		
-		var sceneList: Scenes = []
+		var sceneList: Scenes? = nil
 		var sceneTypeName = "MainMenu"
-		var sceneData: NSDictionary? = nil
+		var sceneData: BaseScene? = nil
 		
 		var reloadSceneData = true
 		while (reloadSceneData) {
@@ -166,15 +166,15 @@ open class GameLogic: NSObject {
 			if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
                 let chapterFileName = story!.Chapters[self.currentChapterIndex!].name
                 let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(chapterFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: chapterFileName, withExtension: "plist")
-                let sceneListContents = try! Data(contentsOf: sceneListPlistURL)
+                let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
                 if (sceneListString != nil && sceneListString!.starts(with: "<?xml")) {
-                    let sceneListPlist = try! PropertyListDecoder().decode(Scenes.self, from: sceneListContents)
+                    sceneList = try! PropertyListDecoder().decode(Scenes.self, from: sceneListContents)
                 } else {
                     let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
                     let key = SymmetricKey.init(data: masterKey())
                     let data = try! AES.GCM.open(sealedBox, using: key)
-                    story = try! PropertyListDecoder().decode(Scenes.self, from: data)
+                    sceneList = try! PropertyListDecoder().decode(Scenes.self, from: data)
                 }
                 
                 // loop sceneList to find sceneLabels and add to dictionary, as index.
@@ -194,10 +194,10 @@ open class GameLogic: NSObject {
 				self.currentSceneIndex! = -1
 			}
 			
-			if (sceneList != nil && sceneList!.count > self.currentSceneIndex! && self.currentSceneIndex! >= 0) {
-				sceneData = sceneList?[self.currentSceneIndex!] as? NSDictionary
-				sceneTypeName = sceneData!["Scene"] as! String
-			} else if (sceneList != nil && self.currentSceneIndex! >= sceneList!.count) {
+            if (sceneList != nil && sceneList!.Scenes.count > self.currentSceneIndex! && self.currentSceneIndex! >= 0) {
+                sceneData = sceneList!.Scenes[self.currentSceneIndex!].data
+                sceneTypeName = sceneData!.Scene
+			} else if (sceneList != nil && self.currentSceneIndex! >= sceneList!.Scenes.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! += 1
 				saveState()
@@ -205,7 +205,7 @@ open class GameLogic: NSObject {
 			}
 		}
 		
-		var musicFile: String? = sceneData?["Music"] as? String
+        var musicFile: String? = (sceneData as? VisualScene)?.Music
 		
 		var transition: SKTransition? = forceTransition
 		var scene: GameScene? = sceneTypes[sceneTypeName]
@@ -228,7 +228,7 @@ open class GameLogic: NSObject {
 		
 		// atode: Convert to NSDictionary to make extendable as well.
 		var rotateScene = false
-		let transitionType: String? = ((sceneData?["Transition"] as? String?)!)
+        let transitionType: String? = (sceneData as? VisualScene)?.Transition
 		if (transition == nil && transitionType != nil) {
 			switch transitionType {
 			case "Fade":
@@ -284,7 +284,7 @@ open class GameLogic: NSObject {
 			}
 		}
 
-		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: sceneData)
+		loadMusic(musicFile: musicFile, transitionType: transitionType, sceneData: (sceneData as? VisualScene))
 		
 		scene!.data = sceneData
 		if (scene!.customLogic()) {

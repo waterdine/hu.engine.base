@@ -28,7 +28,7 @@ public enum GamePadButton {
 open class GameScene: SKScene {
 
 	open var gameLogic: GameLogic?
-	open var data: NSDictionary?
+	open var data: BaseScene?
 	open var nextSceneNode: SKSpriteNode?
 	open var prevSceneNode: SKSpriteNode?
 	var toolbarButtons: [SKSpriteNode] = []
