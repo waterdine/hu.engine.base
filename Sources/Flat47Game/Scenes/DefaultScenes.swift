@@ -9,7 +9,7 @@ import Foundation
 
 // Base Data Types
 
-public enum CharacterAction: String, Codable {
+public enum ActorAction: String, Codable {
     case None, EnterLeft, EnterRight, Jump
 }
 
@@ -17,23 +17,23 @@ public enum TextEvent: String, Codable {
     case None, Instant
 }
 
-struct Product: Identifiable, Codable {
-    var id: UUID = UUID()
-    var name: String = ""
-    var version: Int = 0
-    var frameworkVersion: Int = 0
+public struct Product: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var name: String = ""
+    public var version: Int = 0
+    public var frameworkVersion: Int = 0
 }
 
-struct Chapter: Identifiable, Codable {
-    var id: UUID = UUID()
-    var name: String = ""
-    var sutra: String = ""
+public struct Chapter: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var name: String = ""
+    public var sutra: String = ""
 }
 
-class Story: Identifiable, Codable {
-    var id: UUID = UUID()
-    var Version: Int? = nil
-    var Chapters: [Chapter] = []
+public class Story: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var Version: Int? = nil
+    public var Chapters: [Chapter] = []
     
     enum BaseSceneCodingKeys: String, CodingKey {
         case id
@@ -41,10 +41,10 @@ class Story: Identifiable, Codable {
         case Chapters
     }
     
-    init() {
+    public init() {
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: BaseSceneCodingKeys.self)
         Version = try container.decodeIfPresent(Int.self, forKey: BaseSceneCodingKeys.Version)
         if (Version == nil || Version! == 0) {
@@ -61,7 +61,7 @@ class Story: Identifiable, Codable {
         //id = try container.decode(UUID.self, forKey: BaseSceneCodingKeys.id)
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: BaseSceneCodingKeys.self)
         //try container.encode(id, forKey: BaseSceneCodingKeys.id)
         if (Version == nil || Version! == 0) {
@@ -78,15 +78,15 @@ class Story: Identifiable, Codable {
     }
 }
 
-struct Character: Identifiable, Codable {
-    var id: UUID = UUID()
-    var name: String
-}
+/*public struct Actor: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var name: String
+}*/
 
 open class TextLine: Identifiable, Codable {
     public var id: UUID = UUID()
-    public var character: String = ""
-    public var characterAction: CharacterAction = CharacterAction.None
+    public var actor: String = ""
+    public var actorAction: ActorAction = ActorAction.None
     public var textString: String = ""
     public var textEvent: TextEvent = TextEvent.None
     
