@@ -7,6 +7,11 @@
 
 import AVKit
 import SpriteKit
+import CryptoKit
+
+func masterKey() -> Data {
+    return Data(base64Encoded: "6Vs77pau68MPuZaLWv/msQ==")! // "Hey, hey, hey, hey, ho, ho, ho, ho, da fun da, da fun da."
+}
 
 public enum TextSpeed: Int {
 	case Slow, Normal, Fast
@@ -27,7 +32,7 @@ open class GameLogic: NSObject {
 	// current storyline (saveable)
 	open var currentSceneIndex: Int?
 	open var currentChapterIndex: Int?
-    open var sceneNames: [String:Int] = [:]
+    open var sceneLabels: [String:Int] = [:]
 	open var flags: [String] = []
 	open var variables: [String:String] = [:]
 	open var textDelay: Double = 1.0
@@ -124,11 +129,33 @@ open class GameLogic: NSObject {
 		// atode: REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
+        
+        //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
+        
+        var story: Story? = nil
+        let chaptersPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
+        let chaptersPlistContents = try! Data(contentsOf: chaptersPlistURL)
+        let chaptersPlistString: String? = String(data: chaptersPlistContents, encoding: .utf8)
+        if (chaptersPlistString != nil && chaptersPlistString!.starts(with: "<?xml")) {
+            let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: chaptersPlistContents)
+            let chapterList: [String] = chapterListPlist["Chapters"]! as [String]
+            story = Story()
+            story?.Version = 0
+            story?.Chapters = []
+            for chapter in chapterList {
+                var newChapter: Chapter = Chapter()
+                newChapter.sutra = ""
+                newChapter.name = chapter
+                story!.Chapters.append(newChapter)
+            }
+        } else {
+            let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
+            let key = SymmetricKey.init(data: masterKey())
+            let data = try! AES.GCM.open(sealedBox, using: key)
+            story = try! PropertyListDecoder().decode(Story.self, from: data)
+        }
 		
-        let chapterListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent("Chapters").appendingPathExtension("plist").absoluteString : Bundle.main.path(forResource: "Story", ofType: "plist")!)
-		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
-		
-		var sceneList: NSArray? = nil
+		var sceneList: Scenes = []
 		var sceneTypeName = "MainMenu"
 		var sceneData: NSDictionary? = nil
 		
@@ -136,20 +163,29 @@ open class GameLogic: NSObject {
 		while (reloadSceneData) {
 			reloadSceneData = false
 			
-			if (chapterList != nil && chapterList!.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
-				let chapterFileName = chapterList?[self.currentChapterIndex!] as? String
-                let sceneListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName!).appendingPathComponent("Scenes").appendingPathExtension("plist").absoluteString : Bundle.main.path(forResource: chapterFileName, ofType: "plist")!)
-				sceneList = sceneListPlist?["Scenes"] as? NSArray
+			if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
+                let chapterFileName = story!.Chapters[self.currentChapterIndex!].name
+                let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(chapterFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: chapterFileName, withExtension: "plist")
+                let sceneListContents = try! Data(contentsOf: sceneListPlistURL)
+                let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
+                if (sceneListString != nil && sceneListString!.starts(with: "<?xml")) {
+                    let sceneListPlist = try! PropertyListDecoder().decode(Scenes.self, from: sceneListContents)
+                } else {
+                    let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
+                    let key = SymmetricKey.init(data: masterKey())
+                    let data = try! AES.GCM.open(sealedBox, using: key)
+                    story = try! PropertyListDecoder().decode(Scenes.self, from: data)
+                }
                 
-                // loop sceneList to find sceneNames and add to dictionary, as index.
-                //sceneNames[name] = index
-                sceneNames.removeAll()
+                // loop sceneList to find sceneLabels and add to dictionary, as index.
+                //sceneLabels[name] = index
+                sceneLabels.removeAll()
                 /*for <#item#> in <#items#> {
                     if (sceneName != nil) {
                         sceneNames[sceneName] =
                     }
                 }*/
-			} else if (chapterList != nil && self.currentChapterIndex! >= chapterList!.count) {
+			} else if (story != nil && self.currentChapterIndex! >= story!.Chapters.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! = 0
 				self.flags = []
