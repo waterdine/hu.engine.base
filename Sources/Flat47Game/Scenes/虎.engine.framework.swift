@@ -9,26 +9,28 @@ import SwiftUI
 import Combine
 import SpriteKit
 
-let FRAMEWORK_VERSION = 0
+public let FRAMEWORK_VERSION = 0
 
-class FrameworkParser
+public class SceneParser
 {
-    
+    public init() {
+        
+    }
 }
 
-class SceneWrapper: Identifiable, Codable {
-    var id: UUID = UUID()
-    var data: BaseScene = BaseScene()
+public class SceneWrapper: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var data: BaseScene = BaseScene()
     
     enum SceneKeys: String, CodingKey {
         case Scene
     }
     
-    init() {
+    public init() {
         
     }
     
-    init(frameworkParser: FrameworkParser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
+    public init(sceneParser: SceneParser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
         let scriptLineSplit = scriptLine.split(separator: ",")
         let sceneTypeSplit = scriptLineSplit[0].split(separator: "-")
         let sceneType: String = String(sceneTypeSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
@@ -103,7 +105,7 @@ class SceneWrapper: Identifiable, Codable {
         //data = frameworkParser.
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
 /*        switch Scene {
@@ -137,7 +139,7 @@ class SceneWrapper: Identifiable, Codable {
         }*/
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
 /*        switch data.Scene {
         case "Intro":
             try (data as! IntroScene).encode(to: encoder)
@@ -169,7 +171,7 @@ class SceneWrapper: Identifiable, Codable {
         }*/
     }
     
-    func update()
+    public func update()
     {
         var newData: BaseScene = data
 /*        switch data.Scene {
@@ -222,7 +224,7 @@ class SceneWrapper: Identifiable, Codable {
         data = newData
     }
     
-    func getDescription() -> String {
+    public func getDescription() -> String {
 /*        switch data.Scene {
         case "Intro":
             return (data as! IntroScene).getDescription()
@@ -246,7 +248,7 @@ class SceneWrapper: Identifiable, Codable {
         return ""
     }
     
-    func appendText(text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
+    public func appendText(text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
         let line: TextLine = TextLine()
         line.textString = text
         if (textBucket.isEmpty) {
@@ -392,7 +394,7 @@ class SceneWrapper: Identifiable, Codable {
         }
     }
     
-    func stringsLines(index: Int, strings: [String : String]) -> [String] {
+    public func stringsLines(index: Int, strings: [String : String]) -> [String] {
         var stringsLines: [String] = []
     /*    switch data.Scene {
         case "Intro":
@@ -467,7 +469,7 @@ class SceneWrapper: Identifiable, Codable {
         return stringsLines
     }
 
-    func resolveSkipToIndexes(indexMap: [Int : Int]) {
+    public func resolveSkipToIndexes(indexMap: [Int : Int]) {
         /*switch data.Scene {
         case "Choice":
             // Lucia's Boop!
@@ -492,6 +494,8 @@ class SceneWrapper: Identifiable, Codable {
     }
 }
 
-struct Scenes: Codable {
-    var Scenes: [SceneWrapper] = []
+public struct Scenes: Codable {
+    public var Scenes: [SceneWrapper] = []
+    public init() {
+    }
 }

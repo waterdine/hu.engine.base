@@ -22,12 +22,18 @@ public struct Product: Identifiable, Codable {
     public var name: String = ""
     public var version: Int = 0
     public var frameworkVersion: Int = 0
+    
+    public init() {
+    }
 }
 
 public struct Chapter: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
     public var sutra: String = ""
+    
+    public init() {
+    }
 }
 
 public class Story: Identifiable, Codable {
