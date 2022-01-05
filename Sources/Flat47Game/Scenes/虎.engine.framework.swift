@@ -11,11 +11,9 @@ import SpriteKit
 
 public let FRAMEWORK_VERSION = 0
 
-public class SceneParser
+public struct SceneInitialiser
 {
-    public init() {
-        
-    }
+    public var sceneInitialisers: [BaseSceneInitialiser] = []
 }
 
 public class SceneWrapper: Identifiable, Codable {
@@ -30,7 +28,7 @@ public class SceneWrapper: Identifiable, Codable {
         
     }
     
-    public init(sceneParser: SceneParser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
+    public init(sceneInitialiser: SceneInitialiser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
         let scriptLineSplit = scriptLine.split(separator: ",")
         let sceneTypeSplit = scriptLineSplit[0].split(separator: "-")
         let sceneType: String = String(sceneTypeSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
@@ -72,71 +70,14 @@ public class SceneWrapper: Identifiable, Codable {
             }
             parameters["SkipTo"] = newSkipTo
         }
-
-        /*switch sceneType {
-        case "Intro":
-            data = IntroScene.init(from: parameters, strings: &strings)
-            break
-        case "Story":
-            data = StoryScene.init(from: parameters, strings: &strings)
-            break
-        case "CutScene":
-            data = CutSceneScene.init(from: parameters, strings: &strings)
-            break
-        case "SkipTo":
-            data = SkipToScene.init(from: parameters, strings: &strings)
-            break
-        case "Choice":
-            data = ChoiceScene.init(from: parameters, strings: &strings)
-            break
-        case "ChapterTransition":
-            data = ChapterTransitionScene.init(from: parameters, strings: &strings)
-            break
-        case "DatePuzzle":
-            data = DatePuzzleScene.init(from: parameters, strings: &strings)
-            break
-        case "ZenPuzzle":
-            data = ZenPuzzleScene.init(from: parameters, strings: &strings)
-            break
-        default:
-            data = BaseScene.init(from: parameters, strings: &strings)
-            break
-        }*/
-        //data = frameworkParser.
+        
+        data = sceneInitialiser[sceneType].create(from: parameters, strings: &strings)
     }
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
-/*        switch Scene {
-        case "Intro":
-            data = try IntroScene.init(from: decoder)
-            break
-        case "Story":
-            data = try StoryScene.init(from: decoder)
-            break
-        case "CutScene":
-            data = try CutSceneScene.init(from: decoder)
-            break
-        case "SkipTo":
-            data = try SkipToScene.init(from: decoder)
-            break
-        case "Choice":
-            data = try ChoiceScene.init(from: decoder)
-            break
-        case "ChapterTransition":
-            data = try ChapterTransitionScene.init(from: decoder)
-            break
-        case "DatePuzzle":
-            data = try DatePuzzleScene.init(from: decoder)
-            break
-        case "ZenPuzzle":
-            data = try ZenPuzzleScene.init(from: decoder)
-            break
-        default:
-            data = try BaseScene.init(from: decoder)
-            break
-        }*/
+        data = sceneInitialiser[Scene].decode(from: decoder)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -472,7 +413,6 @@ public class SceneWrapper: Identifiable, Codable {
     public func resolveSkipToIndexes(indexMap: [Int : Int]) {
         /*switch data.Scene {
         case "Choice":
-            // Lucia's Boop!
             for (index, item) in (data as! ChoiceScene).Choices!.enumerated() {
                 if (item.SkipTo != nil && indexMap[item.SkipTo!] != nil) {
                     (data as! ChoiceScene).Choices![index].SkipTo = indexMap[item.SkipTo!]!
