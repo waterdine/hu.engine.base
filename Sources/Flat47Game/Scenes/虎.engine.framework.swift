@@ -11,9 +11,22 @@ import SpriteKit
 
 public let FRAMEWORK_VERSION = 0
 
-public struct SceneInitialiser
+public struct SceneListSerialiser
 {
-    public var sceneInitialisers: [BaseSceneInitialiser] = []
+    public var serialisers: [BaseSceneSerialiser] = []
+    public init() {
+        
+    }
+}
+
+public class SceneListDecoder : PropertyListDecoder
+{
+    var sceneListSerialiser: SceneListSerialiser? = nil
+}
+
+public class SceneListEncoder : PropertyListEncoder
+{
+    var sceneListSerialiser: SceneListSerialiser? = nil
 }
 
 public class SceneWrapper: Identifiable, Codable {
@@ -28,7 +41,7 @@ public class SceneWrapper: Identifiable, Codable {
         
     }
     
-    public init(sceneInitialiser: SceneInitialiser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
+    public init(sceneListSerialiser: SceneListSerialiser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
         let scriptLineSplit = scriptLine.split(separator: ",")
         let sceneTypeSplit = scriptLineSplit[0].split(separator: "-")
         let sceneType: String = String(sceneTypeSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
@@ -71,13 +84,13 @@ public class SceneWrapper: Identifiable, Codable {
             parameters["SkipTo"] = newSkipTo
         }
         
-        data = sceneInitialiser[sceneType].create(from: parameters, strings: &strings)
+        //data = sceneInitialiser.initialisers[sceneType].create(from: parameters, strings: &strings)
     }
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
-        data = sceneInitialiser[Scene].decode(from: decoder)
+        //data = sceneInitialiser.initialisers[Scene].decode(from: decoder)
     }
     
     public func encode(to encoder: Encoder) throws {
