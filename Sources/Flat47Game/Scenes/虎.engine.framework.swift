@@ -84,366 +84,67 @@ public class SceneWrapper: Identifiable, Codable {
             parameters["SkipTo"] = newSkipTo
         }
         
-        //data = sceneInitialiser.initialisers[sceneType].create(from: parameters, strings: &strings)
+        for serialiser in sceneListSerialiser.serialisers {
+            let newData = serialiser.create(from: parameters, strings: &strings)
+            if (newData != nil) {
+                data = newData!
+            }
+        }
     }
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
-        //data = sceneInitialiser.initialisers[Scene].decode(from: decoder)
+        /*for serialiser in (decoder as! SceneListDecoder).sceneListSerialiser!.serialisers {
+            let newData = serialiser.decode(from: decoder, scene: data)
+            if (newData != nil) {
+                data = newData!
+            }
+        }*/
     }
     
     public func encode(to encoder: Encoder) throws {
-/*        switch data.Scene {
-        case "Intro":
-            try (data as! IntroScene).encode(to: encoder)
-            break
-        case "Story":
-            try (data as! StoryScene).encode(to: encoder)
-            break
-        case "CutScene":
-            try (data as! CutSceneScene).encode(to: encoder)
-            break
-        case "SkipTo":
-            try (data as! SkipToScene).encode(to: encoder)
-            break
-        case "Choice":
-            try (data as! ChoiceScene).encode(to: encoder)
-            break
-        case "ChapterTransition":
-            try (data as! ChapterTransitionScene).encode(to: encoder)
-            break
-        case "DatePuzzle":
-            try (data as! DatePuzzleScene).encode(to: encoder)
-            break
-        case "ZenPuzzle":
-            try (data as! ZenPuzzleScene).encode(to: encoder)
-            break
-        default:
-            try data.encode(to: encoder)
-            break
-        }*/
+        for serialiser in (encoder as! SceneListEncoder).sceneListSerialiser!.serialisers {
+            try! serialiser.encode(to: encoder, scene: data)
+        }
     }
     
-    public func update()
+    public func update(sceneListSerialiser: SceneListSerialiser)
     {
         var newData: BaseScene = data
-/*        switch data.Scene {
-        case "Intro":
-            if (!(data is IntroScene)) {
-                newData = IntroScene()
-            }
-            break
-        case "Story":
-            if (!(data is StoryScene)) {
-                newData = StoryScene()
-            }
-            break
-        case "CutScene":
-            if (!(data is CutSceneScene)) {
-                newData = CutSceneScene()
-            }
-            break
-        case "SkipTo":
-            if (!(data is SkipToScene)) {
-                newData = SkipToScene()
-            }
-            break
-        case "Choice":
-            if (!(data is ChoiceScene)) {
-                newData = ChoiceScene()
-            }
-            break
-        case "ChapterTransition":
-            if (!(data is ChapterTransitionScene)) {
-                newData = ChapterTransitionScene()
-            }
-            break
-        case "DatePuzzle":
-            if (!(data is DatePuzzleScene)) {
-                newData = DatePuzzleScene()
-            }
-            break
-        case "ZenPuzzle":
-            if (!(data is ZenPuzzleScene)) {
-                newData = ZenPuzzleScene()
-            }
-            break
-        default:
-            newData = BaseScene()
-            break
-        }*/
+        for serialiser in sceneListSerialiser.serialisers {
+            newData = serialiser.update(scene: newData)!
+        }
         newData.Scene = data.Scene
         newData.Label = data.Label
         data = newData
     }
     
     public func getDescription() -> String {
-/*        switch data.Scene {
-        case "Intro":
-            return (data as! IntroScene).getDescription()
-        case "Story":
-            return (data as! StoryScene).getDescription()
-        case "CutScene":
-            return (data as! CutSceneScene).getDescription()
-        case "SkipTo":
-            return (data as! SkipToScene).getDescription()
-        case "Choice":
-            return (data as! ChoiceScene).getDescription()
-        case "ChapterTransition":
-            return (data as! ChapterTransitionScene).getDescription()
-        case "DatePuzzle":
-            return (data as! DatePuzzleScene).getDescription()
-        case "ZenPuzzle":
-            return (data as! ZenPuzzleScene).getDescription()
-        default:
-            return ""
-        }*/
         return ""
     }
     
-    public func appendText(text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
+    public func appendText(sceneListSerialiser: SceneListSerialiser, text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
         let line: TextLine = TextLine()
         line.textString = text
-        if (textBucket.isEmpty) {
-            let lineString = "line_\(lineIndex)"
-            let lineReference = chapter + "_" + scene + "_" + lineString
-/*            switch data.Scene {
-            case "Story":
-                if (!command) {
-                    strings[lineReference] = String(text)
-                    line.textString = lineReference
-                }
-                (data as! StoryScene).Text.append(line)
-                break
-            case "CutScene":
-                if (!command) {
-                    strings[lineReference] = String(text)
-                    line.textString = lineReference
-                }
-                (data as! CutSceneScene).Text.append(line)
-                break
-            case "ZenPuzzle":
-                if (text.starts(with: "Question")) {
-                    (data as! ZenPuzzleScene).Question = chapter + "_" + scene + "_question"
-                    strings[(data as! ZenPuzzleScene).Question!] = text.replacingOccurrences(of: "Question: ", with: "")
-                } else {
-                    if (!command) {
-                        strings[lineReference] = String(text)
-                        line.textString = lineReference
-                    }
-                    if ((data as! ZenPuzzleScene).Text == nil) {
-                        (data as! ZenPuzzleScene).Text = []
-                    }
-                    (data as! ZenPuzzleScene).Text!.append(line)
-                }
-                break
-            case "DatePuzzle":
-                if (text.starts(with: "Question")) {
-                    (data as! DatePuzzleScene).Question = chapter + "_" + scene + "_question"
-                    strings[(data as! DatePuzzleScene).Question] = text.replacingOccurrences(of: "Question: ", with: "")
-                } else if (text.starts(with: "Answer")) {
-                    (data as! DatePuzzleScene).Answer = chapter + "_" + scene + "_answer"
-                    strings[(data as! DatePuzzleScene).Answer] = text.replacingOccurrences(of: "Answer: ", with: "")
-                } else {
-                    strings[lineReference] = String(text)
-                    line.textString = lineReference
-                    (data as! DatePuzzleScene).Text.append(line)
-                }
-                break
-            case "Choice":
-                if (text.starts(with: "DirectingText")) {
-                    (data as! ChoiceScene).DirectingText = chapter + "_" + scene + "_direction"
-                    strings[(data as! ChoiceScene).DirectingText] = text.replacingOccurrences(of: "DirectingText: ", with: "")
-                } else if (text.starts(with: "Choice")) {
-                    let choiceSplit = text.replacingOccurrences(of: "//", with: "±").split(separator: "±")
-                    let choiceTextSplit = choiceSplit[0].split(separator: ":")
-                    let choiceNumber: String = String(choiceTextSplit[0]).replacingOccurrences(of: "Text", with: "").replacingOccurrences(of: "Choice", with: "").trimmingCharacters(in: [" ", "-", ",", ":", "/"])
-                    let choiceText: String = String(choiceTextSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":", "/"])
-                    var choiceParameters: [String : String] = ["Text" : choiceText]
-                    choiceParameters["Choice"] = choiceNumber
-                    if (choiceSplit.count > 1) {
-                        let choiceParameterSplit = choiceSplit[1].split(separator: ",")
-                        for parameterCombined in choiceParameterSplit {
-                            if (!parameterCombined.starts(with: "Choice")) {
-                                let parameterSplit = parameterCombined.split(separator: ":")
-                                let parameter = String(parameterSplit[0]).trimmingCharacters(in: [" ", "-", ",", ":"])
-                                let value = String(parameterSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
-                                choiceParameters[parameter] = value
-                            }
-                        }
-                    }
-                    
-                    // Map the SkipTos to SceneLabels
-                    if (choiceParameters["SkipTo"] != nil) {
-                        var newSkipTo = ""
-                        for skipToUntrimmed in choiceParameters["SkipTo"]!.split(separator: ";") {
-                            let skipToTrimmed = skipToUntrimmed.trimmingCharacters(in: [" ", ",", ";"])
-                            var skipToNumber = Int(skipToTrimmed)
-                            if (skipToNumber == nil) {
-                                if (sceneLabelMap[skipToTrimmed] == nil) {
-                                    let newIndex = -(sceneLabelMap.count + 1)
-                                    sceneLabelMap[skipToTrimmed] = newIndex
-                                    skipToNumber = newIndex
-                                } else {
-                                    skipToNumber = sceneLabelMap[skipToTrimmed]!
-                                }
-                            }
-                            
-                            if (!newSkipTo.isEmpty) {
-                                newSkipTo += ";"
-                            }
-                            
-                            newSkipTo += "\(skipToNumber!)"
-                        }
-                        choiceParameters["SkipTo"] = newSkipTo
-                    }
-                    
-                    choiceParameters["Chapter"] = chapter
-                    choiceParameters["SceneNumber"] = scene
-                    let choice = Choice.init(from: choiceParameters, strings: &strings)
-                    let choiceIndex = Int(choiceNumber)!
-                    // atode: Check choiceIndex > 0 and handle it otherwise
-                    if ((data as! ChoiceScene).Choices == nil) {
-                        (data as! ChoiceScene).Choices = []
-                    }
-                    
-                    for _ in (data as! ChoiceScene).Choices!.count..<choiceIndex {
-                        (data as! ChoiceScene).Choices!.append(Choice())
-                    }
-                    (data as! ChoiceScene).Choices?[choiceIndex - 1] = choice
-                }
-            case "ChapterTransition":
-                if (text.starts(with: "HorizontalNumber")) {
-                    (data as! ChapterTransitionScene).HorizontalNumber = chapter + "_horizontal_number"
-                    strings[(data as! ChapterTransitionScene).HorizontalNumber] = text.replacingOccurrences(of: "HorizontalNumber: ", with: "")
-                } else if (text.starts(with: "HorizontalTitle")) {
-                    (data as! ChapterTransitionScene).HorizontalTitle = chapter + "_horizontal_title"
-                    strings[(data as! ChapterTransitionScene).HorizontalTitle] = text.replacingOccurrences(of: "HorizontalTitle: ", with: "")
-                } else if (text.starts(with: "VerticalNumber")) {
-                    (data as! ChapterTransitionScene).VerticalNumber = chapter + "_vertical_number"
-                    strings[(data as! ChapterTransitionScene).VerticalNumber] = text.replacingOccurrences(of: "VerticalNumber: ", with: "")
-                } else if (text.starts(with: "VerticalTitle")) {
-                    (data as! ChapterTransitionScene).VerticalTitle = chapter + "_vertical_title"
-                    strings[(data as! ChapterTransitionScene).VerticalTitle] = text.replacingOccurrences(of: "VerticalTitle: ", with: "")
-                }
-            default: break
-            }*/
-        } else if (textBucket == "Solved") {
-            let lineString = "solved_line_\(lineIndex)"
-            let lineReference = chapter + "_" + scene + "_" + lineString
-            /*switch data.Scene {
-            case "ZenPuzzle":
-                if (!command) {
-                    strings[lineReference] = String(text)
-                    line.textString = lineReference
-                }
-                if ((data as! ZenPuzzleScene).SolvedText == nil) {
-                    (data as! ZenPuzzleScene).SolvedText = []
-                }
-                (data as! ZenPuzzleScene).SolvedText!.append(line)
-                break
-            default: break
-            }*/
+        for serialiser in sceneListSerialiser.serialisers {
+            serialiser.appendText(scene: data, text: text, textBucket: textBucket, chapterNumber: chapter, sceneNumber: scene, lineIndex: lineIndex, strings: &strings, command: command, sceneLabelMap: &sceneLabelMap)
         }
     }
     
-    public func stringsLines(index: Int, strings: [String : String]) -> [String] {
+    public func stringsLines(sceneListSerialiser: SceneListSerialiser, index: Int, strings: [String : String]) -> [String] {
         var stringsLines: [String] = []
-    /*    switch data.Scene {
-        case "Intro":
-            stringsLines.append(contentsOf: (data as! IntroScene).toStringsLines(index: index, strings: strings))
-            break
-        case "Story":
-            stringsLines.append(contentsOf: (data as! StoryScene).toStringsLines(index: index, strings: strings))
-            for textLine in (data as! StoryScene).Text {
-                if (!textLine.textString.starts(with: "[") && !textLine.textString.isEmpty) {
-                    stringsLines.append("\"" + textLine.textString + "\" = \"" + strings[textLine.textString]!.replacingOccurrences(of: "\"", with: "\\\"") + "\";")
-                }
-            }
-            break
-        case "CutScene":
-            stringsLines.append(contentsOf: (data as! CutSceneScene).toStringsLines(index: index, strings: strings))
-            for textLine in (data as! CutSceneScene).Text {
-                if (!textLine.textString.starts(with: "[") && !textLine.textString.isEmpty) {
-                    stringsLines.append("\"" + textLine.textString + "\" = \"" + strings[textLine.textString]!.replacingOccurrences(of: "\"", with: "\\\"") + "\";")
-                }
-            }
-            break
-        case "SkipTo":
-            stringsLines.append(contentsOf: (data as! SkipToScene).toStringsLines(index: index, strings: strings))
-            break
-        case "Choice":
-            stringsLines.append(contentsOf: (data as! ChoiceScene).toStringsLines(index: index, strings: strings))
-            stringsLines.append("\"" + (data as! ChoiceScene).DirectingText + "\" = \"" + strings[(data as! ChoiceScene).DirectingText]! + "\";")
-            for choice in (data as! ChoiceScene).Choices! {
-                stringsLines.append("\"" + choice.Text + "\" = \"" + strings[choice.Text]! + "\";")
-            }
-            break
-        case "ChapterTransition":
-            stringsLines.append("/* " + strings[(data as! ChapterTransitionScene).HorizontalNumber]! + " */\n")
-            stringsLines.append(contentsOf: (data as! ChapterTransitionScene).toStringsLines(index: index, strings: strings))
-            stringsLines.append("\"" + (data as! ChapterTransitionScene).HorizontalNumber + "\" = \"" + strings[(data as! ChapterTransitionScene).HorizontalNumber]! + "\";")
-            stringsLines.append("\"" + (data as! ChapterTransitionScene).HorizontalTitle + "\" = \"" + strings[(data as! ChapterTransitionScene).HorizontalTitle]! + "\";")
-            stringsLines.append("\"" + (data as! ChapterTransitionScene).VerticalNumber + "\" = \"" + strings[(data as! ChapterTransitionScene).VerticalNumber]! + "\";")
-            stringsLines.append("\"" + (data as! ChapterTransitionScene).VerticalTitle + "\" = \"" + strings[(data as! ChapterTransitionScene).VerticalTitle]! + "\";")
-            break
-        case "DatePuzzle":
-            stringsLines.append(contentsOf: (data as! DatePuzzleScene).toStringsLines(index: index, strings: strings))
-            for textLine in (data as! DatePuzzleScene).Text {
-                if (!textLine.textString.starts(with: "[") && !textLine.textString.isEmpty) {
-                    stringsLines.append("\"" + textLine.textString + "\" = \"" + strings[textLine.textString]!.replacingOccurrences(of: "\"", with: "\\\"") + "\";")
-                }
-            }
-            stringsLines.append("\"" + (data as! DatePuzzleScene).Question + "\" = \"" + strings[(data as! DatePuzzleScene).Question]! + "\";")
-            stringsLines.append("\"" + (data as! DatePuzzleScene).Answer + "\" = \"" + strings[(data as! DatePuzzleScene).Answer]! + "\";")
-            break
-        case "ZenPuzzle":
-            stringsLines.append(contentsOf: (data as! ZenPuzzleScene).toStringsLines(index: index, strings: strings))
-            if ((data as! ZenPuzzleScene).Text != nil) {
-                for textLine in (data as! ZenPuzzleScene).Text! {
-                    if (!textLine.textString.starts(with: "[") && !textLine.textString.isEmpty) {
-                        stringsLines.append("\"" + textLine.textString + "\" = \"" + strings[textLine.textString]!.replacingOccurrences(of: "\"", with: "\\\"") + "\";")
-                    }
-                }
-            }
-            if ((data as! ZenPuzzleScene).SolvedText != nil) {
-                stringsLines.append("// Solved Text")
-                for textLine in (data as! ZenPuzzleScene).SolvedText! {
-                    if (!textLine.textString.starts(with: "[") && !textLine.textString.isEmpty) {
-                        stringsLines.append("\"" + textLine.textString + "\" = \"" + strings[textLine.textString]!.replacingOccurrences(of: "\"", with: "\\\"") + "\";")
-                    }
-                }
-            }
-            break
-        default:
-            break
-        }*/
         
+        for serialiser in sceneListSerialiser.serialisers {
+            stringsLines.append(contentsOf: serialiser.stringsLines(scene: data, index: index, strings: strings))
+        }
         return stringsLines
     }
 
-    public func resolveSkipToIndexes(indexMap: [Int : Int]) {
-        /*switch data.Scene {
-        case "Choice":
-            for (index, item) in (data as! ChoiceScene).Choices!.enumerated() {
-                if (item.SkipTo != nil && indexMap[item.SkipTo!] != nil) {
-                    (data as! ChoiceScene).Choices![index].SkipTo = indexMap[item.SkipTo!]!
-                }
-            }
-            break
-        case "SkipTo":
-            if (indexMap[(data as! SkipToScene).SkipTo] != nil) {
-                (data as! SkipToScene).SkipTo = indexMap[(data as! SkipToScene).SkipTo]!
-            }
-            break
-        case "DatePuzzle":
-            if (indexMap[(data as! DatePuzzleScene).SkipTo] != nil) {
-                (data as! DatePuzzleScene).SkipTo = indexMap[(data as! DatePuzzleScene).SkipTo]!
-            }
-            break
-        default: break
-        }*/
+    public func resolveSkipToIndexes(sceneListSerialiser: SceneListSerialiser, indexMap: [Int : Int]) {
+        for serialiser in sceneListSerialiser.serialisers {
+            serialiser.resolveSkipToIndexes(scene: data, indexMap: indexMap)
+        }
     }
 }
 
