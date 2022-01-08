@@ -85,7 +85,7 @@ public class SceneWrapper: Identifiable, Codable {
         }
         
         for serialiser in sceneListSerialiser.serialisers {
-            let newData = serialiser.create(from: parameters, strings: &strings)
+            let newData = serialiser.decode(from: parameters, sceneType: sceneType, strings: &strings)
             if (newData != nil) {
                 data = newData!
             }
@@ -94,13 +94,13 @@ public class SceneWrapper: Identifiable, Codable {
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SceneKeys.self)
-        let Scene = try container.decode(String.self, forKey: SceneKeys.Scene)
-        /*for serialiser in (decoder as! SceneListDecoder).sceneListSerialiser!.serialisers {
-            let newData = serialiser.decode(from: decoder, scene: data)
+        let scene = try container.decode(String.self, forKey: SceneKeys.Scene)
+        for serialiser in (decoder as! SceneListDecoder).sceneListSerialiser!.serialisers {
+            let newData = try! serialiser.decode(from: decoder, sceneType: scene)
             if (newData != nil) {
                 data = newData!
             }
-        }*/
+        }
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -120,13 +120,17 @@ public class SceneWrapper: Identifiable, Codable {
         data = newData
     }
     
-    public func getDescription() -> String {
-        return ""
+    public func getDescription(sceneListSerialiser: SceneListSerialiser) -> String {
+        var description = ""
+        for serialiser in sceneListSerialiser.serialisers {
+            if (description.isEmpty) {
+                description = serialiser.getDescription(scene: data) ?? ""
+            }
+        }
+        return description
     }
     
     public func appendText(sceneListSerialiser: SceneListSerialiser, text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
-        let line: TextLine = TextLine()
-        line.textString = text
         for serialiser in sceneListSerialiser.serialisers {
             serialiser.appendText(scene: data, text: text, textBucket: textBucket, chapterNumber: chapter, sceneNumber: scene, lineIndex: lineIndex, strings: &strings, command: command, sceneLabelMap: &sceneLabelMap)
         }
