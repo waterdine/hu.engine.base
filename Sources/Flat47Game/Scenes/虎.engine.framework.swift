@@ -152,8 +152,26 @@ public class SceneWrapper: Identifiable, Codable {
     }
 }
 
-public struct Scenes: Codable {
+public class Scenes: Codable {
     public var Scenes: [SceneWrapper] = []
     public init() {
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.unkeyedContainer()
+        /*let container = try decoder.container(keyedBy: SceneKeys.self)
+        let scene = try container.decode(String.self, forKey: SceneKeys.Scene)
+        for serialiser in (decoder as! SceneListDecoder).sceneListSerialiser!.serialisers {
+            let newData = try! serialiser.decode(from: decoder, sceneType: scene)
+            if (newData != nil) {
+                data = newData!
+            }
+        }*/
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        /*for serialiser in (encoder as! SceneListEncoder).sceneListSerialiser!.serialisers {
+            try! serialiser.encode(to: encoder, scene: data)
+        }*/
     }
 }
