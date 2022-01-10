@@ -56,6 +56,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
             case "SkipTo":
                 scene = SkipToScene.init(from: scriptParameters, strings: &strings)
                 break
+            case "Credits":
+                scene = CreditsScene.init(from: scriptParameters, strings: &strings)
+                break
             default:
                 break
         }
@@ -71,6 +74,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
         case "SkipTo":
             scene = try SkipToScene.init(from: decoder)
             break
+        case "Credits":
+            scene = try CreditsScene.init(from: decoder)
+            break
         default:
             break
         }
@@ -84,6 +90,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
             break
         case "SkipTo":
             try (scene as! SkipToScene).encode(to: encoder)
+            break
+        case "Credits":
+            try (scene as! CreditsScene).encode(to: encoder)
             break
         default:
             break
@@ -103,6 +112,11 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 newData = SkipToScene()
             }
             break
+        case "Credits":
+            if (!(scene is CreditsScene)) {
+                newData = CreditsScene()
+            }
+            break
         default:
             break
         }
@@ -115,6 +129,8 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 return (scene as! IntroScene).getDescription()
             case "SkipTo":
                 return (scene as! SkipToScene).getDescription()
+            case "Credits":
+                return (scene as! CreditsScene).getDescription()
             default:
                 return ""
         }
@@ -131,6 +147,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 break
             case "SkipTo":
                 lines.append(contentsOf: (scene as! SkipToScene).toStringsLines(index: index, strings: strings))
+                break
+            case "Credits":
+                lines.append(contentsOf: (scene as! CreditsScene).toStringsLines(index: index, strings: strings))
                 break
             default:
                 break

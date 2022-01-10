@@ -22,6 +22,7 @@ public struct Product: Identifiable, Codable {
     public var name: String = ""
     public var version: Int = 0
     public var frameworkVersion: Int = 0
+    public var encrypted: Bool = false
     
     public init() {
     }
@@ -255,6 +256,27 @@ open class VisualScene: BaseScene {
         }
         
         return scriptLine
+    }
+}
+
+open class CreditsScene: VisualScene {
+    //enum CreditsCodingKeys: String, CodingKey {
+    //}
+    
+    override init() {
+        super.init()
+    }
+    
+    override init(from scriptParameters: [String : String], strings: inout [String : String]) {
+        super.init(from: scriptParameters, strings: &strings)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
     }
 }
 

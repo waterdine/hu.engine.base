@@ -8,6 +8,7 @@
 import AVKit
 import SpriteKit
 import CryptoKit
+import Security.SecKey
 
 func masterKey() -> Data {
     return Data(base64Encoded: "6Vs77pau68MPuZaLWv/msQ==")! // "Hey, hey, hey, hey, ho, ho, ho, ho, da fun da, da fun da."
