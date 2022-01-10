@@ -41,6 +41,7 @@ open class GameLogic: NSObject {
 	open var textFadeTime: Double = 0.075
 	open var actionDelay: Double = 0.5
 	open var usedSquares: [Int] = []
+    open var story: Story? = nil
 	
 	open var sceneDebug: Bool = false
 	open var skipPuzzles: Bool = false
@@ -135,8 +136,7 @@ open class GameLogic: NSObject {
 		self.variables["LondonWeather"] = "cloudy"
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
-        
-        var story: Story? = nil
+
         let chaptersPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
         let chaptersPlistContents = try! Data(contentsOf: chaptersPlistURL)
         let chaptersPlistString: String? = String(data: chaptersPlistContents, encoding: .utf8)
@@ -557,12 +557,9 @@ open class GameLogic: NSObject {
 	}
 	
 	open func getChapterTable() -> String {
-        let chapterListPlist = NSDictionary(contentsOfFile: baseDir != nil ? baseDir!.appendingPathComponent("Chapters").appendingPathExtension("plist").absoluteString : Bundle.main.path(forResource: "Story", ofType: "plist")!)
-		let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
-		
-		if (chapterList != nil && chapterList!.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
+        if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
 		{
-			return chapterList![self.currentChapterIndex!] as! String
+            return story!.Chapters[self.currentChapterIndex!].name
 		}
 		return "Story"
 	}
