@@ -29,6 +29,7 @@ open class GameLogic: NSObject {
     open var baseDir: URL? = nil
 	open var sceneTypes: [String:GameScene] = [:]
 	open var transition: ((GameScene, SKTransition?) -> Void)?
+    open var sceneListSerialiser: SceneListSerialiser = SceneListSerialiser()
 	
 	// current storyline (saveable)
 	open var currentSceneIndex: Int?
@@ -62,6 +63,8 @@ open class GameLogic: NSObject {
 		gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
 		gameLogic.sceneTypes["SkipTo"] = SkipToLogic.newScene(gameLogic: gameLogic)
 		gameLogic.sceneTypes["Credits"] = CreditsLogic.newScene(gameLogic: gameLogic)
+
+        RegisterGameSceneInitialisers(sceneListSerialiser: &gameLogic.sceneListSerialiser)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
@@ -149,11 +152,15 @@ open class GameLogic: NSObject {
                 newChapter.name = chapter
                 story!.Chapters.append(newChapter)
             }
+        /*} else {
+            if #available(iOS 13.0, *) {
+                let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
+                let key = SymmetricKey.init(data: masterKey())
+                let data = try! AES.GCM.open(sealedBox, using: key)
+                story = try! PropertyListDecoder().decode(Story.self, from: data)
+            }*/
         } else {
-            let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
-            let key = SymmetricKey.init(data: masterKey())
-            let data = try! AES.GCM.open(sealedBox, using: key)
-            story = try! PropertyListDecoder().decode(Story.self, from: data)
+            story = try! PropertyListDecoder().decode(Story.self, from: chaptersPlistContents)
         }
 		
 		var sceneList: Scenes? = nil
@@ -169,13 +176,19 @@ open class GameLogic: NSObject {
                 let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(chapterFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: chapterFileName, withExtension: "plist")
                 let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
+                let decoder: PropertyListDecoder = PropertyListDecoder()
+                decoder.userInfo[SceneListSerialiser().userInfoKey!] = sceneListSerialiser
                 if (sceneListString != nil && sceneListString!.starts(with: "<?xml")) {
-                    sceneList = try! PropertyListDecoder().decode(Scenes.self, from: sceneListContents)
+                    sceneList = try! decoder.decode(Scenes.self, from: sceneListContents)
+                /*} else {
+                    if #available(iOS 13.0, *) {
+                        let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
+                        let key = SymmetricKey.init(data: masterKey())
+                        let data = try! AES.GCM.open(sealedBox, using: key)
+                        sceneList = try! PropertyListDecoder().decode(Scenes.self, from: data)
+                    }*/
                 } else {
-                    let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
-                    let key = SymmetricKey.init(data: masterKey())
-                    let data = try! AES.GCM.open(sealedBox, using: key)
-                    sceneList = try! PropertyListDecoder().decode(Scenes.self, from: data)
+                    sceneList = try! decoder.decode(Scenes.self, from: sceneListContents)
                 }
                 
                 // loop sceneList to find sceneLabels and add to dictionary, as index.
