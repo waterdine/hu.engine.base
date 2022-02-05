@@ -1,7 +1,7 @@
 import XCTest
 
-import Flat47GameTests
+import 虎_engine_base_tests
 
 var tests = [XCTestCaseEntry]()
-tests += Flat47GameTests.allTests()
+tests += 虎_engine_base_tests.allTests()
 XCTMain(tests)

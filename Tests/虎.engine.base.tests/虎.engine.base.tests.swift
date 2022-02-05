@@ -1,5 +1,5 @@
 import XCTest
-@testable import Flat47Game
+@testable import 虎_engine_base
 
 final class 虎_engine_base_tests: XCTestCase {
     func testExample() {
