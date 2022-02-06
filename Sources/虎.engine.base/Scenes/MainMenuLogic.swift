@@ -28,6 +28,8 @@ class MainMenuLogic: GameScene {
 	var puzzleModeLabel: SKLabelNode?
 	var textSpeedNode: SKNode?
 	var textSpeedLabel: SKLabelNode?
+    var volumeNode: SKNode?
+    var volumeLabel: SKLabelNode?
 	
 	// Restart Popup
 	var restartPopupNode: SKNode?
@@ -168,6 +170,25 @@ class MainMenuLogic: GameScene {
 			break
 		}
         textSpeedLabel?.fontName = buttonFont
+        volumeNode = self.childNode(withName: "//Volume")
+        volumeLabel = self.childNode(withName: "//VolumeLabel") as? SKLabelNode
+        if (volumeLabel != nil) {
+            volumeLabel?.fontName = buttonFont
+            switch self.gameLogic!.volumeLevel {
+            case .Off:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                break
+            case .Low:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                break
+            case .Medium:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                break
+            case .High:
+                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                break
+            }
+        }
 		loaded = false
 		pressToContinue = true
 		pressNode?.isHidden = false
@@ -242,7 +263,23 @@ class MainMenuLogic: GameScene {
 					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 					break
 				}
-			}
+			} else if (volumeNode!.frame.contains(point)) {
+                self.gameLogic!.nextVolumeLevel()
+                switch self.gameLogic!.volumeLevel {
+                case .Off:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                    break
+                case .Low:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                    break
+                case .Medium:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                    break
+                case .High:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                    break
+                }
+            }
 		}
 	}
 	
@@ -292,6 +329,22 @@ class MainMenuLogic: GameScene {
                 textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 				break
 			}
+            if (volumeLabel != nil) {
+                switch self.gameLogic!.volumeLevel {
+                case .Off:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                    break
+                case .Low:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                    break
+                case .Medium:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                    break
+                case .High:
+                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                    break
+                }
+            }
 			loaded = true
 		}
 	}
