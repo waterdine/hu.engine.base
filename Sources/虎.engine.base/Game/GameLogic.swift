@@ -140,7 +140,7 @@ open class GameLogic: NSObject {
         let chaptersPlistContents = try! Data(contentsOf: chaptersPlistURL)
         let chaptersPlistString: String? = String(data: chaptersPlistContents, encoding: .utf8)
         if (chaptersPlistString != nil && chaptersPlistString!.starts(with: "<?xml")) {
-            let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: chaptersPlistContents)
+            /*let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: chaptersPlistContents)
             let chapterList: [String] = chapterListPlist["Chapters"]! as [String]
             story = Story()
             story?.Version = 0
@@ -150,7 +150,8 @@ open class GameLogic: NSObject {
                 newChapter.sutra = ""
                 newChapter.name = chapter
                 story!.Chapters.append(newChapter)
-            }
+            }*/
+            story = try! PropertyListDecoder().decode(Story.self, from: chaptersPlistContents)
         /*} else {
             if #available(iOS 13.0, *) {
                 let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
