@@ -2,7 +2,7 @@
 //  SkipTo.swift
 //  虎.engine.base
 //
-//  Created by A. A. Bills on 17/06/2021.
+//  Created by ito.antonia on 17/06/2021.
 //
 
 import SpriteKit

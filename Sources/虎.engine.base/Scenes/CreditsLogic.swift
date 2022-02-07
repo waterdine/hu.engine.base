@@ -2,7 +2,7 @@
 //  CreditsLogic.swift
 //  虎.engine.base
 //
-//  Created by AABills on 13/02/2021.
+//  Created by ito.antonia on 13/02/2021.
 //
 
 import SpriteKit

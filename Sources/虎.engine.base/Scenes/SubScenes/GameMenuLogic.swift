@@ -2,7 +2,7 @@
 //  GameMenuLogic.swift
 //  虎.engine.base Scenes
 //
-//  Created by A. A. Bills on 16/06/2021.
+//  Created by ito.antonia on 16/06/2021.
 //
 
 import SpriteKit
