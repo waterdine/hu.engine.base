@@ -40,7 +40,7 @@ public class SceneWrapper: Identifiable, Codable {
             if (!parameterCombined.starts(with: "// Scene")) {
                 let parameterSplit = parameterCombined.split(separator: ":")
                 let parameter = String(parameterSplit[0]).trimmingCharacters(in: [" ", "-", ",", ":"])
-                let value = String(parameterSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
+                let value = String(parameterSplit[1]).trimmingCharacters(in: [" ", ",", ":"])
                 parameters[parameter] = value
             }
         }
