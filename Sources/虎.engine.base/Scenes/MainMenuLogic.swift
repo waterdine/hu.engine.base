@@ -54,7 +54,7 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override func didMove(to view: SKView) {
-        let title = Bundle.main.localizedString(forKey: "Title", value: nil, table: "Story")
+        let title = gameLogic!.localizedString(forKey: "Title", value: nil, table: "Story")
         let titleLabel = self.childNode(withName: "//Title") as? SKLabelNode
         if #available(iOS 11.0, *) {
             titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
@@ -74,7 +74,7 @@ class MainMenuLogic: GameScene {
             // Fallback on earlier versions
         }
         
-        let subTitle = Bundle.main.localizedString(forKey: "Subtitle", value: nil, table: "Story")
+        let subTitle = gameLogic!.localizedString(forKey: "Subtitle", value: nil, table: "Story")
         let subTitleLabel = self.childNode(withName: "//Subtitle") as? SKLabelNode
         subTitleLabel?.text = subTitle
         let subTitleShadow1Label = self.childNode(withName: "//SubtitleShadow1") as? SKLabelNode
@@ -82,7 +82,7 @@ class MainMenuLogic: GameScene {
         let subTitleShadow2Label = self.childNode(withName: "//SubtitleShadow2") as? SKLabelNode
         subTitleShadow2Label?.text = subTitleLabel?.text
         
-        let buttonFont = Bundle.main.localizedString(forKey: "ButtonFontName", value: nil, table: "Story")
+        let buttonFont = gameLogic!.localizedString(forKey: "ButtonFontName", value: nil, table: "Story")
 		buttonsNode = self.childNode(withName: "//Buttons")
 		backgroundNode = self.childNode(withName: "//Background")
 		pressNode = self.childNode(withName: "//Press") as? SKLabelNode
@@ -91,15 +91,15 @@ class MainMenuLogic: GameScene {
 		configNode = self.childNode(withName: "//Config")
 		creditsNode = self.childNode(withName: "//Credits")
         let fromTheTopLabel = self.childNode(withName: "//FromTheTopLabel") as? SKLabelNode
-        fromTheTopLabel?.text = Bundle.main.localizedString(forKey: "Restart", value: nil, table: "Story")
+        fromTheTopLabel?.text = gameLogic!.localizedString(forKey: "Restart", value: nil, table: "Story")
         fromTheTopLabel?.fontName = buttonFont
         let configLabel = self.childNode(withName: "//ConfigLabel") as? SKLabelNode
-        configLabel?.text = Bundle.main.localizedString(forKey: "Setup", value: nil, table: "Story")
+        configLabel?.text = gameLogic!.localizedString(forKey: "Setup", value: nil, table: "Story")
         configLabel?.fontName = buttonFont
         let creditsLabel = self.childNode(withName: "//CreditsLabel") as? SKLabelNode
-        creditsLabel?.text = Bundle.main.localizedString(forKey: "Credits", value: nil, table: "Story")
+        creditsLabel?.text = gameLogic!.localizedString(forKey: "Credits", value: nil, table: "Story")
         creditsLabel?.fontName = buttonFont
-        pressNode?.text = Bundle.main.localizedString(forKey: "Press to continue...", value: nil, table: "Story")
+        pressNode?.text = gameLogic!.localizedString(forKey: "Press to continue...", value: nil, table: "Story")
 		
 		// Config Popup
 		configPopupNode = self.childNode(withName: "//ConfigPopup")
@@ -111,7 +111,7 @@ class MainMenuLogic: GameScene {
 		puzzleModeLabel = self.childNode(withName: "//PuzzleModeLabel") as? SKLabelNode
 		textSpeedLabel = self.childNode(withName: "//TextSpeedLabel") as? SKLabelNode
         let configCloseLabel = self.childNode(withName: "//CloseLabel") as? SKLabelNode
-        configCloseLabel?.text = Bundle.main.localizedString(forKey: "Close", value: nil, table: "Story")
+        configCloseLabel?.text = gameLogic!.localizedString(forKey: "Close", value: nil, table: "Story")
         configCloseLabel?.fontName = buttonFont
 		
 		// Restart Popup
@@ -119,13 +119,13 @@ class MainMenuLogic: GameScene {
 		yesNode = self.childNode(withName: "//Yes")
 		noNode = self.childNode(withName: "//No")
         let yesLabel = self.childNode(withName: "//YesLabel") as? SKLabelNode
-        yesLabel?.text = Bundle.main.localizedString(forKey: "Yes", value: nil, table: "Story")
+        yesLabel?.text = gameLogic!.localizedString(forKey: "Yes", value: nil, table: "Story")
         yesLabel?.fontName = buttonFont
         let noLabel = self.childNode(withName: "//NoLabel") as? SKLabelNode
-        noLabel?.text = Bundle.main.localizedString(forKey: "No", value: nil, table: "Story")
+        noLabel?.text = gameLogic!.localizedString(forKey: "No", value: nil, table: "Story")
         noLabel?.fontName = buttonFont
         let restartGameLabel = self.childNode(withName: "//RestartText1") as? SKLabelNode
-        restartGameLabel?.text = Bundle.main.localizedString(forKey: "Restart the game!", value: nil, table: "Story")
+        restartGameLabel?.text = gameLogic!.localizedString(forKey: "Restart the game!", value: nil, table: "Story")
         restartGameLabel?.fontName = buttonFont
         let restartGameShadow1Label = self.childNode(withName: "//RestartText1Shadow1") as? SKLabelNode
         restartGameShadow1Label?.text = restartGameLabel?.text
@@ -134,7 +134,7 @@ class MainMenuLogic: GameScene {
         restartGameShadow2Label?.text = restartGameLabel?.text
         restartGameShadow2Label?.fontName = buttonFont
         let areYouSureLabel = self.childNode(withName: "//RestartText2") as? SKLabelNode
-        areYouSureLabel?.text = Bundle.main.localizedString(forKey: "Are you sure?", value: nil, table: "Story")
+        areYouSureLabel?.text = gameLogic!.localizedString(forKey: "Are you sure?", value: nil, table: "Story")
         areYouSureLabel?.fontName = buttonFont
         let areYouSureShadow1Label = self.childNode(withName: "//RestartText2Shadow1") as? SKLabelNode
         areYouSureShadow1Label?.text = areYouSureLabel?.text
@@ -145,7 +145,7 @@ class MainMenuLogic: GameScene {
 		
 		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
-		playResumeLabel!.text = fromTheTopNode!.isHidden ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
+		playResumeLabel!.text = fromTheTopNode!.isHidden ? gameLogic!.localizedString(forKey: "Play", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Continue", value: nil, table: "Story")
         playResumeLabel?.fontName = buttonFont
 		
 		configPopupNode?.isHidden = true
@@ -156,17 +156,17 @@ class MainMenuLogic: GameScene {
 		#else
 			debugModeNode!.isHidden = true
 		#endif
-		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
+		puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
         puzzleModeLabel?.fontName = buttonFont
 		switch self.gameLogic!.textSpeed {
 		case .Slow:
-			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
+			textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
 			break
 		case .Normal:
-			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
+			textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
 			break
 		case .Fast:
-			textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
+			textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 			break
 		}
         textSpeedLabel?.fontName = buttonFont
@@ -176,16 +176,16 @@ class MainMenuLogic: GameScene {
             volumeLabel?.fontName = buttonFont
             switch self.gameLogic!.volumeLevel {
             case .Off:
-                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
                 break
             case .Low:
-                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
                 break
             case .Medium:
-                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
                 break
             case .High:
-                volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                 break
             }
         }
@@ -249,34 +249,34 @@ class MainMenuLogic: GameScene {
 			} else if (puzzleModeNode!.frame.contains(point)) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 				self.gameLogic!.saveState()
-				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
+				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 			} else if (textSpeedNode!.frame.contains(point)) {
 				self.gameLogic!.nextTextSpeed()
 				switch self.gameLogic!.textSpeed {
 				case .Slow:
-					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
+					textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
 					break
 				case .Normal:
-					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
+					textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
 					break
 				case .Fast:
-					textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
+					textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 					break
 				}
 			} else if (volumeNode!.frame.contains(point)) {
                 self.gameLogic!.nextVolumeLevel()
                 switch self.gameLogic!.volumeLevel {
                 case .Off:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
                     break
                 case .Low:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
                     break
                 case .Medium:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
                     break
                 case .High:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
             }
@@ -314,34 +314,34 @@ class MainMenuLogic: GameScene {
 			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
 			let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 			//let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
-			playResumeLabel!.text = fromTheTopNode!.isHidden ? Bundle.main.localizedString(forKey: "Play", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Continue", value: nil, table: "Story")
+			playResumeLabel!.text = fromTheTopNode!.isHidden ? gameLogic!.localizedString(forKey: "Play", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Continue", value: nil, table: "Story")
 			//playResumeLabelShadow!.text = playResumeLabel!.text
 			debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? Bundle.main.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : Bundle.main.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
+			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 			switch self.gameLogic!.textSpeed {
             case .Slow:
-                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
+                textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Slow", value: nil, table: "Story")
                 break
             case .Normal:
-                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
+                textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Normal", value: nil, table: "Story")
                 break
             case .Fast:
-                textSpeedLabel!.text = Bundle.main.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
+                textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 				break
 			}
             if (volumeLabel != nil) {
                 switch self.gameLogic!.volumeLevel {
                 case .Off:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Off", value: nil, table: "Story")
                     break
                 case .Low:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Low", value: nil, table: "Story")
                     break
                 case .Medium:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: Medium", value: nil, table: "Story")
                     break
                 case .High:
-                    volumeLabel!.text = Bundle.main.localizedString(forKey: "Volume: High", value: nil, table: "Story")
+                    volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
             }

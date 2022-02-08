@@ -41,6 +41,7 @@ open class GameLogic: NSObject {
 	open var actionDelay: Double = 0.5
 	open var usedSquares: [Int] = []
     open var story: Story? = nil
+    open var strings: [String:[String:String]]? = nil
 	
 	open var sceneDebug: Bool = false
 	open var skipPuzzles: Bool = false
@@ -55,7 +56,7 @@ open class GameLogic: NSObject {
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, stringsOverride: [String:[String:String]]?) -> GameLogic {
 		let gameLogic = GameLogic()
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
@@ -69,6 +70,7 @@ open class GameLogic: NSObject {
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
         gameLogic.baseDir = baseDir
+        gameLogic.strings = stringsOverride
 		gameLogic.currentSceneIndex = -1;
 		gameLogic.currentChapterIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
@@ -573,4 +575,21 @@ open class GameLogic: NSObject {
 		}
 		return returnText
 	}
+    
+    open func getProperty() -> String {
+        if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
+        {
+            return story!.Chapters[self.currentChapterIndex!].name
+        }
+        return "Story"
+    }
+    
+    open func localizedString(forKey: String, value: String?, table: String) -> String
+    {
+        if (strings != nil) {
+            return strings![table]![forKey]!
+        } else {
+            return Bundle.main.localizedString(forKey: forKey, value: value, table: table)
+        }
+    }
 }
