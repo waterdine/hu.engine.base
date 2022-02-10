@@ -59,6 +59,8 @@ open class GameLogic: NSObject {
 	
     public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?) -> GameLogic {
 		let gameLogic = GameLogic()
+        gameLogic.aspectSuffixOverride = aspectSuffix
+        gameLogic.baseDir = baseDir
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
 		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
@@ -69,9 +71,7 @@ open class GameLogic: NSObject {
         RegisterGameSceneInitialisers(sceneListSerialiser: &gameLogic.sceneListSerialiser)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
-        gameLogic.aspectSuffixOverride = aspectSuffix
 		gameLogic.transition = transitionCallback
-        gameLogic.baseDir = baseDir
 		gameLogic.currentSceneIndex = -1;
 		gameLogic.currentChapterIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
