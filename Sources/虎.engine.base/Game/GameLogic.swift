@@ -57,7 +57,7 @@ open class GameLogic: NSObject {
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?) -> GameLogic {
 		let gameLogic = GameLogic()
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
@@ -69,6 +69,7 @@ open class GameLogic: NSObject {
         RegisterGameSceneInitialisers(sceneListSerialiser: &gameLogic.sceneListSerialiser)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
+        gameLogic.aspectSuffixOverride = aspectSuffix
 		gameLogic.transition = transitionCallback
         gameLogic.baseDir = baseDir
 		gameLogic.currentSceneIndex = -1;
@@ -554,10 +555,6 @@ open class GameLogic: NSObject {
 		}
 #endif
 	}
-	
-    open func setAspectSuffix(aspectSuffix: String?) {
-        aspectSuffixOverride = aspectSuffix
-    }
     
 	open func getScaleMode() -> SKSceneScaleMode {
 #if os(OSX)
