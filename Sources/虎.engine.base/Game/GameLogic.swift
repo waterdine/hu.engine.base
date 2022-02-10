@@ -41,7 +41,7 @@ open class GameLogic: NSObject {
 	open var actionDelay: Double = 0.5
 	open var usedSquares: [Int] = []
     open var story: Story? = nil
-    open var strings: [String:[String:String]]? = nil
+    open var stringsTableOverride: [String:[String:String]?] = [:]
 	
 	open var sceneDebug: Bool = false
 	open var skipPuzzles: Bool = false
@@ -56,7 +56,7 @@ open class GameLogic: NSObject {
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, stringsOverride: [String:[String:String]]?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?) -> GameLogic {
 		let gameLogic = GameLogic()
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
@@ -70,7 +70,6 @@ open class GameLogic: NSObject {
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
         gameLogic.baseDir = baseDir
-        gameLogic.strings = stringsOverride
 		gameLogic.currentSceneIndex = -1;
 		gameLogic.currentChapterIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
@@ -387,7 +386,7 @@ open class GameLogic: NSObject {
     open func setScene(sceneIndex: Int, chapterIndex: Int)
 	{
 		self.currentSceneIndex! = sceneIndex
-        self.currentChapterIndex!= chapterIndex
+        self.currentChapterIndex! = chapterIndex
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
@@ -587,10 +586,14 @@ open class GameLogic: NSObject {
     
     open func localizedString(forKey: String, value: String?, table: String) -> String
     {
-        if (strings != nil) {
-            return strings![table]![forKey]!
+        if (stringsTableOverride[table] != nil) {
+            return stringsTableOverride[table]!![forKey]!
         } else {
             return Bundle.main.localizedString(forKey: forKey, value: value, table: table)
         }
+    }
+    
+    open func overrideStringsTable(table: String, stringsTable: [String : String]) {
+        stringsTableOverride[table] = stringsTable
     }
 }
