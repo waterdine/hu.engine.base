@@ -42,6 +42,7 @@ open class GameLogic: NSObject {
 	open var usedSquares: [Int] = []
     open var story: Story? = nil
     open var stringsTableOverride: [String:[String:String]?] = [:]
+    open var aspectSuffixOverride: String? = nil
 	
 	open var sceneDebug: Bool = false
 	open var skipPuzzles: Bool = false
@@ -523,6 +524,10 @@ open class GameLogic: NSObject {
     }
     
 	open func getAspectSuffix() -> String {
+        if (aspectSuffixOverride != nil) {
+            return aspectSuffixOverride!
+        }
+        
 #if os(OSX)
 		//let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
 		return "_AppleTV"
@@ -550,6 +555,10 @@ open class GameLogic: NSObject {
 #endif
 	}
 	
+    open func setAspectSuffix(aspectSuffix: String?) {
+        aspectSuffixOverride = aspectSuffix
+    }
+    
 	open func getScaleMode() -> SKSceneScaleMode {
 #if os(OSX)
 		return .aspectFit
