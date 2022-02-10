@@ -384,9 +384,10 @@ open class GameLogic: NSObject {
 		}
 	}
 	
-	open func setScene(index: Int)
+    open func setScene(sceneIndex: Int, chapterIndex: Int)
 	{
-		self.currentSceneIndex! = index
+		self.currentSceneIndex! = sceneIndex
+        self.currentChapterIndex!= chapterIndex
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}

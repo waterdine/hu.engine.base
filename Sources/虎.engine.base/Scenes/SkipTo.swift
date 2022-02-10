@@ -31,9 +31,9 @@ class SkipToLogic: GameScene {
 		}
 		 
 		if (shouldSkip) {
-			gameLogic!.setScene(index: skipToScene)
+            gameLogic!.setScene(sceneIndex: skipToScene, chapterIndex: gameLogic!.currentChapterIndex)
 		} else {
-			gameLogic!.setScene(index: gameLogic!.currentSceneIndex! + 1)
+            gameLogic!.nextScene()
 		}
 		return true
 	}
