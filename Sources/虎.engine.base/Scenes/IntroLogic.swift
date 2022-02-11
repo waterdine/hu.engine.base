@@ -15,7 +15,7 @@ class IntroLogic: GameScene {
 	var loaded: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> IntroLogic {
-        guard let scene = IntroLogic(fileNamed: gameLogic.loadUrl(forResource: gameLogic.appendAspectSuffix("Default.Intro"), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())!.path) else {
+        guard let scene = IntroLogic(fileNamed: gameLogic.loadUrl(forResource: gameLogic.appendAspectSuffix(scene: "Default.Intro"), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())!.path) else {
             print("Failed to load Intro.sks")
             abort()
         }
