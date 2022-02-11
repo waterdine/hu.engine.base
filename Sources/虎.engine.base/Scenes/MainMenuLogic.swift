@@ -40,7 +40,8 @@ class MainMenuLogic: GameScene {
 	var pressToContinue: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> MainMenuLogic {
-        guard let scene = MainMenuLogic(fileNamed: gameLogic.loadUrl(forResource: gameLogic.appendAspectSuffix(scene: "Default.MainMenu"), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())!.path) else {
+        let url = gameLogic.loadUrl(forResource: gameLogic.appendAspectSuffix(scene: "Default.MainMenu"), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())
+        guard let scene = MainMenuLogic(fileNamed: url!.path) else {
 			print("Failed to load MainMenu.sks")
 			abort()
 		}
