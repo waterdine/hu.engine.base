@@ -620,8 +620,12 @@ open class GameLogic: NSObject {
             let resourceSplit = forResource.split(separator: ".")
             if (resourceSplit.count == 2) {
                 let resourceName: String = String(resourceSplit[1])
+                print(resourceName)
                 let bundleName: String = String(resourceSplit[0])
-                return bundles[bundleName]!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+                print(bundleName)
+                let bundle = bundles[bundleName]
+                let url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+                return url
             }
             return nil
         } else {
