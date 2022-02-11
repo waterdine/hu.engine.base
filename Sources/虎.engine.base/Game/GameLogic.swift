@@ -624,7 +624,9 @@ open class GameLogic: NSObject {
                 let bundleName: String = String(resourceSplit[0])
                 print(bundleName)
                 let bundle = bundles[bundleName]
+                print(bundle?.bundlePath)
                 let url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+                print(url!.path)
                 return url
             }
             return nil
