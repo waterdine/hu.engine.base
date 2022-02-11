@@ -553,14 +553,14 @@ open class GameLogic: NSObject {
 		case 17:
 			return "AppleTV"
 		default: // case 5
-			return ""
+			return "iPhone"
 		}
 #endif
 	}
     
     open func appendAspectSuffix(scene: String) -> String {
         let suffix = getAspectSuffix()
-        if (suffix.isEmpty) {
+        if (suffix.isEmpty || suffix == "iPhone") {
             return scene
         } else {
             return scene + "_" + suffix
