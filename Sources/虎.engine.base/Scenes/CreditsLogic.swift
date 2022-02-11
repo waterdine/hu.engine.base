@@ -14,7 +14,7 @@ class CreditsLogic: GameScene {
 	var skipable: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> CreditsLogic {
-        guard let scene = CreditsLogic(fileNamed: gameLogic.loadUrl(forResource: "Default.Credits" + gameLogic.getAspectSuffix(), withExtension: ".sks", subdirectory: "Scenes"+ "/" gameLogic.getAspectSuffix())!.path) else {
+        guard let scene = CreditsLogic(fileNamed: gameLogic.loadUrl(forResource: "Default.Credits" + gameLogic.getAspectSuffix(), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())!.path) else {
 			print("Failed to load Credits.sks")
 			abort()
 		}
