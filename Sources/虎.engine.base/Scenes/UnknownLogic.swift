@@ -12,7 +12,7 @@ import SpriteKit
 class UnknownLogic: GameScene {
 	
 	class func newScene(gameLogic: GameLogic) -> UnknownLogic {
-		guard let scene = UnknownLogic(fileNamed: "Unknown" + gameLogic.getAspectSuffix()) else {
+		guard let scene = UnknownLogic(fileNamed: gameLogic.loadUrl(forResource: gameLogic.appendAspectSuffix("Default.Unknown"), withExtension: ".sks", subdirectory: "Scenes/" + gameLogic.getAspectSuffix())!.path) else {
 			print("Failed to load Unknown.sks")
 			abort()
 		}

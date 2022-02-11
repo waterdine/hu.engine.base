@@ -533,30 +533,39 @@ open class GameLogic: NSObject {
         
 #if os(OSX)
 		//let aspect = Int((NSScreen.main?.frame.width)! / (NSScreen.main?.frame.height)! * 10)
-		return "_AppleTV"
+		return "AppleTV"
 #else
 		let aspect = Int(UIScreen.main.bounds.width / UIScreen.main.bounds.height * 10)
 
 		switch aspect {
 		case 4:
-			return "_Odd"
+			return "Odd"
 		case 21:
-			return "_Odd"
+			return "Odd"
 		case 6:
-			return "_Old"
+			return "Old"
 		case 15:
-			return "_Old"
+			return "Old"
 		case 7:
-			return "_iPad"
+			return "iPad"
 		case 13:
-			return "_iPad"
+			return "iPad"
 		case 17:
-			return "_AppleTV"
+			return "AppleTV"
 		default: // case 5
 			return ""
 		}
 #endif
 	}
+    
+    open func appendAspectSuffix(scene: String) -> String {
+        let suffix = getAspectSuffix()
+        if (suffix.isEmpty) {
+            return scene
+        } else {
+            return scene + "_" + suffix
+        }
+    }
     
 	open func getScaleMode() -> SKSceneScaleMode {
 #if os(OSX)
