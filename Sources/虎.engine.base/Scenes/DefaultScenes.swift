@@ -23,6 +23,8 @@ public struct Product: Identifiable, Codable {
     public var version: Int = 0
     public var frameworkVersion: Int = 0
     public var encrypted: Bool = false
+    public var defaultAssetPack: String = ""
+    public var assetPacks: [String] = []
     
     public init() {
     }
