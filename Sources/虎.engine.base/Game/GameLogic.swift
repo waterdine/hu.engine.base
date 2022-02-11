@@ -26,6 +26,7 @@ public enum VolumeLevel: Int {
 open class GameLogic: NSObject {
 	
     open var baseDir: URL? = nil
+    open var bundles: [String:Bundle] = [:]
 	open var sceneTypes: [String:GameScene] = [:]
 	open var transition: ((GameScene, SKTransition?) -> Void)?
     open var sceneListSerialiser: SceneListSerialiser = SceneListSerialiser()
@@ -57,10 +58,11 @@ open class GameLogic: NSObject {
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?) -> GameLogic {
 		let gameLogic = GameLogic()
         gameLogic.aspectSuffixOverride = aspectSuffix
         gameLogic.baseDir = baseDir
+        gameLogic.bundles["Default"] = (defaultBundle != nil) ? defaultBundle : Bundle.main
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
 		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
@@ -85,7 +87,7 @@ open class GameLogic: NSObject {
 		if (musicFile != nil) {
 			do {
 				if (musicFile! != "") {
-					let file = Bundle.main.url(forResource: musicFile!, withExtension: ".mp3")
+					let file = loadUrl(forResource: musicFile!, withExtension: ".mp3", subdirectory: "Music")
 					if (file != nil) {
                         let restartMusic: Bool? = sceneData?.RestartMusic
 						let fadeMusic: Bool = (transitionType != nil && (transitionType! == "Fade" || transitionType! == "CrossFade" || transitionType! == "Flash"))
@@ -601,5 +603,20 @@ open class GameLogic: NSObject {
     
     open func overrideStringsTable(table: String, stringsTable: [String : String]) {
         stringsTableOverride[table] = stringsTable
+    }
+    
+    open func loadUrl(forResource: String, withExtension: String, subdirectory: String) -> URL?
+    {
+        if (forResource.contains(".")) {
+            let resourceSplit = forResource.split(separator: ".")
+            if (resourceSplit.count == 2) {
+                let resourceName: String = String(resourceSplit[1])
+                let bundleName: String = String(resourceSplit[0])
+                return bundles[bundleName]!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+            }
+            return nil
+        } else {
+            return Bundle.main.url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory)
+        }
     }
 }

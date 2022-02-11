@@ -88,7 +88,7 @@ open class GameScene: SKScene {
 			let toolbarPlaceholder = self.childNode(withName: "Toolbar")
 			if (toolbarPlaceholder != nil) {
 				let menuButton = SKSpriteNode()
-				let imagePath = Bundle.main.path(forResource: "Cog", ofType: ".png")
+                let imagePath = gameLogic?.loadUrl(forResource: "Default.Cog", withExtension: ".png", subdirectory: "Images")?.path
 				menuButton.texture = SKTexture(imageNamed: imagePath!)
 				menuButton.size = CGSize(width: 40, height: 40)
 				menuButton.position = toolbarPlaceholder!.position

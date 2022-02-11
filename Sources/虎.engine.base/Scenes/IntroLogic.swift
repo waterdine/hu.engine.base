@@ -15,7 +15,7 @@ class IntroLogic: GameScene {
 	var loaded: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> IntroLogic {
-        guard let scene = IntroLogic(fileNamed: "Intro" + gameLogic.getAspectSuffix()) else {
+        guard let scene = IntroLogic(fileNamed: gameLogic.loadUrl(forResource: "Default.Intro" + gameLogic.getAspectSuffix(), withExtension: ".sks", subdirectory: "Scenes")!.path) else {
             print("Failed to load Intro.sks")
             abort()
         }
@@ -43,7 +43,7 @@ class IntroLogic: GameScene {
 	override func update(_ currentTime: TimeInterval) {
 		let node = self.childNode(withName: "//ThirdFade")
 		if (!loaded && node!.alpha > 0) {
-			let file = Bundle.main.url(forResource: "Music", withExtension: ".mp3")
+			let file = gameLogic?.loadUrl(forResource: "Default.Music", withExtension: ".mp3", subdirectory: "Music")
 			if (file != nil) {
 				if (self.gameLogic!.player != nil) {
 					self.gameLogic!.player?.stop()
