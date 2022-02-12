@@ -31,7 +31,7 @@ open class GameTexture: SKTexture {
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        let obj = aDecoder.attributeKeys
+        let obj = aDecoder.decodeObject(forKey: "texture")
         print (obj)
     }
 }
