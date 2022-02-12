@@ -33,6 +33,8 @@ open class GameTexture: SKTexture {
         super.init(coder: aDecoder)
         let obj = aDecoder.decodeObject(forKey: "name")
         print (obj)
+        let obj2 = aDecoder.decodeObject(forKey: "image")
+        print (obj2)
     }
 }
 
