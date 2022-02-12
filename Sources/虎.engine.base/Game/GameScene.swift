@@ -45,6 +45,11 @@ open class GameTexture: SKTexture {
             imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path
         }
         
+        if (imagePath == nil) {
+            print("Unable to find: \(imageName!)")
+            imagePath = imageName
+        }
+        
         // atode: Do this without using an extra archivers!
         let loadedTexture = SKTexture(imageNamed: imagePath!)
         let archiver = NSKeyedArchiver()
