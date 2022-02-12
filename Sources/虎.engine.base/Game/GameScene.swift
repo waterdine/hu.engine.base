@@ -23,26 +23,34 @@ public enum GamePadButton {
 	case UNKNOWN
 }
 
-open class GameSpriteNode: SKSpriteNode {
-    /*override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
-        print ("here")
-    }*/
-    
+@available(OSX 10.13, *)
+@available(iOS 9.0, *)
+open class GameKeyedUnarchiver : NSKeyedUnarchiver {
+    public var gameLogic: GameLogic? = nil
+    init(forReadingWith: Data, gameLogic: GameLogic) {
+        self.gameLogic = gameLogic
+        super.init(forReadingWith: forReadingWith)
+    }
+}
+
+@available(OSX 10.13, *)
+@available(iOS 9.0, *)
+open class GameTexture: SKTexture {
     public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        let obj = aDecoder.decodeObject()
-        print (obj)
-        let data = aDecoder.decodeData()
-        print (data)
-        let obj2 = aDecoder.decodeObject(of: NSString.self, forKey: "name")
-        print (obj2)
-        let obj3 = aDecoder.decodeObject(of: NSString.self, forKey: "image")
-        print (obj3)
-        let obj4 = aDecoder.decodeObject(of: NSString.self, forKey: "")
-        print (obj4)
-        let obj5 = aDecoder.decodeObject(of: NSString.self, forKey: "texture")
-        print (obj5)
+        let imageName: String? = aDecoder.decodeObject(of: NSString.self, forKey: "_imgName") as String? // Used an archiver on SKTexture to list all keys.
+        let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
+        var imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images")?.path
+        
+        if (imagePath == nil) {
+            imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path
+        }
+        
+        // atode: Do this without using an extra archivers!
+        let loadedTexture = SKTexture(imageNamed: imagePath!)
+        let archiver = NSKeyedArchiver()
+        archiver.encodeRootObject(loadedTexture)
+        let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: archiver.encodedData)
+        super.init(coder: unarchiver)
     }
 }
 

@@ -3,10 +3,11 @@ import XCTest
 
 final class 虎_engine_base_tests: XCTestCase {
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(虎_engine_base().text, "Hello, World!")
+        let productBaseURL = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/ES.teprod")
+        let assetPackUrl = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/EvilShogun.tepack")
+        let defaultBundle = Bundle.init(url: assetPackUrl)
+        let gameLogic = GameLogic.newGame(transitionCallback: nil, baseDir: productBaseURL, aspectSuffix: "iPhone", defaultBundle: defaultBundle)
+        //XCTAssertEqual(虎_engine_base().text, "Hello, World!")
     }
 
     static var allTests = [
