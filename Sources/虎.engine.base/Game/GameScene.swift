@@ -30,9 +30,9 @@ open class GameTexture: SKTexture {
     }*/
     
     public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        let name = aDecoder.decodeObject() as! String
-        print (name)
+        super.init()
+        let obj = aDecoder.decodeObject()
+        print (obj)
     }
 }
 
