@@ -23,7 +23,7 @@ public enum GamePadButton {
 	case UNKNOWN
 }
 
-open class GameTexture: SKTexture {
+open class GameSpriteNode: SKSpriteNode {
     /*override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
         print ("here")
