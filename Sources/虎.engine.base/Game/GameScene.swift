@@ -24,10 +24,10 @@ public enum GamePadButton {
 }
 
 open class GameSpriteNode: SKSpriteNode {
-    override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
+    /*override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
         print ("here")
-    }
+    }*/
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
