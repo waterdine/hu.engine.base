@@ -23,6 +23,18 @@ public enum GamePadButton {
 	case UNKNOWN
 }
 
+open class GameSpriteNode: SKSpriteNode {
+    override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
+        print ("here")
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        print ("here")
+    }
+}
+
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
 open class GameScene: SKScene {

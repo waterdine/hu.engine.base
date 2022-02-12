@@ -637,6 +637,7 @@ open class GameLogic: NSObject {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = NSKeyedUnarchiver(forReadingWith: sceneData)
                 unarchiver.setClass(classType, forClassName: "SKScene")
+                unarchiver.setClass(GameSpriteNode.classForKeyedUnarchiver(), forClassName: "SKSpriteNode")
                 let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
                 (gameScene as! GameScene).scaleMode = self.getScaleMode()
