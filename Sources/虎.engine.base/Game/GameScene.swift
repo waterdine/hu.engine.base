@@ -31,10 +31,18 @@ open class GameTexture: SKTexture {
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        let obj = aDecoder.decodeObject(forKey: "name")
+        let obj = aDecoder.decodeObject()
         print (obj)
-        let obj2 = aDecoder.decodeObject(forKey: "image")
+        let data = aDecoder.decodeData()
+        print (data)
+        let obj2 = aDecoder.decodeObject(of: NSString.self, forKey: "name")
         print (obj2)
+        let obj3 = aDecoder.decodeObject(of: NSString.self, forKey: "image")
+        print (obj3)
+        let obj4 = aDecoder.decodeObject(of: NSString.self, forKey: "")
+        print (obj4)
+        let obj5 = aDecoder.decodeObject(of: NSString.self, forKey: "texture")
+        print (obj5)
     }
 }
 
