@@ -21,10 +21,6 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
-enum SceneLoadError: Error {
-    case fileNotFound(String)
-}
-
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
 open class GameLogic: NSObject {
@@ -635,18 +631,22 @@ open class GameLogic: NSObject {
         }
     }
     
-    open func loadScene(scene: String, classType: AnyClass?) throws -> Any? {
+    open func loadScene(scene: String, classType: AnyClass?) -> Any? {
         let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
-        if let sceneData = FileManager.default.contents(atPath: url!.path) {
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: sceneData)
-            unarchiver.setClass(classType, forClassName: "SKScene")
-            let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
-            unarchiver.finishDecoding()
-            (gameScene as! GameScene).scaleMode = self.getScaleMode()
-            (gameScene as! GameScene).gameLogic = self
-            return gameScene
+        if url != nil {
+            if let sceneData = FileManager.default.contents(atPath: url!.path) {
+                let unarchiver = NSKeyedUnarchiver(forReadingWith: sceneData)
+                unarchiver.setClass(classType, forClassName: "SKScene")
+                let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+                unarchiver.finishDecoding()
+                (gameScene as! GameScene).scaleMode = self.getScaleMode()
+                (gameScene as! GameScene).gameLogic = self
+                return gameScene
+            } else {
+                return nil
+            }
         } else {
-            throw SceneLoadError.fileNotFound(url!.path)
+            return nil
         }
     }
 }
