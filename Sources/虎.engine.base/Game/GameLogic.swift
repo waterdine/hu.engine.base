@@ -639,13 +639,15 @@ open class GameLogic: NSObject {
         }
     }
     
-    open func loadScene(scene: String, classType: AnyClass?, className: String) throws -> Any? {
+    open func loadScene<T>(scene: String, classType: AnyClass?, className: String) throws -> T {
         let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
         if let sceneData = FileManager.default.contents(atPath: url!.path) {
             let unarchiver = NSKeyedUnarchiver(forReadingWith: sceneData)
             unarchiver.setClass(classType, forClassName: className)
-            let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+            let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as! T
             unarchiver.finishDecoding()
+            (gameScene as! GameScene).scaleMode = self.getScaleMode()
+            (gameScene as! GameScene).gameLogic = self
             return gameScene
         } else {
             throw SceneLoadError.fileNotFound(url!.path)
