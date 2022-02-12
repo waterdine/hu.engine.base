@@ -15,11 +15,8 @@ class IntroLogic: GameScene {
 	var loaded: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> IntroLogic {
-        guard let scene = IntroLogic(coder: gameLogic.loadSceneData(scene: "Default.Intro")) else {
-            print("Failed to load Intro.sks")
-            abort()
-        }
-
+        let scene = try! IntroLogic(coder: gameLogic.loadSceneData(scene: "Default.Intro"))!
+        
         scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic;
 		

@@ -40,10 +40,7 @@ class MainMenuLogic: GameScene {
 	var pressToContinue: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> MainMenuLogic {
-        guard let scene = MainMenuLogic(coder: gameLogic.loadSceneData(scene: "Default.MainMenu")) else {
-			print("Failed to load MainMenu.sks")
-			abort()
-		}
+        let scene = try! MainMenuLogic(coder: gameLogic.loadSceneData(scene: "Default.MainMenu"))!
 
 		scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic

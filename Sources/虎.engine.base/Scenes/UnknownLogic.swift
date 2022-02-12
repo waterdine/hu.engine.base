@@ -12,10 +12,7 @@ import SpriteKit
 class UnknownLogic: GameScene {
 	
 	class func newScene(gameLogic: GameLogic) -> UnknownLogic {
-		guard let scene = UnknownLogic(coder: gameLogic.loadSceneData(scene: "Default.Unknown")) else {
-			print("Failed to load Unknown.sks")
-			abort()
-		}
+        let scene = try! UnknownLogic(coder: gameLogic.loadSceneData(scene: "Default.Unknown"))!
 
 		scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic

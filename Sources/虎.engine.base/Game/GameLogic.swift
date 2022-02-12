@@ -21,6 +21,10 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
+enum SceneLoadError: Error {
+    case fileNotFound(String)
+}
+
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
 open class GameLogic: NSObject {
@@ -635,12 +639,12 @@ open class GameLogic: NSObject {
         }
     }
     
-    open func loadSceneData(scene: String) -> NSCoder {
+    open func loadSceneData(scene: String) throws -> NSKeyedUnarchiver {
         let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
         if let sceneData = FileManager.default.contents(atPath: url!.path) {
             return NSKeyedUnarchiver(forReadingWith: sceneData)
         } else {
-            return NSCoder()
+            throw SceneLoadError.fileNotFound(url!.path)
         }
     }
 }
