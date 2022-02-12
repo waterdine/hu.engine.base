@@ -634,4 +634,13 @@ open class GameLogic: NSObject {
             return Bundle.main.url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory)
         }
     }
+    
+    open func loadSceneData(scene: String) -> NSCoder {
+        let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
+        if let sceneData = FileManager.default.contents(atPath: url!.path) {
+            return NSKeyedUnarchiver(forReadingWith: sceneData)
+        } else {
+            return NSCoder()
+        }
+    }
 }
