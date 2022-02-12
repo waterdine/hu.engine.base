@@ -23,15 +23,15 @@ public enum GamePadButton {
 	case UNKNOWN
 }
 
-open class GameTexture: SKTexture {
+open class GameSpriteNode: SKSpriteNode {
     /*override public init(texture: SKTexture?, color: NSColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
         print ("here")
     }*/
     
     public required init?(coder aDecoder: NSCoder) {
-        super.init()
-        let obj = aDecoder.decodeObject(forKey: "imageNamed")
+        let obj = aDecoder.decodeObject(forKey: "texture")
+        super.init(coder: aDecoder)
         print (obj)
     }
 }
