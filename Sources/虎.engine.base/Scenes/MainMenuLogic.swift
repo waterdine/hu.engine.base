@@ -40,7 +40,7 @@ class MainMenuLogic: GameScene {
 	var pressToContinue: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> MainMenuLogic {
-        let scene = try! MainMenuLogic(coder: gameLogic.loadSceneData(scene: "Default.MainMenu"))!
+        let scene = try! gameLogic.loadScene(scene: "Default.MainMenu", classType: MainMenuLogic.classForKeyedUnarchiver(), className: "MainMenuLogic") as! MainMenuLogic
 
 		scene.scaleMode = gameLogic.getScaleMode()
 		scene.gameLogic = gameLogic
