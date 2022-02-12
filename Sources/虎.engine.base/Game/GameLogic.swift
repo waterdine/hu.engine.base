@@ -643,7 +643,7 @@ open class GameLogic: NSObject {
         let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
         if let sceneData = FileManager.default.contents(atPath: url!.path) {
             let unarchiver = NSKeyedUnarchiver(forReadingWith: sceneData)
-            unarchiver.setClass(classType, forClassName: SKScene)
+            unarchiver.setClass(classType, forClassName: "SKScene")
             let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as! T
             unarchiver.finishDecoding()
             (gameScene as! GameScene).scaleMode = self.getScaleMode()
