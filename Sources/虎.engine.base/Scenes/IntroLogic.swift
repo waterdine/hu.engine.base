@@ -15,7 +15,7 @@ class IntroLogic: GameScene {
 	var loaded: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> IntroLogic {
-        let scene: IntroLogic = try! gameLogic.loadScene(scene: "Default.Intro", classType: IntroLogic.classForKeyedUnarchiver(), className: "IntroLogic")
+        let scene: IntroLogic = try! gameLogic.loadScene(scene: "Default.Intro", classType: IntroLogic.classForKeyedUnarchiver()) as! IntroLogic
         return scene
     }
 	

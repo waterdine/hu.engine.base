@@ -14,7 +14,7 @@ class CreditsLogic: GameScene {
 	var skipable: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> CreditsLogic {
-        let scene: CreditsLogic = try! gameLogic.loadScene(scene: "Default.Credits", classType: CreditsLogic.classForKeyedUnarchiver(), className: "CreditsLogic")
+        let scene: CreditsLogic = try! gameLogic.loadScene(scene: "Default.Credits", classType: CreditsLogic.classForKeyedUnarchiver()) as! CreditsLogic
 		scene.allowSkipCredits = false
 		return scene
 	}

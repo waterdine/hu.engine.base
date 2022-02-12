@@ -12,7 +12,7 @@ import SpriteKit
 class UnknownLogic: GameScene {
 	
 	class func newScene(gameLogic: GameLogic) -> UnknownLogic {
-        let scene: UnknownLogic = try! gameLogic.loadScene(scene: "Default.Unknown", classType: UnknownLogic.classForKeyedUnarchiver(), className: "UnknownLogic")
+        let scene: UnknownLogic = try! gameLogic.loadScene(scene: "Default.Unknown", classType: UnknownLogic.classForKeyedUnarchiver()) as! UnknownLogic
 		return scene
 	}
 }
