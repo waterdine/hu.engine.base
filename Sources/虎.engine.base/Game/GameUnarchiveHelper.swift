@@ -39,10 +39,10 @@ open class GameTexture : SKTexture {
     public required init?(coder aDecoder: NSCoder) {
         let imageName: String? = aDecoder.decodeObject(forKey: "_imgName") as! String? // Used an archiver on SKTexture to list all keys.
         let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
-        imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images")?.path.replacingOccurrences(of: " ", with: "\\")
+        imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images")?.path
         
         if (imagePath == nil) {
-            imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path.replacingOccurrences(of: " ", with: "\\")
+            imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path
         }
         
         if (imagePath == nil) {
