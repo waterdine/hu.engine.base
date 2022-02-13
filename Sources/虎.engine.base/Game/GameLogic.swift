@@ -640,8 +640,10 @@ open class GameLogic: NSObject {
                 unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
                 let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
-                (gameScene as! GameScene).scaleMode = self.getScaleMode()
-                (gameScene as! GameScene).gameLogic = self
+                if (gameScene is GameScene) {
+                    (gameScene as! GameScene).scaleMode = self.getScaleMode()
+                    (gameScene as! GameScene).gameLogic = self
+                }
                 return gameScene
             } else {
                 return nil
