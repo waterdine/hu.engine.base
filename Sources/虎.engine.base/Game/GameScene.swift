@@ -54,8 +54,10 @@ open class GameTexture: SKTexture {
         let loadedTexture = SKTexture(imageNamed: imagePath!)
         let archiver = NSKeyedArchiver()
         archiver.encodeRootObject(loadedTexture)
+        archiver.finishEncoding()
         let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: archiver.encodedData)
         super.init(coder: unarchiver)
+        unarchiver.finishDecoding()
         print(self)
     }
 }
