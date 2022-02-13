@@ -25,45 +25,6 @@ public enum GamePadButton {
 
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
-open class GameKeyedUnarchiver : NSKeyedUnarchiver {
-    public var gameLogic: GameLogic? = nil
-    init(forReadingWith: Data, gameLogic: GameLogic) {
-        self.gameLogic = gameLogic
-        super.init(forReadingWith: forReadingWith)
-    }
-}
-
-@available(OSX 10.13, *)
-@available(iOS 9.0, *)
-open class GameTexture: SKTexture {
-    public required init?(coder aDecoder: NSCoder) {
-        let imageName: String? = aDecoder.decodeObject(of: NSString.self, forKey: "_imgName") as String? // Used an archiver on SKTexture to list all keys.
-        let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
-        var imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images")?.path
-        
-        if (imagePath == nil) {
-            imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path
-        }
-        
-        if (imagePath == nil) {
-            print("Unable to find: \(imageName!)")
-            imagePath = imageName
-        }
-        
-        // atode: Do this without using an extra archivers!
-        let loadedTexture = SKTexture(imageNamed: imagePath!)
-        let archiver = NSKeyedArchiver()
-        archiver.encodeRootObject(loadedTexture)
-        archiver.finishEncoding()
-        let unarchiver = try! NSKeyedUnarchiver(forReadingFrom: archiver.encodedData)
-        super.init(coder: unarchiver)
-        unarchiver.finishDecoding()
-        print(self)
-    }
-}
-
-@available(OSX 10.13, *)
-@available(iOS 9.0, *)
 open class GameScene: SKScene {
 
 	open var gameLogic: GameLogic?
