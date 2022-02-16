@@ -624,8 +624,8 @@ open class GameLogic: NSObject {
         if (forResource.contains(".")) {
             let resourceSplit = forResource.split(separator: ".")
             if (resourceSplit.count == 2) {
-                resourceName: String = String(resourceSplit[1])
-                bundleName: String = String(resourceSplit[0])
+                resourceName = String(resourceSplit[1])
+                bundleName = String(resourceSplit[0])
             }
         }
         
@@ -638,12 +638,12 @@ open class GameLogic: NSObject {
         }
     }
     
-    open func loadUrls(forResourcesWithExtension: String, bundleName: String, subdirectory: String) -> URL?
+    open func loadUrls(forResourcesWithExtension: String, bundleName: String, subdirectory: String) -> [URL]?
     {
         let bundle = bundles[bundleName]
         if (bundle != nil) {
-            let url = bundle!.urls(forResourcesWithExtension: withExtension, subdirectory: subdirectory)
-            return url
+            let urls = bundle!.urls(forResourcesWithExtension: forResourcesWithExtension, subdirectory: subdirectory)
+            return urls
         } else {
             return nil
         }
