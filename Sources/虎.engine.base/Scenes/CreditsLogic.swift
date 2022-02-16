@@ -24,12 +24,12 @@ class CreditsLogic: GameScene {
 		credits?.removeAllActions()
 		let startPos = credits?.userData != nil ? credits?.userData!["startPos"] : nil
 		credits!.position = CGPoint(x: 0.0, y: startPos != nil ? startPos! as! Double : -320.0)
-		credits!.run(SKAction.init(named: "CreditsRoll")!)
+        credits!.run(SKAction.init(named: "CreditsRoll", from: (gameLogic?.loadUrl(forResource: "Default.MyActions", withExtension: ".sks", subdirectory: ""))!)!)
 		let finalFade = self.childNode(withName: "//FinalFade")
 		finalFade?.removeAllActions()
 		finalFade?.alpha = 0.0
 		if (!skipable) {
-			finalFade!.run(SKAction.init(named: "FinalFade")!)
+			finalFade!.run(SKAction.init(named: "FinalFade", from: (gameLogic?.loadUrl(forResource: "Default.MyActions", withExtension: ".sks", subdirectory: ""))!)!)
 		}
 	}
 	

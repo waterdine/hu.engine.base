@@ -202,8 +202,8 @@ class MainMenuLogic: GameScene {
 			if (pressNode!.alpha > 0.0) {
 				pressToContinue = false
 				if (backgroundNode?.position.x != 0) {
-					backgroundNode?.run(SKAction(named: "PressToContinue")!)
-					buttonsNode?.run(SKAction(named: "LongFadeIn")!)
+					backgroundNode?.run(SKAction(named: "PressToContinue", from: (gameLogic?.loadUrl(forResource: "Default.MyActions", withExtension: ".sks", subdirectory: ""))!)!)
+					buttonsNode?.run(SKAction(named: "LongFadeIn", from: (gameLogic?.loadUrl(forResource: "Default.MyActions", withExtension: ".sks", subdirectory: ""))!)!)
 				} else {
 					buttonsNode?.run(SKAction.fadeIn(withDuration: 1.0))
 				}
@@ -294,7 +294,7 @@ class MainMenuLogic: GameScene {
 				buttonsNode?.alpha = 0.0
 				buttonsNode!.isHidden = false
 				pressNode?.removeAllActions()
-				pressNode?.run(SKAction(named: "PressToContinueFade")!)
+				pressNode?.run(SKAction(named: "PressToContinueFade", from: (gameLogic?.loadUrl(forResource: "Default.MyActions", withExtension: ".sks", subdirectory: ""))!)!)
 			} else if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
 				view?.window?.toggleFullScreen(self)
 			}
