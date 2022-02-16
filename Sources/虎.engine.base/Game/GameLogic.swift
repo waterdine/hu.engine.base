@@ -671,4 +671,23 @@ open class GameLogic: NSObject {
             return nil
         }
     }
+    
+    open func loadEffectOverlay(scene: String) -> Any? {
+        let url = loadUrl(forResource: scene, withExtension: ".sks", subdirectory: "Scenes/EffectOverlays")
+        if url != nil {
+            if let sceneData = FileManager.default.contents(atPath: url!.path) {
+                let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
+                unarchiver.setClass(SKNode.classForKeyedUnarchiver(), forClassName: "SKScene")
+                unarchiver.setClass(GameSpriteNode.classForKeyedUnarchiver(), forClassName: "SKSpriteNode")
+                unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
+                let overlay = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
+                unarchiver.finishDecoding()
+                return overlay
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
 }
