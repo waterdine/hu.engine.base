@@ -619,18 +619,33 @@ open class GameLogic: NSObject {
     
     open func loadUrl(forResource: String, withExtension: String, subdirectory: String) -> URL?
     {
+        var resourceName = forResource
+        var bundleName = "Default"
         if (forResource.contains(".")) {
             let resourceSplit = forResource.split(separator: ".")
             if (resourceSplit.count == 2) {
-                let resourceName: String = String(resourceSplit[1])
-                let bundleName: String = String(resourceSplit[0])
-                let bundle = bundles[bundleName]
-                let url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
-                return url
+                resourceName: String = String(resourceSplit[1])
+                bundleName: String = String(resourceSplit[0])
             }
-            return nil
+        }
+        
+        let bundle = bundles[bundleName]
+        if (bundle != nil) {
+            let url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+            return url
         } else {
-            return Bundle.main.url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory)
+            return nil
+        }
+    }
+    
+    open func loadUrls(forResourcesWithExtension: String, bundleName: String, subdirectory: String) -> URL?
+    {
+        let bundle = bundles[bundleName]
+        if (bundle != nil) {
+            let url = bundle!.urls(forResourcesWithExtension: withExtension, subdirectory: subdirectory)
+            return url
+        } else {
+            return nil
         }
     }
     
