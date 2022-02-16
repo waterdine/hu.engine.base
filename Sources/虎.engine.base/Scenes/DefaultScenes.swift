@@ -17,14 +17,25 @@ public enum TextEvent: String, Codable {
     case None, Instant
 }
 
+public struct Library: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var name: String = ""
+    public var version: Int = 0
+    public var frameworkVersion: Int = 0
+    public var encrypted: Bool = false
+    
+    public init() {
+    }
+}
+
 public struct Product: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
     public var version: Int = 0
     public var frameworkVersion: Int = 0
     public var encrypted: Bool = false
-    public var defaultAssetPack: String = ""
-    public var assetPacks: [String] = []
+    public var defaultLibrary: String = ""
+    public var libraries: [String] = []
     
     public init() {
     }
