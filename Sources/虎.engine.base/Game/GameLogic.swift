@@ -58,11 +58,14 @@ open class GameLogic: NSObject {
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?, initialStringTable: [String:[String:String]?]?) -> GameLogic {
 		let gameLogic = GameLogic()
         gameLogic.aspectSuffixOverride = aspectSuffix
         gameLogic.baseDir = baseDir
         gameLogic.bundles["Default"] = (defaultBundle != nil) ? defaultBundle : Bundle.main
+        if (initialStringTable != nil) {
+            gameLogic.stringsTableOverride = initialStringTable!
+        }
 
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
 		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
