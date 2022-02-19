@@ -36,6 +36,7 @@ public struct Product: Identifiable, Codable {
     public var encrypted: Bool = false
     public var defaultLibrary: String = ""
     public var libraries: [String] = []
+    public var languages: [String] = []
     
     public init() {
     }

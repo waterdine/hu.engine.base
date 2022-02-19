@@ -110,11 +110,11 @@ class GameMenuLogic : GameSubScene {
 			self.isHidden = true
 		} else if (debugModeNode!.frame.contains(point)) {
 			self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
-			self.gameLogic!.saveState()
+			self.gameLogic!.saveGlobalState()
 			debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
 		} else if (puzzleModeNode!.frame.contains(point)) {
 			self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
-			self.gameLogic!.saveState()
+			self.gameLogic!.saveGlobalState()
 			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 		} else if (textSpeedNode!.frame.contains(point)) {
 			self.gameLogic!.nextTextSpeed()

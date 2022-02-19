@@ -25,6 +25,7 @@ public enum VolumeLevel: Int {
 @available(iOS 9.0, *)
 open class GameLogic: NSObject {
 	
+    open var languages: [String] = []
     open var baseDir: URL? = nil
     open var bundles: [String:Bundle] = [:]
 	open var sceneTypes: [String:GameScene] = [:]
@@ -42,7 +43,7 @@ open class GameLogic: NSObject {
 	open var actionDelay: Double = 0.5
 	open var usedSquares: [Int] = []
     open var story: Story? = nil
-    open var stringsTableOverride: [String:[String:String]?] = [:]
+    open var stringsTables: [String:[String:String]?] = [:]
     open var aspectSuffixOverride: String? = nil
 	
 	open var sceneDebug: Bool = false
@@ -57,16 +58,31 @@ open class GameLogic: NSObject {
 	
 	open var textSpeed: TextSpeed = TextSpeed.Normal
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
+    open var currentLanguageIndex: Int = 0
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?, initialStringTable: [String:[String:String]?]?) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?, languages: [String]) -> GameLogic {
 		let gameLogic = GameLogic()
         gameLogic.aspectSuffixOverride = aspectSuffix
         gameLogic.baseDir = baseDir
         gameLogic.bundles["Default"] = (defaultBundle != nil) ? defaultBundle : Bundle.main
-        if (initialStringTable != nil) {
-            gameLogic.stringsTableOverride = initialStringTable!
+        gameLogic.languages = languages
+        gameLogic.currentLanguageIndex = 0
+        var preferredLanguageIndex: Int? = nil
+        for languageCode in Locale.preferredLanguages {
+            preferredLanguageIndex = languages.firstIndex(where: { $0 == languageCode })
         }
-
+        if (preferredLanguageIndex != nil) {
+            for languageCode in Locale.preferredLanguages {
+                let regionFreeCode = languageCode.components(separatedBy: "-").first
+                preferredLanguageIndex = languages.firstIndex(where: { $0.components(separatedBy: "-").first == regionFreeCode })
+            }
+        }
+        if (preferredLanguageIndex != nil) {
+            gameLogic.currentLanguageIndex = preferredLanguageIndex!
+        }
+        gameLogic.loadGlobalState()
+        gameLogic.loadStringsTables()
+        
 		// atode: this probably does not need to be instances, could just be state struct + a static class.
 		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
 		gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
@@ -86,6 +102,19 @@ open class GameLogic: NSObject {
 		return gameLogic
 	}
 	
+    func loadStringsTables() {
+        if (baseDir != nil) {
+            let storyStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Story").appendingPathExtension("strings")
+                    
+            if (FileManager.default.fileExists(atPath: storyStringsURL.path)) {
+                let string = NSDictionary.init(contentsOf: storyStringsURL)
+                if (string != nil) {
+                    stringsTables["Story"] = (NSDictionary.init(contentsOf: storyStringsURL) as! [String:String])
+                }
+            }
+        }
+    }
+    
 	func loadMusic(musicFile: String?, transitionType: String?, sceneData: VisualScene?) {
 		if (musicFile != nil) {
 			do {
@@ -143,7 +172,7 @@ open class GameLogic: NSObject {
 		self.variables["LondonWeather"] = "cloudy"
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
-
+        
         let chaptersPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
         let chaptersPlistContents = try! Data(contentsOf: chaptersPlistURL)
         let chaptersPlistString: String? = String(data: chaptersPlistContents, encoding: .utf8)
@@ -207,6 +236,14 @@ open class GameLogic: NSObject {
                         sceneNames[sceneName] =
                     }
                 }*/
+                let chapterStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension(".lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
+                        
+                if (FileManager.default.fileExists(atPath: chapterStringsURL.path)) {
+                    let string = NSDictionary.init(contentsOf: chapterStringsURL)
+                    if (string != nil) {
+                        stringsTables[chapterFileName] = (NSDictionary.init(contentsOf: chapterStringsURL) as! [String:String])
+                    }
+                }
 			} else if (story != nil && self.currentChapterIndex! >= story!.Chapters.count) {
 				self.currentSceneIndex! = 0
 				self.currentChapterIndex! = 0
@@ -315,55 +352,36 @@ open class GameLogic: NSObject {
 		self.transition?(scene!, transition)
 		currentScene = scene
 	}
-	
-	open func saveState() {
-		UserDefaults.standard.setValue(max(0, self.currentSceneIndex!), forKey: "currentSceneIndex")
-		UserDefaults.standard.setValue(max(0, self.currentChapterIndex!), forKey: "currentChapterIndex")
-		UserDefaults.standard.setValue(self.flags, forKey: "flags")
-		UserDefaults.standard.setValue(self.textSpeed.rawValue, forKey: "textSpeed")
-		UserDefaults.standard.setValue(self.sceneDebug, forKey: "sceneDebug")
-		UserDefaults.standard.setValue(self.skipPuzzles, forKey: "skipPuzzles")
-		UserDefaults.standard.setValue(self.variables, forKey: "variables")
+    
+    open func saveGlobalState() {
+        UserDefaults.standard.setValue(self.textSpeed.rawValue, forKey: "textSpeed")
+        UserDefaults.standard.setValue(self.sceneDebug, forKey: "sceneDebug")
+        UserDefaults.standard.setValue(self.skipPuzzles, forKey: "skipPuzzles")
         UserDefaults.standard.setValue(self.volumeLevel.rawValue, forKey: "volumeLevel")
-	}
-	
-	open func loadState() {
-		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
-		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
-		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
-		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
-		let savedTextSpeed: Int? = UserDefaults.standard.value(forKey: "textSpeed") as? Int
+    }
+    
+    open func loadGlobalState() {
+        let savedTextSpeed: Int? = UserDefaults.standard.value(forKey: "textSpeed") as? Int
         let savedVolume: Int? = UserDefaults.standard.value(forKey: "volumeLevel") as? Int
-		let savedSceneDebug: Bool? = UserDefaults.standard.value(forKey: "sceneDebug") as? Bool
-		let savedSkipPuzzles: Bool? = UserDefaults.standard.value(forKey: "skipPuzzles") as? Bool
-		
-		if (savedCurrentSceneIndex != nil) {
-			self.currentSceneIndex = savedCurrentSceneIndex! - 1
-		}
-		if (savedCurrentChapterIndex != nil) {
-			self.currentChapterIndex = savedCurrentChapterIndex!
-		}
-		if (savedFlags != nil) {
-			self.flags = savedFlags!
-		}
-		if (savedVariables != nil) {
-			self.variables = savedVariables!
-		}
-		if (savedTextSpeed != nil) {
-			switch savedTextSpeed! {
-			case TextSpeed.Slow.rawValue:
-				self.textSpeed = .Slow
-				break
-			case TextSpeed.Normal.rawValue:
-				self.textSpeed = .Normal
-				break
-			case TextSpeed.Fast.rawValue:
-				self.textSpeed = .Fast
-				break
-			default:
-				self.textSpeed = .Normal
-			}
-		}
+        let savedSceneDebug: Bool? = UserDefaults.standard.value(forKey: "sceneDebug") as? Bool
+        let savedSkipPuzzles: Bool? = UserDefaults.standard.value(forKey: "skipPuzzles") as? Bool
+        let savedLanguage: String? = UserDefaults.standard.value(forKey: "language") as? String
+        
+        if (savedTextSpeed != nil) {
+            switch savedTextSpeed! {
+            case TextSpeed.Slow.rawValue:
+                self.textSpeed = .Slow
+                break
+            case TextSpeed.Normal.rawValue:
+                self.textSpeed = .Normal
+                break
+            case TextSpeed.Fast.rawValue:
+                self.textSpeed = .Fast
+                break
+            default:
+                self.textSpeed = .Normal
+            }
+        }
         if (savedVolume != nil) {
             switch savedVolume! {
             case VolumeLevel.Off.rawValue:
@@ -382,11 +400,47 @@ open class GameLogic: NSObject {
                 self.volumeLevel = .Medium
             }
         }
-		if (savedSceneDebug != nil) {
-			self.sceneDebug = savedSceneDebug!
+        if (savedLanguage != nil) {
+            var foundLanguageIndex = languages.firstIndex(where: { $0 == savedLanguage! })
+            if (foundLanguageIndex == nil) {
+                foundLanguageIndex = languages.firstIndex(where: { $0.components(separatedBy: "-").first == savedLanguage!.components(separatedBy: "-").first })
+            }
+            if (foundLanguageIndex != nil) {
+                self.currentLanguageIndex = foundLanguageIndex!
+            }
+        }
+        if (savedSceneDebug != nil) {
+            self.sceneDebug = savedSceneDebug!
+        }
+        if (savedSkipPuzzles != nil) {
+            self.skipPuzzles = savedSkipPuzzles!
+        }
+    }
+    
+    open func saveState() {
+        UserDefaults.standard.setValue(max(0, self.currentSceneIndex!), forKey: "currentSceneIndex")
+        UserDefaults.standard.setValue(max(0, self.currentChapterIndex!), forKey: "currentChapterIndex")
+        UserDefaults.standard.setValue(self.flags, forKey: "flags")
+        UserDefaults.standard.setValue(self.variables, forKey: "variables")
+    }
+    
+	open func loadState() {
+		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
+		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
+		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
+		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
+		
+		if (savedCurrentSceneIndex != nil) {
+			self.currentSceneIndex = savedCurrentSceneIndex! - 1
 		}
-		if (savedSkipPuzzles != nil) {
-			self.skipPuzzles = savedSkipPuzzles!
+		if (savedCurrentChapterIndex != nil) {
+			self.currentChapterIndex = savedCurrentChapterIndex!
+		}
+		if (savedFlags != nil) {
+			self.flags = savedFlags!
+		}
+		if (savedVariables != nil) {
+			self.variables = savedVariables!
 		}
 	}
 	
@@ -506,7 +560,7 @@ open class GameLogic: NSObject {
 			textSpeed = .Slow
 			break
 		}
-		saveState()
+		saveGlobalState()
 		alignTextSpeed()
 	}
     
@@ -525,8 +579,13 @@ open class GameLogic: NSObject {
             volumeLevel = .Off
             break
         }
-        saveState()
+        saveGlobalState()
         alignVolumeLevel()
+    }
+    
+    open func nextLanguage() {
+        currentLanguageIndex = (currentLanguageIndex + 1) % languages.count
+        saveGlobalState()
     }
     
 	open func getAspectSuffix() -> String {
@@ -606,15 +665,15 @@ open class GameLogic: NSObject {
     
     open func localizedString(forKey: String, value: String?, table: String) -> String
     {
-        if (stringsTableOverride[table] != nil) {
-            return stringsTableOverride[table]!![forKey]!
+        if (stringsTables[table] != nil) {
+            return stringsTables[table]!![forKey]!
         } else {
             return Bundle.main.localizedString(forKey: forKey, value: value, table: table)
         }
     }
     
     open func overrideStringsTable(table: String, stringsTable: [String : String]) {
-        stringsTableOverride[table] = stringsTable
+        stringsTables[table] = stringsTable
     }
     
     open func loadUrl(forResource: String, withExtension: String, subdirectory: String) -> URL?

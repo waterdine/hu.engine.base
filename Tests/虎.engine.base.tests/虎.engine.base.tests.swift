@@ -3,10 +3,10 @@ import XCTest
 
 final class 虎_engine_base_tests: XCTestCase {
     func testExample() {
-        let productBaseURL = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/ES.teprod")
-        let assetPackUrl = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/EvilShogun.tepack")
+        let productBaseURL = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/EvilShogun.虎product")
+        let assetPackUrl = URL(fileURLWithPath: "/Users/ito.antonia/Library/Mobile Documents/iCloud~studio~waterdine~xn--y71a~engine/Documents/Kamakura.虎library")
         let defaultBundle = Bundle.init(url: assetPackUrl)
-        let gameLogic = GameLogic.newGame(transitionCallback: nil, baseDir: productBaseURL, aspectSuffix: "iPhone", defaultBundle: defaultBundle)
+        let gameLogic = GameLogic.newGame(transitionCallback: nil, baseDir: productBaseURL, aspectSuffix: "iPhone", defaultBundle: defaultBundle, languages: ["en","ja"])
         //XCTAssertEqual(虎_engine_base().text, "Hello, World!")
     }
 

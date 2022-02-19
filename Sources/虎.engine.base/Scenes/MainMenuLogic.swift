@@ -30,6 +30,8 @@ class MainMenuLogic: GameScene {
 	var textSpeedLabel: SKLabelNode?
     var volumeNode: SKNode?
     var volumeLabel: SKLabelNode?
+    var languageNode: SKNode?
+    var languageLabel: SKLabelNode?
 	
 	// Restart Popup
 	var restartPopupNode: SKNode?
@@ -182,6 +184,12 @@ class MainMenuLogic: GameScene {
                 break
             }
         }
+        languageNode = self.childNode(withName: "//Language")
+        languageLabel = self.childNode(withName: "//LanguageLabel") as? SKLabelNode
+        if (languageLabel != nil) {
+            languageLabel?.fontName = buttonFont
+            languageLabel?.text = gameLogic!.localizedString(forKey: "Language: " + gameLogic!.languages[gameLogic!.currentLanguageIndex], value: nil, table: "Story")
+        }
 		loaded = false
 		pressToContinue = true
 		pressNode?.isHidden = false
@@ -237,11 +245,11 @@ class MainMenuLogic: GameScene {
 				configPopupNode?.isHidden = true
 			} else if (debugModeNode!.frame.contains(point)) {
 				self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
-				self.gameLogic!.saveState()
+				self.gameLogic!.saveGlobalState()
 				debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
 			} else if (puzzleModeNode!.frame.contains(point)) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
-				self.gameLogic!.saveState()
+				self.gameLogic!.saveGlobalState()
 				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
 			} else if (textSpeedNode!.frame.contains(point)) {
 				self.gameLogic!.nextTextSpeed()
@@ -272,6 +280,10 @@ class MainMenuLogic: GameScene {
                     volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
+            } else if (languageNode!.frame.contains(point)) {
+                self.gameLogic!.nextLanguage()
+                languageLabel?.text = gameLogic!.localizedString(forKey: "Language: " + gameLogic!.languages[gameLogic!.currentLanguageIndex], value: nil, table: "Story")
+                self.didMove(to: self.view!)
             }
 		}
 	}
@@ -337,6 +349,9 @@ class MainMenuLogic: GameScene {
                     volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
+            }
+            if (languageLabel != nil) {
+                languageLabel?.text = gameLogic!.localizedString(forKey: "Language: " + gameLogic!.languages[gameLogic!.currentLanguageIndex], value: nil, table: "Story")
             }
 			loaded = true
 		}
