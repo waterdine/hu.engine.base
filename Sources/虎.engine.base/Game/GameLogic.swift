@@ -237,9 +237,9 @@ open class GameLogic: NSObject {
                     }
                 }*/
                 if (baseDir != nil) {
-                    let chapterStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
-                    let path = chapterStringsURL.path
-                    if (FileManager.default.fileExists(atPath: path)) {
+                    let chapterStringsURL = baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
+
+                    if (FileManager.default.fileExists(atPath: chapterStringsURL.path)) {
                         let string = NSDictionary.init(contentsOf: chapterStringsURL)
                         if (string != nil) {
                             stringsTables[chapterFileName] = (NSDictionary.init(contentsOf: chapterStringsURL) as! [String:String])
