@@ -236,12 +236,14 @@ open class GameLogic: NSObject {
                         sceneNames[sceneName] =
                     }
                 }*/
-                let chapterStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension(".lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
-                        
-                if (FileManager.default.fileExists(atPath: chapterStringsURL.path)) {
-                    let string = NSDictionary.init(contentsOf: chapterStringsURL)
-                    if (string != nil) {
-                        stringsTables[chapterFileName] = (NSDictionary.init(contentsOf: chapterStringsURL) as! [String:String])
+                if (baseDir != nil) {
+                    let chapterStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
+                            
+                    if (FileManager.default.fileExists(atPath: chapterStringsURL.path)) {
+                        let string = NSDictionary.init(contentsOf: chapterStringsURL)
+                        if (string != nil) {
+                            stringsTables[chapterFileName] = (NSDictionary.init(contentsOf: chapterStringsURL) as! [String:String])
+                        }
                     }
                 }
 			} else if (story != nil && self.currentChapterIndex! >= story!.Chapters.count) {
@@ -586,6 +588,7 @@ open class GameLogic: NSObject {
     open func nextLanguage() {
         currentLanguageIndex = (currentLanguageIndex + 1) % languages.count
         saveGlobalState()
+        loadStringsTables()
     }
     
 	open func getAspectSuffix() -> String {
@@ -666,7 +669,7 @@ open class GameLogic: NSObject {
     open func localizedString(forKey: String, value: String?, table: String) -> String
     {
         if (stringsTables[table] != nil) {
-            return stringsTables[table]!![forKey]!
+            return stringsTables[table]!![forKey] ?? forKey
         } else {
             return Bundle.main.localizedString(forKey: forKey, value: value, table: table)
         }
