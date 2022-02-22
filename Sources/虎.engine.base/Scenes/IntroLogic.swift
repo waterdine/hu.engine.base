@@ -47,6 +47,7 @@ class IntroLogic: GameScene {
 					do {
 						try self.gameLogic!.player = AVAudioPlayer(contentsOf: file!)
 						self.gameLogic!.player?.numberOfLoops = 1
+                        self.gameLogic?.alignVolumeLevel()
 						self.gameLogic!.player?.play()
 					} catch  {
 					}

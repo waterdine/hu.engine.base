@@ -522,29 +522,37 @@ open class GameLogic: NSObject {
         case .Off:
             if #available(iOS 10.0, *) {
                 player?.setVolume(0.0, fadeDuration: 0.0)
+                loopSound?.setVolume(0.0, fadeDuration: 0.0)
             } else {
                 player?.volume = 0.0
+                loopSound?.volume = 0.0
             }
             break
         case .Low:
             if #available(iOS 10.0, *) {
                 player?.setVolume(0.1, fadeDuration: 0.0)
+                loopSound?.setVolume(0.1, fadeDuration: 0.0)
             } else {
                 player?.volume = 0.1
+                loopSound?.volume = 0.1
             }
             break
         case .Medium:
             if #available(iOS 10.0, *) {
                 player?.setVolume(0.5, fadeDuration: 0.0)
+                loopSound?.setVolume(0.5, fadeDuration: 0.0)
             } else {
                 player?.volume = 0.5
+                loopSound?.volume = 0.5
             }
             break
         case .High:
             if #available(iOS 10.0, *) {
                 player?.setVolume(1.0, fadeDuration: 0.0)
+                loopSound?.setVolume(1.0, fadeDuration: 0.0)
             } else {
                 player?.volume = 1.0
+                loopSound?.volume = 1.0
             }
             break
         }
