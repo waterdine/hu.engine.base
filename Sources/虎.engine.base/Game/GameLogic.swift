@@ -517,7 +517,7 @@ open class GameLogic: NSObject {
 		}
 	}
     
-    func alignVolumeLevel() {
+    open func alignVolumeLevel() {
         switch volumeLevel {
         case .Off:
             if #available(iOS 10.0, *) {
