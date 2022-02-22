@@ -210,7 +210,7 @@ class MainMenuLogic: GameScene {
 			if (pressNode!.alpha > 0.0) {
 				pressToContinue = false
 				if (backgroundNode?.position.x != 0) {
-                    backgroundNode?.run((gameLogic?.loadAction(actionName: "Stamp", forResource: "Default.MyActions"))!)
+                    backgroundNode?.run((gameLogic?.loadAction(actionName: "PressToContinue", forResource: "Default.MyActions"))!)
                     buttonsNode?.run((gameLogic?.loadAction(actionName: "LongFadeIn", forResource: "Default.MyActions"))!)
 				} else {
 					buttonsNode?.run(SKAction.fadeIn(withDuration: 1.0))
