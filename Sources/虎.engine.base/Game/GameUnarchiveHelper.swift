@@ -32,18 +32,6 @@ open class GameKeyedUnarchiver : NSKeyedUnarchiver {
                 imagePath = imageName
             }
             return imagePath
-        } else if (key.contains("_fileName")) {
-            let fileName: String? = super.decodeObject(forKey: key) as! String?
-            var fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Sound")
-            
-            if (fileURL == nil) {
-                fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Music")
-            }
-            
-            if (fileURL == nil) {
-                print("Unable to find: \(fileName!)")
-            }
-            return fileURL
         } else if (key.contains("_actions")) {
             var actionsArray = super.decodeObject(forKey: "_actions") as? [SKAction]
             if (actionsArray != nil) {
@@ -77,7 +65,17 @@ open class GamePlaySound : SKAction {
     var fileUrl: URL? = nil
     
     public required init?(coder aDecoder: NSCoder) {
-        super.init()
-        fileUrl = aDecoder.decodeObject(forKey: "_fileName") as! URL?
+    super.init()
+        let fileName: String? = aDecoder.decodeObject(forKey: "_fileName") as! String?
+        let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
+        var fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Sound")
+        
+        if (fileURL == nil) {
+            fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Music")
+        }
+        
+        if (fileURL == nil) {
+            print("Unable to find: \(fileName!)")
+        }
     }
 }
