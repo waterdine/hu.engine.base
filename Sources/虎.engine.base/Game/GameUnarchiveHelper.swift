@@ -38,7 +38,7 @@ open class GameKeyedUnarchiver : NSKeyedUnarchiver {
                             }
                             if (fileUrl != nil) {
                                 try! self.gameLogic?.loopSound = AVAudioPlayer(contentsOf: fileUrl!)
-                                self.gameLogic?.loopSound?.numberOfLoops = -1
+                                self.gameLogic?.loopSound?.numberOfLoops = 1
                                 self.gameLogic?.loopSound?.play()
                             }
                         })
