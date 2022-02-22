@@ -21,7 +21,7 @@ open class GameKeyedUnarchiver : NSKeyedUnarchiver {
        if (key.contains("texture") || key.contains("Texture")) {
            let gameTexture: GameTexture? = super.decodeObject(forKey: key) as! GameTexture?
            if (gameTexture != nil) {
-               return SKTexture(imageNamed: gameTexture!.fileUrl!.path)
+               return SKTexture(imageNamed: gameTexture!.fileUrl?.path ?? "")
            } else {
                return nil
            }
