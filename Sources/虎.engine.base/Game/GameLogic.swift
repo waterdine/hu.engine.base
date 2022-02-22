@@ -717,6 +717,7 @@ open class GameLogic: NSObject {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
                 unarchiver.setClass(classType, forClassName: "SKScene")
+                unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
                 let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
                 if (gameScene is GameScene) {
@@ -738,6 +739,7 @@ open class GameLogic: NSObject {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
                 unarchiver.setClass(SKNode.classForKeyedUnarchiver(), forClassName: "SKScene")
+                unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
                 let overlay = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
                 return overlay

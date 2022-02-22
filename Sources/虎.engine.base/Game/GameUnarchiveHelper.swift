@@ -18,21 +18,14 @@ open class GameKeyedUnarchiver : NSKeyedUnarchiver {
     }
     
     open override func decodeObject(forKey key: String) -> Any? {
-        print(key)
-        if (key.contains("_imgName")) {
-            let imageName: String? = super.decodeObject(forKey: key) as! String?
-            var imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images")?.path
-            
-            if (imagePath == nil) {
-                imagePath = gameLogic?.loadUrl(forResource: "Default." + imageName!, withExtension: ".png", subdirectory: "Images/Backgrounds")?.path
-            }
-            
-            if (imagePath == nil) {
-                print("Unable to find: \(imageName!)")
-                imagePath = imageName
-            }
-            return imagePath
-        } else if (key.contains("_actions")) {
+       if (key.contains("texture") || key.contains("Texture")) {
+           let gameTexture: GameTexture? = super.decodeObject(forKey: key) as! GameTexture?
+           if (gameTexture != nil) {
+               return SKTexture(imageNamed: gameTexture!.fileUrl!.path)
+           } else {
+               return nil
+           }
+       } else if (key.contains("_actions")) {
             var actionsArray = super.decodeObject(forKey: "_actions") as? [SKAction]
             if (actionsArray != nil) {
                 for index in actionsArray!.indices {
@@ -61,20 +54,42 @@ open class GameKeyedUnarchiver : NSKeyedUnarchiver {
 
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
+open class GameTexture : SKTexture {
+    var fileUrl: URL? = nil
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init()
+        let fileName: String? = aDecoder.decodeObject(forKey: "_imgName") as! String?
+        let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
+        fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".png", subdirectory: "Images")
+        
+        if (fileUrl == nil) {
+            fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".png", subdirectory: "Images/Backgrounds")
+        }
+        
+        if (fileUrl == nil) {
+            print("Unable to find: \(fileName!)")
+        }
+    }
+}
+
+
+@available(OSX 10.13, *)
+@available(iOS 9.0, *)
 open class GamePlaySound : SKAction {
     var fileUrl: URL? = nil
     
     public required init?(coder aDecoder: NSCoder) {
-    super.init()
+        super.init()
         let fileName: String? = aDecoder.decodeObject(forKey: "_fileName") as! String?
         let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
-        var fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Sound")
+        fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Sound")
         
-        if (fileURL == nil) {
-            fileURL = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Music")
+        if (fileUrl == nil) {
+            fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".mp3", subdirectory: "Music")
         }
         
-        if (fileURL == nil) {
+        if (fileUrl == nil) {
             print("Unable to find: \(fileName!)")
         }
     }
