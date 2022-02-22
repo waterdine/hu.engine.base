@@ -11,14 +11,13 @@ import SpriteKit
 @available(iOS 9.0, *)
 open class GameKeyedUnarchiver : NSKeyedUnarchiver {
     public var gameLogic: GameLogic? = nil
-    public var enableTextureReplacement = false
     init(forReadingWith: Data, gameLogic: GameLogic) {
         self.gameLogic = gameLogic
         super.init(forReadingWith: forReadingWith)
     }
     
     open override func decodeObject(forKey key: String) -> Any? {
-        if (enableTextureReplacement && (key.contains("texture") || key.contains("Texture"))) {
+        if (key.contains("texture") || key.contains("Texture")) {
             let gameTexture: GameTexture? = super.decodeObject(forKey: key) as! GameTexture?
             if (gameTexture != nil) {
                 return SKTexture(imageNamed: gameTexture!.imagePath!)
@@ -50,15 +49,5 @@ open class GameTexture : SKTexture {
             imagePath = imageName
         }
         super.init()
-    }
-}
-
-@available(OSX 10.13, *)
-@available(iOS 9.0, *)
-open class GameSpriteNode: SKSpriteNode {
-    public required init?(coder aDecoder: NSCoder) {
-        (aDecoder as! GameKeyedUnarchiver).enableTextureReplacement = true
-        super.init(coder: aDecoder)
-        (aDecoder as! GameKeyedUnarchiver).enableTextureReplacement = false
     }
 }
