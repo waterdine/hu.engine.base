@@ -717,7 +717,6 @@ open class GameLogic: NSObject {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
                 unarchiver.setClass(classType, forClassName: "SKScene")
-                unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
                 let gameScene = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
                 if (gameScene is GameScene) {
@@ -739,10 +738,28 @@ open class GameLogic: NSObject {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
                 unarchiver.setClass(SKNode.classForKeyedUnarchiver(), forClassName: "SKScene")
-                unarchiver.setClass(GameTexture.classForKeyedUnarchiver(), forClassName: "SKTexture")
                 let overlay = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey)
                 unarchiver.finishDecoding()
                 return overlay
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    open func loadAction(actionName: String, forResource: String) -> SKAction? {
+        
+        let url = loadUrl(forResource: forResource, withExtension: ".sks", subdirectory: "")
+        if url != nil {
+            if let sceneData = FileManager.default.contents(atPath: url!.path) {
+                let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
+                unarchiver.setClass(GamePlaySound.classForKeyedUnarchiver(), forClassName: "SKPlaySound")
+                let rootList = unarchiver.decodeObject(forKey: NSKeyedArchiveRootObjectKey) as? [String:[String:SKAction?]?]
+                unarchiver.finishDecoding()
+                let actionList = (rootList ?? [:])["actions"] ?? [:]
+                return actionList![actionName] ?? nil
             } else {
                 return nil
             }
