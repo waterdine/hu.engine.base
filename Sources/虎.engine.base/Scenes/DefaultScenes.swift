@@ -67,8 +67,10 @@ public class Story: Identifiable, Codable {
                 newChapter.name = chapter
                 Scripts.append(newChapter)
             }
-        } else if (Version! > 0) {
+        } else if (Version! > 1) {
             Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Scripts)!
+        } else if (Version! > 0) {
+            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Chapters)!
         }
         //id = try container.decode(UUID.self, forKey: BaseSceneCodingKeys.id)
     }
@@ -83,9 +85,12 @@ public class Story: Identifiable, Codable {
                 chapters.append(chapter.name)
             }
             try container.encode(chapters, forKey: BaseSceneCodingKeys.Chapters)
-        } else if (Version! > 0) {
+        } else if (Version! > 1) {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
             try container.encode(Scripts, forKey: BaseSceneCodingKeys.Scripts)
+        } else if (Version! > 0) {
+            try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
+            try container.encode(Scripts, forKey: BaseSceneCodingKeys.Chapters)
         }
     }
 }
