@@ -21,7 +21,7 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
-public struct SceneFlow {
+public struct SceneFlow: Codable {
     var sceneIndex: Int?
     var scriptIndex: Int?
 }
