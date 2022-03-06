@@ -30,7 +30,7 @@ open class BaseSceneSerialiser {
         return nil
     }
     
-    open func appendText(scene: BaseScene, text: String, textBucket: String, chapterNumber: String, sceneNumber: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
+    open func appendText(scene: BaseScene, text: String, textBucket: String, scriptNumber: String, sceneNumber: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
     }
     
     open func stringsLines(scene: BaseScene, index: Int, strings: [String : String]) -> [String] {
@@ -152,7 +152,7 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
         }
     }
     
-    open override func appendText(scene: BaseScene, text: String, textBucket: String, chapterNumber: String, sceneNumber: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
+    open override func appendText(scene: BaseScene, text: String, textBucket: String, scriptNumber: String, sceneNumber: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
     }
     
     open override func stringsLines(scene: BaseScene, index: Int, strings: [String : String]) -> [String] {

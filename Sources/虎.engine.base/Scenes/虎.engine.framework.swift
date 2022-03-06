@@ -31,7 +31,7 @@ public class SceneWrapper: Identifiable, Codable {
         
     }
     
-    public init(sceneListSerialiser: SceneListSerialiser, scriptLine: String, label: String, strings: inout [String : String], chapterString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
+    public init(sceneListSerialiser: SceneListSerialiser, scriptLine: String, label: String, strings: inout [String : String], scriptString: String, sceneString: inout String, sceneLabelMap: inout [String : Int]) {
         let scriptLineSplit = scriptLine.split(separator: ",")
         let sceneTypeSplit = scriptLineSplit[0].split(separator: "-")
         let sceneType: String = String(sceneTypeSplit[1]).trimmingCharacters(in: [" ", "-", ",", ":"])
@@ -45,7 +45,7 @@ public class SceneWrapper: Identifiable, Codable {
             }
         }
         
-        parameters["Chapter"] = chapterString
+        parameters["Chapter"] = scriptString
         parameters["SceneNumber"] = sceneString
         parameters["Label"] = label
         
@@ -120,9 +120,9 @@ public class SceneWrapper: Identifiable, Codable {
         return description
     }
     
-    public func appendText(sceneListSerialiser: SceneListSerialiser, text: String, textBucket: String, chapter: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
+    public func appendText(sceneListSerialiser: SceneListSerialiser, text: String, textBucket: String, script: String, scene: String, lineIndex: Int, strings: inout [String : String], command: Bool, sceneLabelMap: inout [String : Int]) {
         for serialiser in sceneListSerialiser.serialisers {
-            serialiser.appendText(scene: data, text: text, textBucket: textBucket, chapterNumber: chapter, sceneNumber: scene, lineIndex: lineIndex, strings: &strings, command: command, sceneLabelMap: &sceneLabelMap)
+            serialiser.appendText(scene: data, text: text, textBucket: textBucket, scriptNumber: script, sceneNumber: scene, lineIndex: lineIndex, strings: &strings, command: command, sceneLabelMap: &sceneLabelMap)
         }
     }
     
