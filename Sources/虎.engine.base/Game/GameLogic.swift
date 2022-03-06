@@ -21,9 +21,9 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
-public struct SceneFlow: Codable {
-    var sceneIndex: Int?
-    var scriptIndex: Int?
+public struct SceneFlow {
+    var sceneIndex: Int
+    var scriptIndex: Int
 }
 /*
 public struct ChoiceFlow {
@@ -468,7 +468,9 @@ open class GameLogic: NSObject {
     
     open func pushToStack()
     {
-        self.sceneStack.append(SceneFlow(sceneIndex: self.currentSceneIndex, scriptIndex: self.currentScriptIndex))
+        if (self.currentSceneIndex != nil && self.currentScriptIndex != nil) {
+            self.sceneStack.append(SceneFlow(sceneIndex: self.currentSceneIndex!, scriptIndex: self.currentScriptIndex!))
+        }
     }
     
     open func clearStack()
