@@ -32,7 +32,7 @@ public struct Product: Identifiable, Codable {
     }
 }
 
-public struct Chapter: Identifiable, Codable {
+public struct Script: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
     public var sutra: String = ""
@@ -44,12 +44,13 @@ public struct Chapter: Identifiable, Codable {
 public class Story: Identifiable, Codable {
     public var id: UUID = UUID()
     public var Version: Int? = nil
-    public var Chapters: [Chapter] = []
+    public var Scripts: [Script] = []
     
     enum BaseSceneCodingKeys: String, CodingKey {
         case id
         case Version
         case Chapters
+        case Scripts
     }
     
     public init() {
@@ -62,12 +63,12 @@ public class Story: Identifiable, Codable {
             Version = 0
             let chapters: [String] = try container.decodeIfPresent([String].self, forKey: BaseSceneCodingKeys.Chapters)!
             for chapter in chapters {
-                var newChapter: Chapter = Chapter()
+                var newChapter: Script = Script()
                 newChapter.name = chapter
-                Chapters.append(newChapter)
+                Scripts.append(newChapter)
             }
         } else if (Version! > 0) {
-            Chapters = try container.decodeIfPresent([Chapter].self, forKey: BaseSceneCodingKeys.Chapters)!
+            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Scripts)!
         }
         //id = try container.decode(UUID.self, forKey: BaseSceneCodingKeys.id)
     }
@@ -78,13 +79,13 @@ public class Story: Identifiable, Codable {
         if (Version == nil || Version! == 0) {
             Version = 0
             var chapters: [String] = []
-            for chapter in Chapters {
+            for chapter in Scripts {
                 chapters.append(chapter.name)
             }
             try container.encode(chapters, forKey: BaseSceneCodingKeys.Chapters)
         } else if (Version! > 0) {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
-            try container.encode(Chapters, forKey: BaseSceneCodingKeys.Chapters)
+            try container.encode(Scripts, forKey: BaseSceneCodingKeys.Scripts)
         }
     }
 }
@@ -286,11 +287,15 @@ open class CreditsScene: VisualScene {
 
 open class SkipToScene: BaseScene {
     public var SkipTo: Int = 0
+    public var Script: String? = nil
     public var Flag: String? = nil
+    public var ClearStack: Bool? = nil
     
     enum SkipToCodingKeys: String, CodingKey {
         case SkipTo
+        case Script
         case Flag
+        case ClearStack
     }
     
     public override init() {
@@ -304,8 +309,16 @@ open class SkipToScene: BaseScene {
             SkipTo = Int(scriptParameters["SkipTo"]!)!
         }
         
+        if (scriptParameters["Script"] != nil) {
+            Script = scriptParameters["Script"]!
+        }
+        
         if (scriptParameters["Flag"] != nil) {
             Flag = scriptParameters["Flag"]!
+        }
+        
+        if (scriptParameters["ClearStack"] != nil) {
+            ClearStack = (scriptParameters["ClearStack"]! == "True") ? true : false
         }
     }
     
@@ -313,14 +326,18 @@ open class SkipToScene: BaseScene {
         try super.init(from: decoder)
         let container = try decoder.container(keyedBy: SkipToCodingKeys.self)
         SkipTo = try container.decode(Int.self, forKey: SkipToCodingKeys.SkipTo)
+        Script = try container.decodeIfPresent(String.self, forKey: SkipToCodingKeys.Script)
         Flag = try container.decodeIfPresent(String.self, forKey: SkipToCodingKeys.Flag)
+        ClearStack = try container.decodeIfPresent(Bool.self, forKey: SkipToCodingKeys.ClearStack)
     }
     
     public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: SkipToCodingKeys.self)
         try container.encode(SkipTo, forKey: SkipToCodingKeys.SkipTo)
+        try container.encodeIfPresent(Script, forKey: SkipToCodingKeys.Script)
         try container.encodeIfPresent(Flag, forKey: SkipToCodingKeys.Flag)
+        try container.encodeIfPresent(ClearStack, forKey: SkipToCodingKeys.ClearStack)
     }
     
     open override func getDescription() -> String{
@@ -335,6 +352,56 @@ open class SkipToScene: BaseScene {
         } else {
             scriptLine += ", SkipTo: \(SkipTo)"
         }
+        
+        if (Script != nil) {
+            scriptLine += ", Script: " + Script!
+        }
+        
+        if (Flag != nil) {
+            scriptLine += ", Flag: " + Flag!
+        }
+        
+        if (ClearStack != nil) {
+            scriptLine += ", ClearStack: " + ((ClearStack! == true) ? "True" : "False")
+        }
+        
+        return scriptLine
+    }
+}
+
+open class SkipBackScene: BaseScene {
+    public var Flag: String? = nil
+    
+    enum SkipBackCodingKeys: String, CodingKey {
+        case Flag
+    }
+    
+    public override init() {
+        super.init()
+    }
+    
+    public override init(from scriptParameters: [String : String], strings: inout [String : String]) {
+        super.init(from: scriptParameters, strings: &strings)
+        
+        if (scriptParameters["Flag"] != nil) {
+            Flag = scriptParameters["Flag"]!
+        }
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+        let container = try decoder.container(keyedBy: SkipBackCodingKeys.self)
+        Flag = try container.decodeIfPresent(String.self, forKey: SkipBackCodingKeys.Flag)
+    }
+    
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: SkipBackCodingKeys.self)
+        try container.encodeIfPresent(Flag, forKey: SkipBackCodingKeys.Flag)
+    }
+    
+    open override func toScriptHeader(index: Int, strings: [String : String], indexMap: [Int : String]) -> String {
+        var scriptLine: String = super.toScriptHeader(index: index, strings: strings, indexMap: indexMap)
         
         if (Flag != nil) {
             scriptLine += ", Flag: " + Flag!

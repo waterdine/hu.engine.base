@@ -138,7 +138,7 @@ class MainMenuLogic: GameScene {
         areYouSureShadow2Label?.text = areYouSureLabel?.text
         areYouSureShadow2Label?.fontName = buttonFont
 		
-		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
+		fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentScriptIndex == 0
 		let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 		playResumeLabel!.text = fromTheTopNode!.isHidden ? gameLogic!.localizedString(forKey: "Play", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Continue", value: nil, table: "Story")
         playResumeLabel?.fontName = buttonFont
@@ -316,7 +316,7 @@ class MainMenuLogic: GameScene {
 	
 	override func update(_ currentTime: TimeInterval) {
 		if (!loaded) {
-			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentChapterIndex == 0
+			fromTheTopNode?.isHidden = self.gameLogic?.currentSceneIndex == -1 && self.gameLogic?.currentScriptIndex == 0
 			let playResumeLabel = self.childNode(withName: "//PlayResumeLabel") as? SKLabelNode
 			//let playResumeLabelShadow = self.childNode(withName: "//PlayResumeLabelShadow") as? SKLabelNode
 			playResumeLabel!.text = fromTheTopNode!.isHidden ? gameLogic!.localizedString(forKey: "Play", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Continue", value: nil, table: "Story")

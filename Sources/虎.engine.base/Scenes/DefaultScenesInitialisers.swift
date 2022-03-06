@@ -56,6 +56,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
             case "SkipTo":
                 scene = SkipToScene.init(from: scriptParameters, strings: &strings)
                 break
+            case "SkipBack":
+                scene = SkipBackScene.init(from: scriptParameters, strings: &strings)
+                break
             case "Credits":
                 scene = CreditsScene.init(from: scriptParameters, strings: &strings)
                 break
@@ -74,6 +77,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
         case "SkipTo":
             scene = try SkipToScene.init(from: decoder)
             break
+        case "SkipBack":
+            scene = try SkipBackScene.init(from: decoder)
+            break
         case "Credits":
             scene = try CreditsScene.init(from: decoder)
             break
@@ -90,6 +96,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
             break
         case "SkipTo":
             try (scene as! SkipToScene).encode(to: encoder)
+            break
+        case "SkipBack":
+            try (scene as! SkipBackScene).encode(to: encoder)
             break
         case "Credits":
             try (scene as! CreditsScene).encode(to: encoder)
@@ -112,6 +121,11 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 newData = SkipToScene()
             }
             break
+        case "SkipBack":
+            if (!(scene is SkipBackScene)) {
+                newData = SkipBackScene()
+            }
+            break
         case "Credits":
             if (!(scene is CreditsScene)) {
                 newData = CreditsScene()
@@ -129,6 +143,8 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 return (scene as! IntroScene).getDescription()
             case "SkipTo":
                 return (scene as! SkipToScene).getDescription()
+            case "SkipBack":
+                return (scene as! SkipBackScene).getDescription()
             case "Credits":
                 return (scene as! CreditsScene).getDescription()
             default:
@@ -147,6 +163,9 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
                 break
             case "SkipTo":
                 lines.append(contentsOf: (scene as! SkipToScene).toStringsLines(index: index, strings: strings))
+                break
+            case "SkipBack":
+                lines.append(contentsOf: (scene as! SkipBackScene).toStringsLines(index: index, strings: strings))
                 break
             case "Credits":
                 lines.append(contentsOf: (scene as! CreditsScene).toStringsLines(index: index, strings: strings))

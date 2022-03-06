@@ -21,6 +21,17 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
+public struct SceneFlow {
+    var sceneIndex: Int?
+    var scriptIndex: Int?
+}
+/*
+public struct ChoiceFlow {
+    var sceneIndex: Int
+    var scriptIndex: Int
+    var choiceIndex: Int // Choices are only allowed a specific gramma for their directing text and choices.
+}*/
+
 @available(OSX 10.13, *)
 @available(iOS 9.0, *)
 open class GameLogic: NSObject {
@@ -34,7 +45,9 @@ open class GameLogic: NSObject {
 	
 	// current storyline (saveable)
 	open var currentSceneIndex: Int?
-	open var currentChapterIndex: Int?
+	open var currentScriptIndex: Int?
+    //open var log: [ChoiceFlow]
+    open var sceneStack: [SceneFlow] = []
     open var sceneLabels: [String:Int] = [:]
 	open var flags: [String] = []
 	open var variables: [String:String] = [:]
@@ -94,7 +107,7 @@ open class GameLogic: NSObject {
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
 		gameLogic.currentSceneIndex = -1;
-		gameLogic.currentChapterIndex = 0;
+		gameLogic.currentScriptIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
 		gameLogic.loadState()
 		gameLogic.alignTextSpeed()
@@ -103,7 +116,7 @@ open class GameLogic: NSObject {
 	}
 	
     func loadStringsTables() {
-        if (baseDir != nil) {
+        if (baseDir != nil && languages.count > currentLanguageIndex) {
             let storyStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Story").appendingPathExtension("strings")
                     
             if (FileManager.default.fileExists(atPath: storyStringsURL.path)) {
@@ -170,14 +183,15 @@ open class GameLogic: NSObject {
 		// atode: REMOVVE!!
 		self.variables["LondonTime"] = "13:20"
 		self.variables["LondonWeather"] = "cloudy"
+        self.variables["Mood"] = "Irritable" // atode: get this from HealthKit data, such as time of month, time of day, tireness etc.
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
         
-        let chaptersPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
-        let chaptersPlistContents = try! Data(contentsOf: chaptersPlistURL)
-        let chaptersPlistString: String? = String(data: chaptersPlistContents, encoding: .utf8)
-        if (chaptersPlistString != nil && chaptersPlistString!.starts(with: "<?xml")) {
-            /*let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: chaptersPlistContents)
+        let storyPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
+        let storyPlistContents = try! Data(contentsOf: storyPlistURL)
+        let storyPlistString: String? = String(data: storyPlistContents, encoding: .utf8)
+        if (storyPlistString != nil && storyPlistString!.starts(with: "<?xml")) {
+            /*let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: storyPlistContents)
             let chapterList: [String] = chapterListPlist["Chapters"]! as [String]
             story = Story()
             story?.Version = 0
@@ -188,16 +202,16 @@ open class GameLogic: NSObject {
                 newChapter.name = chapter
                 story!.Chapters.append(newChapter)
             }*/
-            story = try! PropertyListDecoder().decode(Story.self, from: chaptersPlistContents)
+            story = try! PropertyListDecoder().decode(Story.self, from: storyPlistContents)
         /*} else {
             if #available(iOS 13.0, *) {
-                let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
+                let sealedBox = try! AES.GCM.SealedBox.init(combined: storyPlistContents)
                 let key = SymmetricKey.init(data: masterKey())
                 let data = try! AES.GCM.open(sealedBox, using: key)
                 story = try! PropertyListDecoder().decode(Story.self, from: data)
             }*/
         } else {
-            story = try! PropertyListDecoder().decode(Story.self, from: chaptersPlistContents)
+            story = try! PropertyListDecoder().decode(Story.self, from: storyPlistContents)
         }
 		
 		var sceneList: Scenes? = nil
@@ -208,9 +222,9 @@ open class GameLogic: NSObject {
 		while (reloadSceneData) {
 			reloadSceneData = false
 			
-			if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0) {
-                let chapterFileName = story!.Chapters[self.currentChapterIndex!].name
-                let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(chapterFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: chapterFileName, withExtension: "plist")
+			if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0) {
+                let scriptFileName = story!.Scripts[self.currentScriptIndex!].name
+                let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(scriptFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: scriptFileName, withExtension: "plist")
                 let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
                 let decoder: PropertyListDecoder = PropertyListDecoder()
@@ -236,21 +250,22 @@ open class GameLogic: NSObject {
                         sceneNames[sceneName] =
                     }
                 }*/
-                if (baseDir != nil) {
-                    let chapterStringsURL = baseDir!.appendingPathComponent(chapterFileName).appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(chapterFileName).appendingPathExtension("strings")
+                if (baseDir != nil && languages.count > currentLanguageIndex) {
+                    let scriptStringsURL = baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(scriptFileName).appendingPathExtension("strings")
 
-                    if (FileManager.default.fileExists(atPath: chapterStringsURL.path)) {
-                        let string = NSDictionary.init(contentsOf: chapterStringsURL)
+                    if (FileManager.default.fileExists(atPath: scriptStringsURL.path)) {
+                        let string = NSDictionary.init(contentsOf: scriptStringsURL)
                         if (string != nil) {
-                            stringsTables[chapterFileName] = (NSDictionary.init(contentsOf: chapterStringsURL) as! [String:String])
+                            stringsTables[scriptFileName] = (NSDictionary.init(contentsOf: scriptStringsURL) as! [String:String])
                         }
                     }
                 }
-			} else if (story != nil && self.currentChapterIndex! >= story!.Chapters.count) {
+			} else if (story != nil && self.currentScriptIndex! >= story!.Scripts.count) {
 				self.currentSceneIndex! = 0
-				self.currentChapterIndex! = 0
+				self.currentScriptIndex! = 0
 				self.flags = []
 				self.variables = [:]
+                self.sceneStack = []
 				saveState()
 				self.currentSceneIndex! = -1
 			}
@@ -260,7 +275,7 @@ open class GameLogic: NSObject {
                 sceneTypeName = sceneData!.Scene
 			} else if (sceneList != nil && self.currentSceneIndex! >= sceneList!.Scenes.count) {
 				self.currentSceneIndex! = 0
-				self.currentChapterIndex! += 1
+				self.currentScriptIndex! += 1
 				saveState()
 				reloadSceneData = true
 			}
@@ -421,22 +436,24 @@ open class GameLogic: NSObject {
     
     open func saveState() {
         UserDefaults.standard.setValue(max(0, self.currentSceneIndex!), forKey: "currentSceneIndex")
-        UserDefaults.standard.setValue(max(0, self.currentChapterIndex!), forKey: "currentChapterIndex")
+        UserDefaults.standard.setValue(max(0, self.currentScriptIndex!), forKey: "currentChapterIndex")
         UserDefaults.standard.setValue(self.flags, forKey: "flags")
         UserDefaults.standard.setValue(self.variables, forKey: "variables")
+        UserDefaults.standard.setValue(self.sceneStack, forKey: "sceneStack")
     }
     
 	open func loadState() {
 		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
-		let savedCurrentChapterIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
+		let savedcurrentScriptIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
 		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
 		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
+        let savedSceneStack: [SceneFlow]? = UserDefaults.standard.value(forKey: "sceneStack") as? [SceneFlow]
 		
 		if (savedCurrentSceneIndex != nil) {
 			self.currentSceneIndex = savedCurrentSceneIndex! - 1
 		}
-		if (savedCurrentChapterIndex != nil) {
-			self.currentChapterIndex = savedCurrentChapterIndex!
+		if (savedcurrentScriptIndex != nil) {
+			self.currentScriptIndex = savedcurrentScriptIndex!
 		}
 		if (savedFlags != nil) {
 			self.flags = savedFlags!
@@ -444,12 +461,37 @@ open class GameLogic: NSObject {
 		if (savedVariables != nil) {
 			self.variables = savedVariables!
 		}
+        if (savedSceneStack != nil) {
+            self.sceneStack = savedSceneStack!
+        }
 	}
-	
-    open func setScene(sceneIndex: Int, chapterIndex: Int)
+    
+    open func pushToStack()
+    {
+        self.sceneStack.append(SceneFlow(sceneIndex: self.currentSceneIndex, scriptIndex: self.currentScriptIndex))
+    }
+    
+    open func clearStack()
+    {
+        self.sceneStack = []
+    }
+    
+    open func popStack()
+    {
+        let flow = self.sceneStack.popLast()
+        if (flow != nil) {
+            self.currentSceneIndex = flow?.sceneIndex
+            self.currentScriptIndex = flow?.scriptIndex
+            nextScene()
+        }
+    }
+    
+    open func setScene(sceneIndex: Int, script: String?)
 	{
 		self.currentSceneIndex! = sceneIndex
-        self.currentChapterIndex! = chapterIndex
+        if (script != nil) {
+            self.currentScriptIndex! = self.story!.Scripts.firstIndex(where: { $0.name == script! })!
+        }
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
@@ -474,9 +516,10 @@ open class GameLogic: NSObject {
 	
 	open func restart() {
 		self.currentSceneIndex! = 0
-		self.currentChapterIndex! = 0
+		self.currentScriptIndex! = 0
 		self.flags = []
 		self.variables = [:]
+        self.sceneStack = []
 		saveState()
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
@@ -649,9 +692,9 @@ open class GameLogic: NSObject {
 	}
 	
 	open func getChapterTable() -> String {
-        if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
+        if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0)
 		{
-            return story!.Chapters[self.currentChapterIndex!].name
+            return story!.Scripts[self.currentScriptIndex!].name
 		}
 		return "Story"
 	}
@@ -667,9 +710,9 @@ open class GameLogic: NSObject {
 	}
     
     open func getProperty() -> String {
-        if (story != nil && story!.Chapters.count > self.currentChapterIndex! && self.currentChapterIndex! >= 0)
+        if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0)
         {
-            return story!.Chapters[self.currentChapterIndex!].name
+            return story!.Scripts[self.currentScriptIndex!].name
         }
         return "Story"
     }

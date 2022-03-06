@@ -22,16 +22,23 @@ class SkipToLogic: GameScene {
 	
 	open override func customLogic() -> Bool {
         let skipToScene: Int = (data as? SkipToScene)!.SkipTo
+        let script: String? = (data as? SkipToScene)!.Script
         let flag: String? = (data as? SkipToScene)!.Flag
+        let clearStack: Bool? = (data as? SkipToScene)!.ClearStack
 		 
 		var shouldSkip: Bool = true;
 		 
 		if (flag != nil) {
 			shouldSkip = !(gameLogic!.flags.contains(flag!))
 		}
-		 
+        
+        if (clearStack == nil || clearStack!) {
+            gameLogic?.clearStack()
+        }
+        
 		if (shouldSkip) {
-            gameLogic!.setScene(sceneIndex: skipToScene, chapterIndex: gameLogic!.currentChapterIndex!)
+            gameLogic?.pushToStack()
+            gameLogic!.setScene(sceneIndex: skipToScene, script: script)
 		} else {
             gameLogic!.nextScene()
 		}
