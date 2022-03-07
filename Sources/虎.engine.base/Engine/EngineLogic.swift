@@ -98,7 +98,7 @@ open class GameLogic: NSObject {
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
         gameLogic.gameState.currentSceneIndex = -1;
-        gameLogic.gameState.currentScriptIndex = 0;
+        gameLogic.gameState.currentScript = nil;
 		gameLogic.transitionToScene(forceTransition: nil)
 		gameLogic.loadState()
 		gameLogic.alignTextSpeed()
@@ -213,8 +213,8 @@ open class GameLogic: NSObject {
 		while (reloadSceneData) {
 			reloadSceneData = false
 			
-            if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0) {
-                let scriptFileName = story!.Scripts[self.gameState.currentScriptIndex!].name
+            if (story != nil && self.gameState.currentScript != nil) {
+                let scriptFileName = self.gameState.currentScript!
                 let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(scriptFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: scriptFileName, withExtension: "plist")
                 let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
@@ -251,24 +251,28 @@ open class GameLogic: NSObject {
                         }
                     }
                 }
-            } else if (story != nil && self.gameState.currentScriptIndex! >= story!.Scripts.count) {
-                self.gameState.currentSceneIndex! = 0
-                self.gameState.currentScriptIndex! = 0
-                self.gameState.flags = []
-                self.gameState.variables = [:]
-                self.gameState.sceneStack = []
-				saveState()
-                self.gameState.currentSceneIndex! = -1
-			}
+            }
 			
             if (sceneList != nil && sceneList!.Scenes.count > self.gameState.currentSceneIndex! && self.gameState.currentSceneIndex! >= 0) {
                 sceneData = sceneList!.Scenes[self.gameState.currentSceneIndex!].data
                 sceneTypeName = sceneData!.Scene
             } else if (sceneList != nil && self.gameState.currentSceneIndex! >= sceneList!.Scenes.count) {
-                self.gameState.currentSceneIndex! = 0
-                self.gameState.currentScriptIndex! += 1
-				saveState()
-				reloadSceneData = true
+                var scriptIndex = story!.Scripts.firstIndex(where: { $0.name == self.gameState.currentScript }) ?? 0
+                scriptIndex += 1
+                if (scriptIndex >= story!.Scripts.count) {
+                    self.gameState.currentSceneIndex! = 0
+                    self.gameState.currentScript = nil
+                    self.gameState.flags = []
+                    self.gameState.variables = [:]
+                    self.gameState.sceneStack = []
+                    saveState()
+                    self.gameState.currentSceneIndex! = -1
+                } else {
+                    self.gameState.currentSceneIndex! = 0
+                    self.gameState.currentScript = story!.Scripts[scriptIndex].name
+                    saveState()
+                }
+                reloadSceneData = true
 			}
 		}
 		
@@ -446,7 +450,8 @@ open class GameLogic: NSObject {
                 self.gameState.currentSceneIndex = savedCurrentSceneIndex! - 1
             }
             if (savedcurrentScriptIndex != nil) {
-                self.gameState.currentScriptIndex = savedcurrentScriptIndex!
+                // atode: Reload story before here?
+                self.gameState.currentScript = story!.Scripts[savedcurrentScriptIndex!].name
             }
             if (savedFlags != nil) {
                 self.gameState.flags = savedFlags!
@@ -459,8 +464,8 @@ open class GameLogic: NSObject {
     
     open func pushToStack()
     {
-        if (self.gameState.currentSceneIndex != nil && self.gameState.currentScriptIndex != nil) {
-            self.gameState.sceneStack.append(SceneFlow(sceneIndex: self.gameState.currentSceneIndex!, scriptIndex: self.gameState.currentScriptIndex!))
+        if (self.gameState.currentSceneIndex != nil && self.gameState.currentScript != nil) {
+            self.gameState.sceneStack.append(SceneFlow(sceneIndex: self.gameState.currentSceneIndex!, script: self.gameState.currentScript!))
         }
     }
     
@@ -474,7 +479,7 @@ open class GameLogic: NSObject {
         let flow = self.gameState.sceneStack.popLast()
         if (flow != nil) {
             self.gameState.currentSceneIndex = flow?.sceneIndex
-            self.gameState.currentScriptIndex = flow?.scriptIndex
+            self.gameState.currentScript = flow?.script
             nextScene()
         }
     }
@@ -483,7 +488,7 @@ open class GameLogic: NSObject {
 	{
         self.gameState.currentSceneIndex! = sceneIndex
         if (script != nil) {
-            self.gameState.currentScriptIndex! = self.story!.Scripts.firstIndex(where: { $0.name == script! })!
+            self.gameState.currentScript = nil
         }
 		saveState()
 		transitionToScene(forceTransition: nil)
@@ -509,7 +514,7 @@ open class GameLogic: NSObject {
 	
 	open func restart() {
         self.gameState.currentSceneIndex! = 0
-        self.gameState.currentScriptIndex! = 0
+        self.gameState.currentScript = nil
         self.gameState.flags = []
         self.gameState.variables = [:]
         self.gameState.sceneStack = []
@@ -685,11 +690,7 @@ open class GameLogic: NSObject {
 	}
 	
 	open func getChapterTable() -> String {
-        if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0)
-		{
-            return story!.Scripts[self.gameState.currentScriptIndex!].name
-		}
-		return "Story"
+        return self.gameState.currentScript ?? "Story"
 	}
 	
 	open func unwrapVariables(text: String) -> String {
@@ -703,11 +704,7 @@ open class GameLogic: NSObject {
 	}
     
     open func getProperty() -> String {
-        if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0)
-        {
-            return story!.Scripts[self.gameState.currentScriptIndex!].name
-        }
-        return "Story"
+        return self.gameState.currentScript ?? "Story"
     }
     
     open func localizedString(forKey: String, value: String?, table: String) -> String

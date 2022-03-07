@@ -9,13 +9,13 @@ import Foundation
 
 public struct SceneFlow: Codable {
     var sceneIndex: Int
-    var scriptIndex: Int
+    var script: String
 }
 
 public class GameState: Codable {
     var version: Int = 0
     open var currentSceneIndex: Int? = nil
-    open var currentScriptIndex: Int? = nil
+    open var currentScript: String? = nil
     //open var log: [ChoiceFlow]
     open var sceneStack: [SceneFlow] = []
     open var flags: [String] = []
@@ -24,7 +24,7 @@ public class GameState: Codable {
     enum GameStateCodingKeys: String, CodingKey {
         case Version
         case CurrentSceneIndex
-        case CurrentScriptIndex
+        case CurrentScript
         case SceneStack
         case Flags
         case Variables
@@ -37,7 +37,7 @@ public class GameState: Codable {
         let container = try decoder.container(keyedBy: GameStateCodingKeys.self)
         version = try container.decode(Int.self, forKey: GameStateCodingKeys.Version)
         currentSceneIndex = try container.decodeIfPresent(Int.self, forKey: GameStateCodingKeys.CurrentSceneIndex)
-        currentScriptIndex = try container.decodeIfPresent(Int.self, forKey: GameStateCodingKeys.CurrentScriptIndex)
+        currentScript = try container.decodeIfPresent(String.self, forKey: GameStateCodingKeys.CurrentScript)
         sceneStack = try container.decode([SceneFlow].self, forKey: GameStateCodingKeys.SceneStack)
         flags = try container.decode([String].self, forKey: GameStateCodingKeys.Flags)
         variables = try container.decode([String:String].self, forKey: GameStateCodingKeys.Variables)
@@ -47,7 +47,7 @@ public class GameState: Codable {
         var container = encoder.container(keyedBy: GameStateCodingKeys.self)
         try container.encode(version, forKey: GameStateCodingKeys.Version)
         try container.encodeIfPresent(currentSceneIndex, forKey: GameStateCodingKeys.CurrentSceneIndex)
-        try container.encodeIfPresent(currentScriptIndex, forKey: GameStateCodingKeys.CurrentScriptIndex)
+        try container.encodeIfPresent(currentScript, forKey: GameStateCodingKeys.CurrentScript)
         try container.encode(sceneStack, forKey: GameStateCodingKeys.SceneStack)
         try container.encode(flags, forKey: GameStateCodingKeys.Flags)
         try container.encode(variables, forKey: GameStateCodingKeys.Variables)
