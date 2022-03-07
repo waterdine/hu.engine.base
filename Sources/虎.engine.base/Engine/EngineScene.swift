@@ -43,7 +43,7 @@ open class GameScene: SKScene {
 	open override func didMove(to view: SKView) {
 		let logic: GameLogic = gameLogic!
 		if (logic.sceneDebug) {
-			let sceneNumber: Int = logic.currentSceneIndex!
+            let sceneNumber: Int = logic.gameState.currentSceneIndex!
 			let sceneNumberText = String.init(format: "Scene: %d", sceneNumber as CVarArg)
 			if (sceneNumberLabel == nil) {
 				sceneNumberLabel = SKLabelNode.init(text: sceneNumberText)

@@ -21,10 +21,6 @@ public enum VolumeLevel: Int {
     case Off, Low, Medium, High
 }
 
-public struct SceneFlow {
-    var sceneIndex: Int
-    var scriptIndex: Int
-}
 /*
 public struct ChoiceFlow {
     var sceneIndex: Int
@@ -44,13 +40,8 @@ open class GameLogic: NSObject {
     open var sceneListSerialiser: SceneListSerialiser = SceneListSerialiser()
 	
 	// current storyline (saveable)
-	open var currentSceneIndex: Int?
-	open var currentScriptIndex: Int?
-    //open var log: [ChoiceFlow]
-    open var sceneStack: [SceneFlow] = []
+    open var gameState: GameState = GameState()
     open var sceneLabels: [String:Int] = [:]
-	open var flags: [String] = []
-	open var variables: [String:String] = [:]
 	open var textDelay: Double = 1.0
 	open var textFadeTime: Double = 0.075
 	open var actionDelay: Double = 0.5
@@ -106,8 +97,8 @@ open class GameLogic: NSObject {
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
 		gameLogic.transition = transitionCallback
-		gameLogic.currentSceneIndex = -1;
-		gameLogic.currentScriptIndex = 0;
+        gameLogic.gameState.currentSceneIndex = -1;
+        gameLogic.gameState.currentScriptIndex = 0;
 		gameLogic.transitionToScene(forceTransition: nil)
 		gameLogic.loadState()
 		gameLogic.alignTextSpeed()
@@ -181,9 +172,9 @@ open class GameLogic: NSObject {
 
 	open func transitionToScene(forceTransition: SKTransition?) {
 		// atode: REMOVVE!!
-		self.variables["LondonTime"] = "13:20"
-		self.variables["LondonWeather"] = "cloudy"
-        self.variables["Mood"] = "Irritable" // atode: get this from HealthKit data, such as time of month, time of day, tireness etc.
+        self.gameState.variables["LondonTime"] = "13:20"
+        self.gameState.variables["LondonWeather"] = "cloudy"
+        self.gameState.variables["Mood"] = "Irritable" // atode: get this from HealthKit data, such as time of month, time of day, tireness etc.
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
         
@@ -222,8 +213,8 @@ open class GameLogic: NSObject {
 		while (reloadSceneData) {
 			reloadSceneData = false
 			
-			if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0) {
-                let scriptFileName = story!.Scripts[self.currentScriptIndex!].name
+            if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0) {
+                let scriptFileName = story!.Scripts[self.gameState.currentScriptIndex!].name
                 let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(scriptFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: scriptFileName, withExtension: "plist")
                 let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
@@ -260,22 +251,22 @@ open class GameLogic: NSObject {
                         }
                     }
                 }
-			} else if (story != nil && self.currentScriptIndex! >= story!.Scripts.count) {
-				self.currentSceneIndex! = 0
-				self.currentScriptIndex! = 0
-				self.flags = []
-				self.variables = [:]
-                self.sceneStack = []
+            } else if (story != nil && self.gameState.currentScriptIndex! >= story!.Scripts.count) {
+                self.gameState.currentSceneIndex! = 0
+                self.gameState.currentScriptIndex! = 0
+                self.gameState.flags = []
+                self.gameState.variables = [:]
+                self.gameState.sceneStack = []
 				saveState()
-				self.currentSceneIndex! = -1
+                self.gameState.currentSceneIndex! = -1
 			}
 			
-            if (sceneList != nil && sceneList!.Scenes.count > self.currentSceneIndex! && self.currentSceneIndex! >= 0) {
-                sceneData = sceneList!.Scenes[self.currentSceneIndex!].data
+            if (sceneList != nil && sceneList!.Scenes.count > self.gameState.currentSceneIndex! && self.gameState.currentSceneIndex! >= 0) {
+                sceneData = sceneList!.Scenes[self.gameState.currentSceneIndex!].data
                 sceneTypeName = sceneData!.Scene
-			} else if (sceneList != nil && self.currentSceneIndex! >= sceneList!.Scenes.count) {
-				self.currentSceneIndex! = 0
-				self.currentScriptIndex! += 1
+            } else if (sceneList != nil && self.gameState.currentSceneIndex! >= sceneList!.Scenes.count) {
+                self.gameState.currentSceneIndex! = 0
+                self.gameState.currentScriptIndex! += 1
 				saveState()
 				reloadSceneData = true
 			}
@@ -435,93 +426,93 @@ open class GameLogic: NSObject {
     }
     
     open func saveState() {
-        UserDefaults.standard.setValue(max(0, self.currentSceneIndex!), forKey: "currentSceneIndex")
-        UserDefaults.standard.setValue(max(0, self.currentScriptIndex!), forKey: "currentChapterIndex")
-        UserDefaults.standard.setValue(self.flags, forKey: "flags")
-        UserDefaults.standard.setValue(self.variables, forKey: "variables")
-        UserDefaults.standard.setValue(self.sceneStack, forKey: "sceneStack")
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .binary
+        let data = try! encoder.encode(self.gameState)
+        UserDefaults.standard.setValue(data, forKey: "GameState")
     }
     
 	open func loadState() {
-		let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
-		let savedcurrentScriptIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
-		let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
-		let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
-        let savedSceneStack: [SceneFlow]? = UserDefaults.standard.value(forKey: "sceneStack") as? [SceneFlow]
-		
-		if (savedCurrentSceneIndex != nil) {
-			self.currentSceneIndex = savedCurrentSceneIndex! - 1
-		}
-		if (savedcurrentScriptIndex != nil) {
-			self.currentScriptIndex = savedcurrentScriptIndex!
-		}
-		if (savedFlags != nil) {
-			self.flags = savedFlags!
-		}
-		if (savedVariables != nil) {
-			self.variables = savedVariables!
-		}
-        if (savedSceneStack != nil) {
-            self.sceneStack = savedSceneStack!
+        let savedGameState: Data? = UserDefaults.standard.value(forKey: "GameState") as? Data
+        if (savedGameState != nil) {
+            self.gameState = try! PropertyListDecoder().decode(GameState.self, from: savedGameState!)
+        } else {
+            let savedCurrentSceneIndex: Int? = UserDefaults.standard.value(forKey: "currentSceneIndex") as? Int
+            let savedcurrentScriptIndex: Int? = UserDefaults.standard.value(forKey: "currentChapterIndex") as? Int
+            let savedFlags: [String]? = UserDefaults.standard.value(forKey: "flags") as? [String]
+            let savedVariables: [String:String]? = UserDefaults.standard.value(forKey: "variables") as? [String:String]
+            
+            if (savedCurrentSceneIndex != nil) {
+                self.gameState.currentSceneIndex = savedCurrentSceneIndex! - 1
+            }
+            if (savedcurrentScriptIndex != nil) {
+                self.gameState.currentScriptIndex = savedcurrentScriptIndex!
+            }
+            if (savedFlags != nil) {
+                self.gameState.flags = savedFlags!
+            }
+            if (savedVariables != nil) {
+                self.gameState.variables = savedVariables!
+            }
         }
 	}
     
     open func pushToStack()
     {
-        if (self.currentSceneIndex != nil && self.currentScriptIndex != nil) {
-            self.sceneStack.append(SceneFlow(sceneIndex: self.currentSceneIndex!, scriptIndex: self.currentScriptIndex!))
+        if (self.gameState.currentSceneIndex != nil && self.gameState.currentScriptIndex != nil) {
+            self.gameState.sceneStack.append(SceneFlow(sceneIndex: self.gameState.currentSceneIndex!, scriptIndex: self.gameState.currentScriptIndex!))
         }
     }
     
     open func clearStack()
     {
-        self.sceneStack = []
+        self.gameState.sceneStack = []
     }
     
     open func popStack()
     {
-        let flow = self.sceneStack.popLast()
+        let flow = self.gameState.sceneStack.popLast()
         if (flow != nil) {
-            self.currentSceneIndex = flow?.sceneIndex
-            self.currentScriptIndex = flow?.scriptIndex
+            self.gameState.currentSceneIndex = flow?.sceneIndex
+            self.gameState.currentScriptIndex = flow?.scriptIndex
             nextScene()
         }
     }
     
     open func setScene(sceneIndex: Int, script: String?)
 	{
-		self.currentSceneIndex! = sceneIndex
+        self.gameState.currentSceneIndex! = sceneIndex
         if (script != nil) {
-            self.currentScriptIndex! = self.story!.Scripts.firstIndex(where: { $0.name == script! })!
+            self.gameState.currentScriptIndex! = self.story!.Scripts.firstIndex(where: { $0.name == script! })!
         }
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
 	
 	open func nextScene() {
-		self.currentSceneIndex! += 1
+        self.gameState.currentSceneIndex! += 1
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
 	
 	open func prevScene() {
-		self.currentSceneIndex! -= 1
+        self.gameState.currentSceneIndex! -= 1
 		saveState()
 		transitionToScene(forceTransition: nil)
 	}
 
 	open func start() {
-		self.currentSceneIndex! += 1
+        self.gameState.currentSceneIndex! += 1
 		saveState()
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
 	
 	open func restart() {
-		self.currentSceneIndex! = 0
-		self.currentScriptIndex! = 0
-		self.flags = []
-		self.variables = [:]
-        self.sceneStack = []
+        self.gameState.currentSceneIndex! = 0
+        self.gameState.currentScriptIndex! = 0
+        self.gameState.flags = []
+        self.gameState.variables = [:]
+        self.gameState.sceneStack = []
 		saveState()
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
@@ -694,9 +685,9 @@ open class GameLogic: NSObject {
 	}
 	
 	open func getChapterTable() -> String {
-        if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0)
+        if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0)
 		{
-            return story!.Scripts[self.currentScriptIndex!].name
+            return story!.Scripts[self.gameState.currentScriptIndex!].name
 		}
 		return "Story"
 	}
@@ -704,7 +695,7 @@ open class GameLogic: NSObject {
 	open func unwrapVariables(text: String) -> String {
 		var returnText = text
 		if (returnText.contains("$")) {
-			for variable in variables {
+            for variable in gameState.variables {
 				returnText = returnText.replacingOccurrences(of: "$" + variable.key, with: variable.value)
 			}
 		}
@@ -712,9 +703,9 @@ open class GameLogic: NSObject {
 	}
     
     open func getProperty() -> String {
-        if (story != nil && story!.Scripts.count > self.currentScriptIndex! && self.currentScriptIndex! >= 0)
+        if (story != nil && story!.Scripts.count > self.gameState.currentScriptIndex! && self.gameState.currentScriptIndex! >= 0)
         {
-            return story!.Scripts[self.currentScriptIndex!].name
+            return story!.Scripts[self.gameState.currentScriptIndex!].name
         }
         return "Story"
     }

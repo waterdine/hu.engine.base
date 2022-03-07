@@ -29,7 +29,7 @@ class SkipToLogic: GameScene {
 		var shouldSkip: Bool = true;
 		 
 		if (flag != nil) {
-			shouldSkip = !(gameLogic!.flags.contains(flag!))
+            shouldSkip = !(gameLogic!.gameState.flags.contains(flag!))
 		}
         
         if (clearStack == nil || clearStack!) {
