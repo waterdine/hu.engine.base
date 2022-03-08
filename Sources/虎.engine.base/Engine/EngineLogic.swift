@@ -488,7 +488,7 @@ open class GameLogic: NSObject {
 	{
         self.gameState.currentSceneIndex! = sceneIndex
         if (script != nil) {
-            self.gameState.currentScript = nil
+            self.gameState.currentScript = script
         }
 		saveState()
 		transitionToScene(forceTransition: nil)
