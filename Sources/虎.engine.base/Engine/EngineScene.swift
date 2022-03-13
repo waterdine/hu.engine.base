@@ -223,7 +223,7 @@ open class GameScene: SKScene {
     open override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
             guard let key = press.key else { continue }
-            print(key.title)
+            print(key)
             var button: GamePadButton
             switch key.charactersIgnoringModifiers {
             case UIKeyCommand.inputUpArrow:
