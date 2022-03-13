@@ -223,6 +223,7 @@ open class GameScene: SKScene {
     open override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
             guard let key = press.key else { continue }
+            print(key.title)
             var button: GamePadButton
             switch key.charactersIgnoringModifiers {
             case UIKeyCommand.inputUpArrow:
@@ -233,8 +234,8 @@ open class GameScene: SKScene {
                 button = GamePadButton.LEFT
             case UIKeyCommand.inputRightArrow:
                 button = GamePadButton.RIGHT
-            case 76,  36, 49:
-                button = GamePadButton.CIRCLE
+            //case 76,  36, 49:
+            //    button = GamePadButton.CIRCLE
             case UIKeyCommand.inputEscape:
                 button = GamePadButton.CROSS
             default:
