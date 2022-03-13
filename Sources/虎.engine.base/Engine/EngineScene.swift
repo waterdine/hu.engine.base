@@ -241,7 +241,7 @@ open class GameScene: SKScene {
             default:
                 button = GamePadButton.UNKNOWN
             }
-            interactionButton(button, timestamp: event.timestamp)
+            interactionButton(button, timestamp: event!.timestamp)
         }
     }
 #endif
