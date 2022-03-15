@@ -9,11 +9,13 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 // Define this document's type.
+@available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 extension UTType {
     static let engineDocument = UTType(exportedAs: "engine.xn--y71a.product")
 }
 
+@available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 struct EngineDocument: FileDocument {
     
