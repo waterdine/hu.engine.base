@@ -11,15 +11,15 @@ import UniformTypeIdentifiers
 // Define this document's type.
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
-extension UTType {
+public extension UTType {
     static let engineDocument = UTType(exportedAs: "engine.xn--y71a.product")
 }
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
-struct EngineDocument: FileDocument {
+public struct EngineDocument: FileDocument {
     
-    static var readableContentTypes: [UTType] { [.engineDocument] }
+    public static var readableContentTypes: [UTType] { [.engineDocument] }
     
     var product: Product = Product()
     var story: Story? = nil
@@ -31,10 +31,10 @@ struct EngineDocument: FileDocument {
     var sounds: [String : FileWrapper] = [:]
     var musics: [String : FileWrapper] = [:]
     
-    init() {
+    public init() {
     }
 
-    init(configuration: ReadConfiguration) throws {
+    public init(configuration: ReadConfiguration) throws {
         self.product = try PropertyListDecoder().decode(Product.self, from: (configuration.file.fileWrappers?["Property.plist"]?.regularFileContents)!)
         if (product.library) {
             self.backgrounds = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]?.fileWrappers ?? [:]
@@ -46,7 +46,7 @@ struct EngineDocument: FileDocument {
         }
     }
     
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
         let productData = try PropertyListEncoder().encode(product)
         let productWrapper = FileWrapper(regularFileWithContents: productData)
