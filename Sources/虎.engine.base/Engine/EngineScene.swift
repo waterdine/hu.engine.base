@@ -220,7 +220,7 @@ open class GameScene: SKScene {
 	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
 	}
     
-    open override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+/*    open override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
             guard let key = press.key else { continue }
             print(key)
@@ -243,7 +243,7 @@ open class GameScene: SKScene {
             }
             interactionButton(button, timestamp: event!.timestamp)
         }
-    }
+    }*/
 #endif
 
 #if os(OSX)

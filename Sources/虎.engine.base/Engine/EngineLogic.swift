@@ -257,20 +257,26 @@ open class GameLogic: NSObject {
                 sceneData = sceneList!.Scenes[self.gameState.currentSceneIndex!].data
                 sceneTypeName = sceneData!.Scene
             } else if (sceneList != nil && self.gameState.currentSceneIndex! >= sceneList!.Scenes.count) {
-                var scriptIndex = story!.Scripts.firstIndex(where: { $0.name == self.gameState.currentScript }) ?? 0
-                scriptIndex += 1
-                if (scriptIndex >= story!.Scripts.count) {
-                    self.gameState.currentSceneIndex! = 0
-                    self.gameState.currentScript = nil
-                    self.gameState.flags = []
-                    self.gameState.variables = [:]
-                    self.gameState.sceneStack = []
-                    saveState()
-                    self.gameState.currentSceneIndex! = -1
+                if (self.gameState.sceneStack.count > 0) {
+                    popStack()
+                    return
                 } else {
-                    self.gameState.currentSceneIndex! = 0
-                    self.gameState.currentScript = story!.Scripts[scriptIndex].name
-                    saveState()
+                    var scriptIndex = story!.Scripts.firstIndex(where: { $0.name == self.gameState.currentScript }) ?? 0
+                    scriptIndex += 1
+                    // auto back
+                    if (scriptIndex >= story!.Scripts.count) {
+                        self.gameState.currentSceneIndex! = 0
+                        self.gameState.currentScript = nil
+                        self.gameState.flags = []
+                        self.gameState.variables = [:]
+                        self.gameState.sceneStack = []
+                        saveState()
+                        self.gameState.currentSceneIndex! = -1
+                    } else {
+                        self.gameState.currentSceneIndex! = 0
+                        self.gameState.currentScript = story!.Scripts[scriptIndex].name
+                        saveState()
+                    }
                 }
                 reloadSceneData = true
 			}
