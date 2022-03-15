@@ -21,15 +21,15 @@ public struct EngineDocument: FileDocument {
     
     public static var readableContentTypes: [UTType] { [.engineDocument] }
     
-    var product: Product = Product()
-    var story: Story? = nil
-    var storyStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
-    var scripts: [String : Scenes] = [:] // Convert to subdocument .lprod
-    var scriptStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
-    var backgrounds: [String : FileWrapper] = [:]
-    var actors: [String : FileWrapper] = [:]
-    var sounds: [String : FileWrapper] = [:]
-    var musics: [String : FileWrapper] = [:]
+    public var product: Product = Product()
+    public var story: Story? = nil
+    public var storyStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
+    public var scripts: [String : Scenes] = [:] // Convert to subdocument .lprod
+    public var scriptStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
+    public var backgrounds: [String : FileWrapper] = [:]
+    public var actors: [String : FileWrapper] = [:]
+    public var sounds: [String : FileWrapper] = [:]
+    public var musics: [String : FileWrapper] = [:]
     
     public init() {
     }
