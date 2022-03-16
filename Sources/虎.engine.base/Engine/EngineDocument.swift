@@ -35,7 +35,7 @@ public struct EngineDocument: FileDocument {
     }
 
     public init(configuration: ReadConfiguration) throws {
-        self.product = try PropertyListDecoder().decode(Product.self, from: (configuration.file.fileWrappers?["Property.plist"]?.regularFileContents)!)
+        self.product = try PropertyListDecoder().decode(Product.self, from: (configuration.file.fileWrappers?["Product.plist"]?.regularFileContents)!)
         if (product.library) {
             self.backgrounds = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]
             self.actors = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Characters"]
@@ -50,7 +50,7 @@ public struct EngineDocument: FileDocument {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
         let productData = try PropertyListEncoder().encode(product)
         let productWrapper = FileWrapper(regularFileWithContents: productData)
-        productWrapper.preferredFilename = "Property.plist"
+        productWrapper.preferredFilename = "Product.plist"
         topDirectory.addFileWrapper(productWrapper)
         if (product.library) {
             let imagesDirectory = FileWrapper(directoryWithFileWrappers: [:])
