@@ -12,7 +12,7 @@ import UniformTypeIdentifiers
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 public extension UTType {
-    static let engineDocument = UTType(exportedAs: "engine.xn--y71a.product")
+    static let engineDocument = UTType(exportedAs: "app.arhat.project")
 }
 
 @available(macCatalyst 14.0, *)
