@@ -25,11 +25,11 @@ public struct EngineDocument: FileDocument {
     public var story: Story? = nil
     public var storyStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
     public var scripts: [String : Scenes] = [:] // Convert to subdocument .lprod
-    public var scriptStrings: [String : FileWrapper] = [:] // Convert to subdocument .lprod
-    public var backgrounds: [String : FileWrapper] = [:]
-    public var actors: [String : FileWrapper] = [:]
-    public var sounds: [String : FileWrapper] = [:]
-    public var musics: [String : FileWrapper] = [:]
+    public var scriptStrings: FileWrapper? = nil // Convert to subdocument .lprod
+    public var backgrounds: FileWrapper? = nil
+    public var actors: FileWrapper? = nil
+    public var sounds: FileWrapper? = nil
+    public var musics: FileWrapper? = nil
     
     public init() {
     }
@@ -37,10 +37,10 @@ public struct EngineDocument: FileDocument {
     public init(configuration: ReadConfiguration) throws {
         self.product = try PropertyListDecoder().decode(Product.self, from: (configuration.file.fileWrappers?["Property.plist"]?.regularFileContents)!)
         if (product.library) {
-            self.backgrounds = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]?.fileWrappers ?? [:]
-            self.actors = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Characters"]?.fileWrappers ?? [:]
-            self.sounds = configuration.file.fileWrappers?["Sounds"]?.fileWrappers ?? [:]
-            self.musics = configuration.file.fileWrappers?["Music"]?.fileWrappers ?? [:]
+            self.backgrounds = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]
+            self.actors = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Characters"]
+            self.sounds = configuration.file.fileWrappers?["Sound"]
+            self.musics = configuration.file.fileWrappers?["Music"]
         } else {
             self.story = try PropertyListDecoder().decode(Story.self, from: (configuration.file.fileWrappers?["Story.plist"]?.regularFileContents)!)
         }
@@ -55,27 +55,24 @@ public struct EngineDocument: FileDocument {
         if (product.library) {
             let imagesDirectory = FileWrapper(directoryWithFileWrappers: [:])
             imagesDirectory.preferredFilename = "Images"
-            let backgroundsDirectory = FileWrapper(directoryWithFileWrappers: [:])
-            backgroundsDirectory.preferredFilename = "Backgrounds"
-            let charactersDirectory = FileWrapper(directoryWithFileWrappers: [:])
-            charactersDirectory.preferredFilename = "Characters"
-            imagesDirectory.addFileWrapper(backgroundsDirectory)
-            imagesDirectory.addFileWrapper(charactersDirectory)
-            
-            let soundDirectory = FileWrapper(directoryWithFileWrappers: [:])
-            soundDirectory.preferredFilename = "Sound"
-            for sound in sounds {
-                soundDirectory.addFileWrapper(sound.value)
+            if (backgrounds != nil) {
+                backgrounds?.preferredFilename = "Backgrounds"
+                imagesDirectory.addFileWrapper(backgrounds!)
             }
-            let musicDirectory = FileWrapper(directoryWithFileWrappers: [:])
-            for music in musics {
-                musicDirectory.addFileWrapper(music.value)
+            if (actors != nil) {
+                actors?.preferredFilename = "Characters"
+                imagesDirectory.addFileWrapper(actors!)
             }
-            musicDirectory.preferredFilename = "Music"
             
             topDirectory.addFileWrapper(imagesDirectory)
-            topDirectory.addFileWrapper(soundDirectory)
-            topDirectory.addFileWrapper(musicDirectory)
+            if (sounds != nil) {
+                sounds?.preferredFilename = "Sound"
+                topDirectory.addFileWrapper(sounds!)
+            }
+            if (musics != nil) {
+                musics?.preferredFilename = "Music"
+                topDirectory.addFileWrapper(musics!)
+            }
         } else {
             let storyData = try PropertyListEncoder().encode(story)
             let storyWrapper = FileWrapper(regularFileWithContents: storyData)
