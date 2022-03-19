@@ -27,7 +27,7 @@ public struct StringsDocument: FileDocument {
     }
     
     public init(file: FileWrapper) throws {
-        //strings = NSDictionary.init(data: file.fileWrappers?["Product.plist"]?.regularFileContents) as! [String : String]
+        strings = try PropertyListSerialization.propertyList(from: file.regularFileContents!, format: nil) as! [String : String]
     }
     
     public init(configuration: ReadConfiguration) throws {
