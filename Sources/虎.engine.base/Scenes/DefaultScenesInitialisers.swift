@@ -192,3 +192,41 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
 public func RegisterGameSceneInitialisers(sceneListSerialiser: inout SceneListSerialiser) {
     sceneListSerialiser.serialisers.append(GameSceneListSerialiser())
 }
+
+public func RegisterGameSettings(settings: inout [String])
+{
+    settings.append("Title");
+    settings.append("Subtitle");
+    settings.append("FontName");
+    //settings.append("FontScale");
+    settings.append("ButtonFontName");
+    //settings.append("CharacterFontName");
+    //settings.append("CharacterFontScale");
+    //settings.append("EncodeFontScale");
+}
+
+public func RegisterGameTranslatableStrings(strings: inout [String])
+{
+    strings.append("Play");
+    strings.append("Continue");
+    strings.append("Restart");
+    strings.append("Setup");
+    strings.append("Credits");
+    strings.append("Main Menu");
+    strings.append("Close");
+    strings.append("Yes");
+    strings.append("No");
+    strings.append("Restart the game!");
+    strings.append("Are you sure?");
+    strings.append("Skip Puzzles is Off");
+    strings.append("Skip Puzzles is On");
+    strings.append("Text Speed: Slow");
+    strings.append("Text Speed: Normal");
+    strings.append("Text Speed: Fast");
+    strings.append("Volume: Off");
+    strings.append("Volume: Low");
+    strings.append("Volume: Medium");
+    strings.append("Volume: High");
+    strings.append("Press to continue...");
+    strings.append("Language: Name");
+}

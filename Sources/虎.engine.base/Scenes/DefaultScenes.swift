@@ -44,7 +44,7 @@ public struct Script: Identifiable, Codable {
     public init() {
     }
 }
-
+    
 public class Story: Identifiable, Codable {
     public var id: UUID = UUID()
     public var Version: Int? = nil

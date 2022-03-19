@@ -120,6 +120,7 @@ public struct StoryDocument: FileDocument {
     public init() {
         self.scriptsWrapper = FileWrapper(directoryWithFileWrappers: [:])
         self.languagesWrapper = FileWrapper(directoryWithFileWrappers: [:])
+        //
     }
     
     public init(file: FileWrapper) throws {
