@@ -27,7 +27,9 @@ public struct StringsDocument: FileDocument {
     }
     
     public init(file: FileWrapper) throws {
-        strings = try PropertyListSerialization.propertyList(from: file.regularFileContents!, format: nil) as! [String : String]
+        // Todo what happens if multiple .strings files?
+        
+        strings = try PropertyListSerialization.propertyList(from: (file.fileWrappers?.first(where: { $0.key.contains(".strings")})?.value.regularFileContents!)!, format: nil) as! [String : String]
     }
     
     public init(configuration: ReadConfiguration) throws {
