@@ -27,7 +27,7 @@ public struct StringsDocument: FileDocument {
     }
     
     public init(file: FileWrapper) throws {
-        //strings = NSDictionary.init(contentsOf: file.fileWrappers?["Product.plist"]?.regularFileContents)
+        //strings = NSDictionary.init(data: file.fileWrappers?["Product.plist"]?.regularFileContents) as! [String : String]
     }
     
     public init(configuration: ReadConfiguration) throws {
@@ -50,7 +50,7 @@ public struct StringsDocument: FileDocument {
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 public struct ScriptDocument: FileDocument {
-    public static var readableContentTypes: [UTType] { [.scriptDocument] }
+    public static var readableContentTypes: [UTType] { [.waterdineScriptDocument] }
     public var scenesWrapper: FileWrapper? = nil
     public var languagesWrapper: FileWrapper
     
@@ -111,7 +111,7 @@ public struct ScriptDocument: FileDocument {
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 public struct StoryDocument: FileDocument {
-    public static var readableContentTypes: [UTType] { [.storyDocument] }
+    public static var readableContentTypes: [UTType] { [.waterdineStoryDocument] }
     
     public var story: Story? = nil
     public var scriptsWrapper: FileWrapper
@@ -179,7 +179,7 @@ public struct StoryDocument: FileDocument {
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
 public struct ProductDocument: FileDocument {
-    public static var readableContentTypes: [UTType] { [.productDocument] }
+    public static var readableContentTypes: [UTType] { [.waterdineProductDocument] }
     
     public var product: Product = Product()
     public var storyWrapper: FileWrapper? = nil
