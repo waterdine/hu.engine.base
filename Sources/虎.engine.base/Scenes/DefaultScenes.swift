@@ -39,7 +39,7 @@ public struct Product: Identifiable, Codable {
 public struct Script: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
-    public var sutra: String = ""
+    public var key: String = ""
     
     public init() {
     }

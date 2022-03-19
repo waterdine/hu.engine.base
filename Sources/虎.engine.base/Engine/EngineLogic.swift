@@ -189,7 +189,7 @@ open class GameLogic: NSObject {
             story?.Chapters = []
             for chapter in chapterList {
                 var newChapter: Chapter = Chapter()
-                newChapter.sutra = ""
+                newChapter.key = ""
                 newChapter.name = chapter
                 story!.Chapters.append(newChapter)
             }*/
