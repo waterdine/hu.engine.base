@@ -17,6 +17,10 @@ public enum TextEvent: String, Codable {
     case None, Instant
 }
 
+public enum Operator: String, Codable {
+    case Equal, Greater, Less, GreaterOrEqual, LessOrEqual
+}
+
 public struct Product: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
@@ -98,6 +102,28 @@ public class Story: Identifiable, Codable {
 /*public struct Actor: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String
+}*/
+
+/*open class Comparison: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public variable: String = ""
+    public value: String = ""
+    public op: Operator = Operator.Equal
+    
+    public init() {
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        textString = try container.decode(String.self)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        //try container.encode(id, forKey: BaseSceneCodingKeys.id)
+        //try container.encode(label, forKey: BaseSceneCodingKeys.label)
+        try container.encode(textString)
+    }
 }*/
 
 open class TextLine: Identifiable, Codable {
@@ -295,6 +321,7 @@ open class SkipToScene: BaseScene {
     public var Script: String? = nil
     public var Flag: String? = nil
     public var ClearStack: Bool? = nil
+    //public var Variables: [VariableComparison? = nil
     
     enum SkipToCodingKeys: String, CodingKey {
         case SkipTo

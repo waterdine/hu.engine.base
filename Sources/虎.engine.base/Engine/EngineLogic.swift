@@ -174,7 +174,7 @@ open class GameLogic: NSObject {
 		// atode: REMOVVE!!
         self.gameState.variables["LondonTime"] = "13:20"
         self.gameState.variables["LondonWeather"] = "cloudy"
-        self.gameState.variables["Mood"] = "Irritable" // atode: get this from HealthKit data, such as time of month, time of day, tireness etc.
+        self.gameState.variables["Mood"] = "Average" // atode: get this from HealthKit data, such as time of month, time of day, tireness etc.
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
         

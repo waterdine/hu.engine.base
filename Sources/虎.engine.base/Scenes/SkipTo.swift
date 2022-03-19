@@ -24,6 +24,7 @@ class SkipToLogic: GameScene {
         let skipToScene: Int = (data as? SkipToScene)!.SkipTo
         let script: String? = (data as? SkipToScene)!.Script
         let flag: String? = (data as? SkipToScene)!.Flag
+       //s let variable: [String? = (data as? SkipToScene)!.Flag
         let clearStack: Bool? = (data as? SkipToScene)!.ClearStack
 		 
 		var shouldSkip: Bool = true;
