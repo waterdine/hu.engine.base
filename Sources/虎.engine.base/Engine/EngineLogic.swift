@@ -33,7 +33,9 @@ public struct ChoiceFlow {
 open class GameLogic: NSObject {
 	
     open var languages: [String] = []
-    open var baseDir: URL? = nil
+    open var storyDir: URL? = nil
+    open var scriptsDir: URL? = nil
+    open var languagesDir: URL? = nil
     open var bundles: [String:Bundle] = [:]
 	open var sceneTypes: [String:GameScene] = [:]
 	open var transition: ((GameScene, SKTransition?) -> Void)?
@@ -64,10 +66,12 @@ open class GameLogic: NSObject {
     open var volumeLevel: VolumeLevel = VolumeLevel.Medium
     open var currentLanguageIndex: Int = 0
 	
-    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, baseDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?, languages: [String]) -> GameLogic {
+    public class func newGame(transitionCallback: ((GameScene, SKTransition?) -> Void)?, storyDir: URL?, aspectSuffix: String?, defaultBundle: Bundle?, languages: [String]) -> GameLogic {
 		let gameLogic = GameLogic()
         gameLogic.aspectSuffixOverride = aspectSuffix
-        gameLogic.baseDir = baseDir
+        gameLogic.storyDir = storyDir
+        gameLogic.scriptsDir = gameLogic.storyDir!.appendingPathComponent("Scripts")
+        gameLogic.languagesDir = gameLogic.storyDir!.appendingPathComponent("Languages")
         gameLogic.bundles["Default"] = (defaultBundle != nil) ? defaultBundle : Bundle.main
         gameLogic.languages = languages
         gameLogic.currentLanguageIndex = 0
@@ -107,8 +111,8 @@ open class GameLogic: NSObject {
 	}
 	
     func loadStringsTables() {
-        if (baseDir != nil && languages.count > currentLanguageIndex) {
-            let storyStringsURL = baseDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Story").appendingPathExtension("strings")
+        if (languagesDir != nil && languages.count > currentLanguageIndex) {
+            let storyStringsURL = languagesDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Story").appendingPathExtension("strings")
                     
             if (FileManager.default.fileExists(atPath: storyStringsURL.path)) {
                 let string = NSDictionary.init(contentsOf: storyStringsURL)
@@ -178,8 +182,12 @@ open class GameLogic: NSObject {
         
         //let chapterList: NSArray? = chapterListPlist?["Chapters"] as? NSArray
         
-        let storyPlistURL = baseDir != nil ? baseDir!.appendingPathComponent("Story").appendingPathExtension("plist") : Bundle.main.url(forResource: "Story", withExtension: "plist")!
-        let storyPlistContents = try! Data(contentsOf: storyPlistURL)
+        var storyPlistURL = Bundle.main.url(forResource: "Story", withExtension: "plist")
+        if (storyDir != nil) {
+            storyPlistURL = storyDir!.appendingPathComponent("Story").appendingPathExtension("plist")
+        }
+        
+        let storyPlistContents = try! Data(contentsOf: storyPlistURL!)
         let storyPlistString: String? = String(data: storyPlistContents, encoding: .utf8)
         if (storyPlistString != nil && storyPlistString!.starts(with: "<?xml")) {
             /*let chapterListPlist = try! PropertyListDecoder().decode([String : [String]].self, from: storyPlistContents)
@@ -215,7 +223,14 @@ open class GameLogic: NSObject {
 			
             if (story != nil && self.gameState.currentScript != nil) {
                 let scriptFileName = self.gameState.currentScript!
-                let sceneListPlistURL = baseDir != nil ? baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(scriptFileName).appendingPathExtension("plist") : Bundle.main.url(forResource: scriptFileName, withExtension: "plist")
+                var sceneListPlistURL = Bundle.main.url(forResource: scriptFileName, withExtension: "plist")
+                var scriptDir: URL? = nil
+                var scriptLanguagesDir: URL? = nil
+                if (scriptsDir != nil) {
+                    scriptDir = scriptsDir!.appendingPathComponent(scriptFileName).appendingPathExtension("虎script")
+                    scriptLanguagesDir = scriptDir!.appendingPathComponent("Languages")
+                    sceneListPlistURL = scriptDir!.appendingPathComponent("Scenes").appendingPathExtension("plist")
+                }
                 let sceneListContents = try! Data(contentsOf: sceneListPlistURL!)
                 let sceneListString: String? = String(data: sceneListContents, encoding: .utf8)
                 let decoder: PropertyListDecoder = PropertyListDecoder()
@@ -232,17 +247,8 @@ open class GameLogic: NSObject {
                 } else {
                     sceneList = try! decoder.decode(Scenes.self, from: sceneListContents)
                 }
-                
-                // loop sceneList to find sceneLabels and add to dictionary, as index.
-                //sceneLabels[name] = index
-                sceneLabels.removeAll()
-                /*for <#item#> in <#items#> {
-                    if (sceneName != nil) {
-                        sceneNames[sceneName] =
-                    }
-                }*/
-                if (baseDir != nil && languages.count > currentLanguageIndex) {
-                    let scriptStringsURL = baseDir!.appendingPathComponent(scriptFileName).appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(scriptFileName).appendingPathExtension("strings")
+                if (scriptLanguagesDir != nil && languages.count > currentLanguageIndex) {
+                    let scriptStringsURL = scriptLanguagesDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(scriptFileName).appendingPathExtension("strings")
 
                     if (FileManager.default.fileExists(atPath: scriptStringsURL.path)) {
                         let string = NSDictionary.init(contentsOf: scriptStringsURL)

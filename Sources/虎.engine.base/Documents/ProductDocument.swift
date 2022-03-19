@@ -111,7 +111,7 @@ public struct ScriptDocument: FileDocument {
 }
 
 @available(macCatalyst 14.0, *)
-@available(macOS 11.0, *)
+@available(macOS 11, *)
 public struct StoryDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineStoryDocument] }
     
