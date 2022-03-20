@@ -194,16 +194,20 @@ public struct ProductDocument: FileDocument {
     public init() {
     }
     
-    public init(configuration: ReadConfiguration) throws {
-        self.product = try PropertyListDecoder().decode(Product.self, from: (configuration.file.fileWrappers?["Product.plist"]?.regularFileContents)!)
+    public init(file: FileWrapper) throws {
+        self.product = try PropertyListDecoder().decode(Product.self, from: (file.fileWrappers?["Product.plist"]?.regularFileContents)!)
         if (product.library) {
-            self.backgrounds = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]
-            self.actors = configuration.file.fileWrappers?["Images"]?.fileWrappers?["Characters"]
-            self.sounds = configuration.file.fileWrappers?["Sound"]
-            self.musics = configuration.file.fileWrappers?["Music"]
+            self.backgrounds = file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]
+            self.actors = file.fileWrappers?["Images"]?.fileWrappers?["Characters"]
+            self.sounds = file.fileWrappers?["Sound"]
+            self.musics = file.fileWrappers?["Music"]
         } else {
-            self.storyWrapper = configuration.file.fileWrappers?["\(product.name).虎story"]
+            self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
         }
+    }
+    
+    public init(configuration: ReadConfiguration) throws {
+        try self.init(file: configuration.file)
     }
     
     public func fetchStory() -> StoryDocument {
