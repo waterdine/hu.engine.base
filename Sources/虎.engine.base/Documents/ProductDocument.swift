@@ -13,6 +13,7 @@ import UniformTypeIdentifiers
 @available(macOS 11.0, *)
 public extension UTType {
     static let waterdineScriptDocument = UTType(exportedAs: "studio.waterdine.script")
+    static let waterdineActorDocument = UTType(exportedAs: "studio.waterdine.actor")
     static let waterdineStoryDocument = UTType(exportedAs: "studio.waterdine.story")
     static let waterdineProductDocument = UTType(exportedAs: "studio.waterdine.product")
 }
@@ -42,6 +43,43 @@ public struct StringsDocument: FileDocument {
             lines.append("\"" + stringPair.key + "\" = \"" + stringPair.value + "\";")
         }
         return FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
+    }
+    
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return try fileWrapper()
+    }
+}
+
+@available(macCatalyst 14.0, *)
+@available(macOS 11.0, *)
+public struct ActorDocument: FileDocument {
+    public static var readableContentTypes: [UTType] { [.waterdineActorDocument] }
+    public var mouthOpenWrapper: FileWrapper? = nil
+    public var mouthClosedWrapper: FileWrapper? = nil
+    
+    public init() {
+    }
+
+    public init(file: FileWrapper) throws {
+        mouthOpenWrapper = file.fileWrappers?["MouthOpen.png"]
+        mouthClosedWrapper = file.fileWrappers?["MouthClosed.png"]
+    }
+    
+    public init(configuration: ReadConfiguration) throws {
+        try self.init(file: configuration.file)
+    }
+    
+    public func fileWrapper() throws -> FileWrapper {
+        let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
+        if (mouthOpenWrapper != nil) {
+            mouthOpenWrapper?.preferredFilename = "MouthOpen.png"
+            topDirectory.addFileWrapper(mouthOpenWrapper!)
+        }
+        if (mouthClosedWrapper != nil) {
+            mouthClosedWrapper?.preferredFilename = "MouthClosed.png"
+            topDirectory.addFileWrapper(mouthClosedWrapper!)
+        }
+        return topDirectory
     }
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
@@ -186,10 +224,10 @@ public struct ProductDocument: FileDocument {
     
     public var product: Product = Product()
     public var storyWrapper: FileWrapper? = nil
-    public var backgrounds: FileWrapper? = nil
-    public var actors: FileWrapper? = nil
-    public var sounds: FileWrapper? = nil
-    public var musics: FileWrapper? = nil
+    public var backgroundsWrapper: FileWrapper? = nil
+    public var actorsWrapper: FileWrapper? = nil
+    public var soundsWrapper: FileWrapper? = nil
+    public var musicsWrapper: FileWrapper? = nil
     
     public init() {
     }
@@ -197,10 +235,10 @@ public struct ProductDocument: FileDocument {
     public init(file: FileWrapper) throws {
         self.product = try PropertyListDecoder().decode(Product.self, from: (file.fileWrappers?["Product.plist"]?.regularFileContents)!)
         if (product.library) {
-            self.backgrounds = file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"]
-            self.actors = file.fileWrappers?["Images"]?.fileWrappers?["Characters"]
-            self.sounds = file.fileWrappers?["Sound"]
-            self.musics = file.fileWrappers?["Music"]
+            self.backgroundsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.actorsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Actors"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.soundsWrapper = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.musicsWrapper = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
         } else {
             self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
         }
@@ -208,6 +246,24 @@ public struct ProductDocument: FileDocument {
     
     public init(configuration: ReadConfiguration) throws {
         try self.init(file: configuration.file)
+    }
+    
+    public func listActors() -> [String] {
+        // put this in a manifest?
+        return actorsWrapper?.fileWrappers?.keys.map({ $0.replacingOccurrences(of: ".虎actor", with: "") }) ?? []
+    }
+    
+    public func fetchActor(name: String) -> ActorDocument {
+        let wrapperForActor = actorsWrapper?.fileWrappers?["\(name).虎actor"]
+        return wrapperForActor == nil ? ActorDocument() : try! ActorDocument(file: wrapperForActor!)
+    }
+    
+    public func setActor(name: String, script: ActorDocument) {
+        let wrapperForActor = actorsWrapper?.fileWrappers?["\(name).虎actor"]
+        if (wrapperForActor != nil) {
+            actorsWrapper?.removeFileWrapper(wrapperForActor!)
+        }
+        actorsWrapper?.addFileWrapper(try! script.fileWrapper())
     }
     
     public func fetchStory() -> StoryDocument {
@@ -227,23 +283,23 @@ public struct ProductDocument: FileDocument {
         if (product.library) {
             let imagesDirectory = FileWrapper(directoryWithFileWrappers: [:])
             imagesDirectory.preferredFilename = "Images"
-            if (backgrounds != nil) {
-                backgrounds?.preferredFilename = "Backgrounds"
-                imagesDirectory.addFileWrapper(backgrounds!)
+            if (backgroundsWrapper != nil) {
+                backgroundsWrapper?.preferredFilename = "Backgrounds"
+                imagesDirectory.addFileWrapper(backgroundsWrapper!)
             }
-            if (actors != nil) {
-                actors?.preferredFilename = "Characters"
-                imagesDirectory.addFileWrapper(actors!)
+            if (actorsWrapper != nil) {
+                actorsWrapper?.preferredFilename = "Actors"
+                imagesDirectory.addFileWrapper(actorsWrapper!)
             }
             
             topDirectory.addFileWrapper(imagesDirectory)
-            if (sounds != nil) {
-                sounds?.preferredFilename = "Sound"
-                topDirectory.addFileWrapper(sounds!)
+            if (soundsWrapper != nil) {
+                soundsWrapper?.preferredFilename = "Sound"
+                topDirectory.addFileWrapper(soundsWrapper!)
             }
-            if (musics != nil) {
-                musics?.preferredFilename = "Music"
-                topDirectory.addFileWrapper(musics!)
+            if (musicsWrapper != nil) {
+                musicsWrapper?.preferredFilename = "Music"
+                topDirectory.addFileWrapper(musicsWrapper!)
             }
         } else {
             storyWrapper!.preferredFilename = "\(product.name).虎story"
