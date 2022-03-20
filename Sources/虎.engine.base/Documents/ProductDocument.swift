@@ -94,16 +94,17 @@ public struct ActorDocument: FileDocument {
 public struct ScriptDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineScriptDocument] }
     public var name: String = ""
-    public var scenesWrapper: FileWrapper? = nil
+    public var scenesWrapper: FileWrapper
     public var languagesWrapper: FileWrapper
     
     public init() {
+        self.scenesWrapper = FileWrapper(regularFileWithContents: Data())
         self.languagesWrapper = FileWrapper(directoryWithFileWrappers: [:])
     }
 
     public init(file: FileWrapper) throws {
         name = file.filename ?? ""
-        self.scenesWrapper = file.fileWrappers?["Scenes.plist"]
+        self.scenesWrapper = file.fileWrappers?["Scenes.plist"] ?? FileWrapper(regularFileWithContents: Data())
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
     }
     
@@ -111,13 +112,33 @@ public struct ScriptDocument: FileDocument {
         try self.init(file: configuration.file)
     }
     
-    public func fetchScenes(sceneListSerialiser: SceneListSerialiser) -> Scenes {
+    public func fetchScenes(key: String, sceneListSerialiser: SceneListSerialiser) -> Scenes {
+        /*let scriptsPlistContents = try! Data(contentsOf: scriptsPlistURL)
+        var story: Story? = nil
+        let scriptsPlistString: String? = String(data: scriptsPlistContents, encoding: .utf8)
+        if (scriptsPlistString != nil && scriptsPlistString!.starts(with: "<?xml")) {
+            story = try! PropertyListDecoder().decode(Story.self, from: scriptsPlistString!.data(using: .utf8)!)
+        } else {
+            let sealedBox = try! AES.GCM.SealedBox.init(combined: scriptsPlistContents)
+            let key = SymmetricKey.init(data: masterKey())
+            let data = try! AES.GCM.open(sealedBox, using: key)
+            story = try! PropertyListDecoder().decode(Story.self, from: data)
+        }*/
         let decoder: PropertyListDecoder = PropertyListDecoder()
         decoder.userInfo[SceneListSerialiser().userInfoKey!] = sceneListSerialiser
-        return try! decoder.decode(Scenes.self, from: (scenesWrapper?.regularFileContents)!)
+        return try! decoder.decode(Scenes.self, from: (scenesWrapper.regularFileContents)!)
     }
     
-    public mutating func setScenes(scenes: Scenes, sceneListSerialiser: SceneListSerialiser) {
+    public mutating func setScenes(key: String, scenes: Scenes, sceneListSerialiser: SceneListSerialiser) {
+        /*let scriptsPlistData = try! encoder.encode(story)
+        let scriptsPlistURL = productURL!.appendingPathComponent("Story").appendingPathExtension("plist")
+        if (encoder.outputFormat == .binary) {
+            let key = SymmetricKey.init(data: masterKey())
+            let sealedBox = try! AES.GCM.seal(scriptsPlistData, using: key)
+            try! sealedBox.combined!.write(to: scriptsPlistURL)
+        } else {
+            try! String(data: scriptsPlistData, encoding: .utf8)!.write(to: scriptsPlistURL, atomically: false, encoding: .utf8)
+        }*/
         let encoder = PropertyListEncoder()
         encoder.userInfo[sceneListSerialiser.userInfoKey!] = sceneListSerialiser
         encoder.outputFormat = .xml
@@ -140,8 +161,8 @@ public struct ScriptDocument: FileDocument {
     
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
-        scenesWrapper?.preferredFilename = "Scenes.plist"
-        topDirectory.addFileWrapper(scenesWrapper!)
+        scenesWrapper.preferredFilename = "Scenes.plist"
+        topDirectory.addFileWrapper(scenesWrapper)
         languagesWrapper.preferredFilename = "Languages"
         topDirectory.addFileWrapper(languagesWrapper)
         return topDirectory
@@ -157,24 +178,36 @@ public struct ScriptDocument: FileDocument {
 public struct StoryDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineStoryDocument] }
     
-    public var story: Story? = nil
+    public var storyWrapper: FileWrapper
     public var scriptsWrapper: FileWrapper
     public var languagesWrapper: FileWrapper
     
     public init() {
+        self.storyWrapper = FileWrapper(regularFileWithContents: Data())
         self.scriptsWrapper = FileWrapper(directoryWithFileWrappers: [:])
         self.languagesWrapper = FileWrapper(directoryWithFileWrappers: [:])
-        //
     }
     
     public init(file: FileWrapper) throws {
-        self.story = try PropertyListDecoder().decode(Story.self, from: (file.fileWrappers?["Story.plist"]?.regularFileContents)!)
+        self.storyWrapper = file.fileWrappers?["Story.plist"] ?? FileWrapper(regularFileWithContents: Data())
         self.scriptsWrapper = file.fileWrappers?["Scripts"] ?? FileWrapper(directoryWithFileWrappers: [:])
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
     }
     
     public init(configuration: ReadConfiguration) throws {
         try self.init(file: configuration.file)
+    }
+    
+    public func fetchStory(key: String) -> Story {
+        let decoder: PropertyListDecoder = PropertyListDecoder()
+        return try! decoder.decode(Story.self, from: (storyWrapper.regularFileContents)!)
+    }
+    
+    public mutating func setStory(story: Story, key: String) {
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        let storyPlistData = try! encoder.encode(story)
+        storyWrapper = FileWrapper(regularFileWithContents: storyPlistData)
     }
     
     public func fetchScript(name: String) -> ScriptDocument {
@@ -205,8 +238,6 @@ public struct StoryDocument: FileDocument {
     
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
-        let storyData = try PropertyListEncoder().encode(story)
-        let storyWrapper = FileWrapper(regularFileWithContents: storyData)
         storyWrapper.preferredFilename = "Story.plist"
         topDirectory.addFileWrapper(storyWrapper)
         scriptsWrapper.preferredFilename = "Scripts"
