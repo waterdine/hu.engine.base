@@ -54,6 +54,7 @@ public struct StringsDocument: FileDocument {
 @available(macOS 11.0, *)
 public struct ActorDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineActorDocument] }
+    public var name: String = ""
     public var mouthOpenWrapper: FileWrapper? = nil
     public var mouthClosedWrapper: FileWrapper? = nil
     
@@ -61,6 +62,7 @@ public struct ActorDocument: FileDocument {
     }
 
     public init(file: FileWrapper) throws {
+        name = file.filename ?? ""
         mouthOpenWrapper = file.fileWrappers?["MouthOpen.png"]
         mouthClosedWrapper = file.fileWrappers?["MouthClosed.png"]
     }
@@ -91,6 +93,7 @@ public struct ActorDocument: FileDocument {
 @available(macOS 11.0, *)
 public struct ScriptDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineScriptDocument] }
+    public var name: String = ""
     public var scenesWrapper: FileWrapper? = nil
     public var languagesWrapper: FileWrapper
     
@@ -99,6 +102,7 @@ public struct ScriptDocument: FileDocument {
     }
 
     public init(file: FileWrapper) throws {
+        name = file.filename ?? ""
         self.scenesWrapper = file.fileWrappers?["Scenes.plist"]
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
     }
