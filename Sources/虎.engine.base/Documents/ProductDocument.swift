@@ -256,7 +256,7 @@ public struct StoryDocument: FileDocument {
 @available(macOS 11.0, *)
 public struct ProductDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineProductDocument] }
-    
+
     public var product: Product = Product()
     public var storyWrapper: FileWrapper? = nil
     public var backgroundsWrapper: FileWrapper? = nil
