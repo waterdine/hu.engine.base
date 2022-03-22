@@ -159,7 +159,9 @@ public struct ScriptDocument: FileDocument {
         if (wrapperForLanguage != nil) {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
         }
-        try! languagesWrapper.addFileWrapper(language.fileWrapper())
+        let newWrapperForLanguage = try! language.fileWrapper()
+        newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        languagesWrapper.addFileWrapper(newWrapperForLanguage)
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -227,7 +229,9 @@ public struct StoryDocument: FileDocument {
         if (wrapperForScript != nil) {
             scriptsWrapper.removeFileWrapper(wrapperForScript!)
         }
-        scriptsWrapper.addFileWrapper(try! script.fileWrapper())
+        var newWrapperForScript = try! script.fileWrapper()
+        newWrapperForScript.preferredFilename = "\(name).虎script"
+        scriptsWrapper.addFileWrapper(newWrapperForScript)
     }
     
     public func fetchLanguage(name: String) -> StringsDocument {
@@ -240,7 +244,9 @@ public struct StoryDocument: FileDocument {
         if (wrapperForLanguage != nil) {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
         }
-        languagesWrapper.addFileWrapper(try! language.fileWrapper())
+        let newWrapperForLanguage = try! language.fileWrapper()
+        newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        languagesWrapper.addFileWrapper(newWrapperForLanguage)
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -309,7 +315,9 @@ public struct ProductDocument: FileDocument {
         if (wrapperForCharacterModel != nil) {
             characterModelsWrapper?.removeFileWrapper(wrapperForCharacterModel!)
         }
-        characterModelsWrapper?.addFileWrapper(try! characterModel.fileWrapper())
+        var newWrapperForCharacterModel = try! characterModel.fileWrapper()
+        newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
+        characterModelsWrapper?.addFileWrapper(newWrapperForCharacterModel)
     }
     
     public func fetchStory() -> StoryDocument {
