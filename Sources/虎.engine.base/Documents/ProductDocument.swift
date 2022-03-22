@@ -38,11 +38,14 @@ public struct StringsDocument: FileDocument {
     }
     
     public func fileWrapper() throws -> FileWrapper {
+        let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
         var lines = ""
         for stringPair in strings {
             lines.append("\"" + stringPair.key + "\" = \"" + stringPair.value + "\";")
         }
-        return FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
+        let stringsWrapper = FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
+        topDirectory.addFileWrapper(stringsWrapper)
+        return topDirectory
     }
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
@@ -162,6 +165,7 @@ public struct ScriptDocument: FileDocument {
         let newWrapperForLanguage = try! language.fileWrapper()
         newWrapperForLanguage.preferredFilename = "\(name).lproj"
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
+        languagesWrapper.preferredFilename = "Languages"
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -232,6 +236,7 @@ public struct StoryDocument: FileDocument {
         var newWrapperForScript = try! script.fileWrapper()
         newWrapperForScript.preferredFilename = "\(name).虎script"
         scriptsWrapper.addFileWrapper(newWrapperForScript)
+        scriptsWrapper.preferredFilename = "Scripts"
     }
     
     public func fetchLanguage(name: String) -> StringsDocument {
@@ -247,6 +252,7 @@ public struct StoryDocument: FileDocument {
         let newWrapperForLanguage = try! language.fileWrapper()
         newWrapperForLanguage.preferredFilename = "\(name).lproj"
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
+        languagesWrapper.preferredFilename = "Languages"
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -318,6 +324,7 @@ public struct ProductDocument: FileDocument {
         var newWrapperForCharacterModel = try! characterModel.fileWrapper()
         newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
         characterModelsWrapper?.addFileWrapper(newWrapperForCharacterModel)
+        characterModelsWrapper?.preferredFilename = "Characters"
     }
     
     public func fetchStory() -> StoryDocument {
