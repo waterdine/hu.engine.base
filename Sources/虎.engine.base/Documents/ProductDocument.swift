@@ -107,9 +107,7 @@ public struct ScriptDocument: FileDocument {
     public init(file: FileWrapper) throws {
         name = file.filename ?? ""
         self.scenesWrapper = file.fileWrappers?["Scenes.plist"] ?? FileWrapper(regularFileWithContents: Data())
-        self.scenesWrapper.preferredFilename = "Scenes.plist"
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
-        self.languagesWrapper.preferredFilename = "Languages"
     }
     
     public init(configuration: ReadConfiguration) throws {
@@ -197,11 +195,8 @@ public struct StoryDocument: FileDocument {
     
     public init(file: FileWrapper) throws {
         self.storyWrapper = file.fileWrappers?["Story.plist"] ?? FileWrapper(regularFileWithContents: Data())
-        self.storyWrapper.preferredFilename = "Story.plist"
         self.scriptsWrapper = file.fileWrappers?["Scripts"] ?? FileWrapper(directoryWithFileWrappers: [:])
-        self.scriptsWrapper.preferredFilename = "Scripts"
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
-        self.languagesWrapper.preferredFilename = "Languages"
     }
     
     public init(configuration: ReadConfiguration) throws {
