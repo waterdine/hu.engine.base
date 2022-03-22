@@ -45,7 +45,7 @@ public struct Script: Identifiable, Codable {
     }
 }
 
-public struct CastMember: Identifiable, Codable {
+public struct Character: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
     public var model: String = ""
@@ -58,14 +58,14 @@ public class Story: Identifiable, Codable {
     public var id: UUID = UUID()
     public var Version: Int? = nil
     public var Scripts: [Script] = []
-    public var Cast: [CastMember] = []
+    public var Characters: [Character] = []
     
     enum BaseSceneCodingKeys: String, CodingKey {
         case id
         case Version
         case Chapters
         case Scripts
-        case Cast
+        case Characters
     }
     
     public init() {
@@ -84,7 +84,7 @@ public class Story: Identifiable, Codable {
             }
         } else if (Version! > 1) {
             Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Scripts)!
-            Cast = try container.decodeIfPresent([CastMember].self, forKey: BaseSceneCodingKeys.Cast)!
+            Characters = try container.decodeIfPresent([Character].self, forKey: BaseSceneCodingKeys.Characters)!
         } else if (Version! > 0) {
             Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Chapters)!
         }
@@ -104,7 +104,7 @@ public class Story: Identifiable, Codable {
         } else if (Version! > 1) {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
             try container.encode(Scripts, forKey: BaseSceneCodingKeys.Scripts)
-            try container.encode(Cast, forKey: BaseSceneCodingKeys.Cast)
+            try container.encode(Characters, forKey: BaseSceneCodingKeys.Characters)
         } else if (Version! > 0) {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
             try container.encode(Scripts, forKey: BaseSceneCodingKeys.Chapters)
