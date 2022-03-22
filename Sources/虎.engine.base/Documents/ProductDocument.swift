@@ -146,6 +146,7 @@ public struct ScriptDocument: FileDocument {
         encoder.outputFormat = .xml
         let scenesPlistData = try! encoder.encode(scenes)
         scenesWrapper = FileWrapper(regularFileWithContents: scenesPlistData)
+        self.scenesWrapper.preferredFilename = "Scenes.plist"
     }
     
     public func fetchLanguage(name: String) -> StringsDocument {
@@ -213,6 +214,7 @@ public struct StoryDocument: FileDocument {
         encoder.outputFormat = .xml
         let storyPlistData = try! encoder.encode(story)
         storyWrapper = FileWrapper(regularFileWithContents: storyPlistData)
+        storyWrapper.preferredFilename = "Story.plist"
     }
     
     public func fetchScript(name: String) -> ScriptDocument {
