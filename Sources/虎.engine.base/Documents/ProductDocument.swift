@@ -320,7 +320,9 @@ public struct ProductDocument: FileDocument {
             
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
-        let productData = try PropertyListEncoder().encode(product)
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        let productData = try encoder.encode(product)
         let productWrapper = FileWrapper(regularFileWithContents: productData)
         productWrapper.preferredFilename = "Product.plist"
         topDirectory.addFileWrapper(productWrapper)
