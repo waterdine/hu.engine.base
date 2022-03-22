@@ -130,7 +130,13 @@ public struct ScriptDocument: FileDocument {
     public init(file: FileWrapper) throws {
         name = file.filename ?? ""
         self.scenesWrapper = file.fileWrappers?["Scenes.plist"] ?? FileWrapper(regularFileWithContents: Data())
+        if (self.scenesWrapper.filename == nil) {
+            self.scenesWrapper.preferredFilename = "Scenes.plist"
+        }
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
+        if (self.languagesWrapper.filename == nil) {
+            self.languagesWrapper.preferredFilename = "Languages"
+        }
     }
     
     public init(configuration: ReadConfiguration) throws {
@@ -185,7 +191,6 @@ public struct ScriptDocument: FileDocument {
         let newWrapperForLanguage = try! language.fileWrapper()
         newWrapperForLanguage.preferredFilename = "\(name).lproj"
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
-        languagesWrapper.preferredFilename = "Languages"
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -222,8 +227,17 @@ public struct StoryDocument: FileDocument {
     
     public init(file: FileWrapper) throws {
         self.storyWrapper = file.fileWrappers?["Story.plist"] ?? FileWrapper(regularFileWithContents: Data())
+        if (self.storyWrapper.filename == nil) {
+            self.storyWrapper.preferredFilename = "Story.plist"
+        }
         self.scriptsWrapper = file.fileWrappers?["Scripts"] ?? FileWrapper(directoryWithFileWrappers: [:])
+        if (self.scriptsWrapper.filename == nil) {
+            self.scriptsWrapper.preferredFilename = "Scripts"
+        }
         self.languagesWrapper = file.fileWrappers?["Languages"] ?? FileWrapper(directoryWithFileWrappers: [:])
+        if (self.languagesWrapper.filename == nil) {
+            self.languagesWrapper.preferredFilename = "Languages"
+        }
     }
     
     public init(configuration: ReadConfiguration) throws {
@@ -256,7 +270,6 @@ public struct StoryDocument: FileDocument {
         var newWrapperForScript = try! script.fileWrapper()
         newWrapperForScript.preferredFilename = "\(name).虎script"
         scriptsWrapper.addFileWrapper(newWrapperForScript)
-        scriptsWrapper.preferredFilename = "Scripts"
     }
     
     public func fetchLanguage(name: String) -> LanguageDocument {
@@ -272,7 +285,6 @@ public struct StoryDocument: FileDocument {
         let newWrapperForLanguage = try! language.fileWrapper()
         newWrapperForLanguage.preferredFilename = "\(name).lproj"
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
-        languagesWrapper.preferredFilename = "Languages"
     }
     
     public func fileWrapper() throws -> FileWrapper {
@@ -344,7 +356,6 @@ public struct ProductDocument: FileDocument {
         var newWrapperForCharacterModel = try! characterModel.fileWrapper()
         newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
         characterModelsWrapper?.addFileWrapper(newWrapperForCharacterModel)
-        characterModelsWrapper?.preferredFilename = "Characters"
     }
     
     public func fetchStory() -> StoryDocument {
