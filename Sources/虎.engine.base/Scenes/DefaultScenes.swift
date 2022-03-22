@@ -9,7 +9,7 @@ import Foundation
 
 // Base Data Types
 
-public enum ActorAction: String, Codable {
+public enum CharacterAction: String, Codable {
     case None, EnterLeft, EnterRight, Jump
 }
 
@@ -141,8 +141,8 @@ public class Story: Identifiable, Codable {
 
 open class TextLine: Identifiable, Codable {
     public var id: UUID = UUID()
-    public var actor: String = ""
-    public var actorAction: ActorAction = ActorAction.None
+    public var character: String = ""
+    public var characterAction: CharacterAction = CharacterAction.None
     public var textString: String = ""
     public var textEvent: TextEvent = TextEvent.None
     

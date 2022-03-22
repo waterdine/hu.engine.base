@@ -13,7 +13,7 @@ import UniformTypeIdentifiers
 @available(macOS 11.0, *)
 public extension UTType {
     static let waterdineScriptDocument = UTType(exportedAs: "studio.waterdine.script")
-    static let waterdineActorDocument = UTType(exportedAs: "studio.waterdine.actor")
+    static let waterdineCharacterModelDocument = UTType(exportedAs: "studio.waterdine.charactermodel")
     static let waterdineStoryDocument = UTType(exportedAs: "studio.waterdine.story")
     static let waterdineProductDocument = UTType(exportedAs: "studio.waterdine.product")
 }
@@ -52,8 +52,8 @@ public struct StringsDocument: FileDocument {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
-public struct ActorDocument: FileDocument {
-    public static var readableContentTypes: [UTType] { [.waterdineActorDocument] }
+public struct CharacterModelDocument: FileDocument {
+    public static var readableContentTypes: [UTType] { [.waterdineCharacterModelDocument] }
     public var name: String = ""
     public var mouthOpenWrapper: FileWrapper? = nil
     public var mouthClosedWrapper: FileWrapper? = nil
@@ -270,9 +270,11 @@ public struct ProductDocument: FileDocument {
     public var product: Product = Product()
     public var storyWrapper: FileWrapper? = nil
     public var backgroundsWrapper: FileWrapper? = nil
-    public var actorsWrapper: FileWrapper? = nil
+    public var characterModelsWrapper: FileWrapper? = nil
     public var soundsWrapper: FileWrapper? = nil
     public var musicsWrapper: FileWrapper? = nil
+    public var scenesWrapper: FileWrapper? = nil
+    public var interfaceWrapper: FileWrapper? = nil
     
     public init() {
     }
@@ -281,7 +283,9 @@ public struct ProductDocument: FileDocument {
         self.product = try PropertyListDecoder().decode(Product.self, from: (file.fileWrappers?["Product.plist"]?.regularFileContents)!)
         if (product.library) {
             self.backgroundsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.actorsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Actors"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.characterModelsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Characters"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.interfaceWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Interface"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.scenesWrapper = file.fileWrappers?["Scenes"] ?? FileWrapper(directoryWithFileWrappers: [:])
             self.soundsWrapper = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
             self.musicsWrapper = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
         } else {
@@ -293,22 +297,22 @@ public struct ProductDocument: FileDocument {
         try self.init(file: configuration.file)
     }
     
-    public func listActors() -> [String] {
+    public func listCharacterModels() -> [String] {
         // put this in a manifest?
-        return actorsWrapper?.fileWrappers?.keys.map({ $0.replacingOccurrences(of: ".虎actor", with: "") }) ?? []
+        return characterModelsWrapper?.fileWrappers?.keys.map({ $0.replacingOccurrences(of: ".虎model", with: "") }) ?? []
     }
     
-    public func fetchActor(name: String) -> ActorDocument {
-        let wrapperForActor = actorsWrapper?.fileWrappers?["\(name).虎actor"]
-        return wrapperForActor == nil ? ActorDocument() : try! ActorDocument(file: wrapperForActor!)
+    public func fetchCharacterModels(name: String) -> CharacterModelDocument {
+        let wrapperForCharacterModel = characterModelsWrapper?.fileWrappers?["\(name).虎model"]
+        return wrapperForCharacterModel == nil ? CharacterModelDocument() : try! CharacterModelDocument(file: wrapperForCharacterModel!)
     }
     
-    public func setActor(name: String, script: ActorDocument) {
-        let wrapperForActor = actorsWrapper?.fileWrappers?["\(name).虎actor"]
-        if (wrapperForActor != nil) {
-            actorsWrapper?.removeFileWrapper(wrapperForActor!)
+    public func setCharacterModels(name: String, characterModel: CharacterModelDocument) {
+        let wrapperForCharacterModel = characterModelsWrapper?.fileWrappers?["\(name).虎model"]
+        if (wrapperForCharacterModel != nil) {
+            characterModelsWrapper?.removeFileWrapper(wrapperForCharacterModel!)
         }
-        actorsWrapper?.addFileWrapper(try! script.fileWrapper())
+        characterModelsWrapper?.addFileWrapper(try! characterModel.fileWrapper())
     }
     
     public func fetchStory() -> StoryDocument {
@@ -332,9 +336,13 @@ public struct ProductDocument: FileDocument {
                 backgroundsWrapper?.preferredFilename = "Backgrounds"
                 imagesDirectory.addFileWrapper(backgroundsWrapper!)
             }
-            if (actorsWrapper != nil) {
-                actorsWrapper?.preferredFilename = "Actors"
-                imagesDirectory.addFileWrapper(actorsWrapper!)
+            if (characterModelsWrapper != nil) {
+                characterModelsWrapper?.preferredFilename = "Characters"
+                imagesDirectory.addFileWrapper(characterModelsWrapper!)
+            }
+            if (interfaceWrapper != nil) {
+                interfaceWrapper?.preferredFilename = "Interface"
+                imagesDirectory.addFileWrapper(interfaceWrapper!)
             }
             
             topDirectory.addFileWrapper(imagesDirectory)
@@ -345,6 +353,10 @@ public struct ProductDocument: FileDocument {
             if (musicsWrapper != nil) {
                 musicsWrapper?.preferredFilename = "Music"
                 topDirectory.addFileWrapper(musicsWrapper!)
+            }
+            if (scenesWrapper != nil) {
+                scenesWrapper?.preferredFilename = "Scenes"
+                topDirectory.addFileWrapper(scenesWrapper!)
             }
         } else {
             storyWrapper!.preferredFilename = "\(product.name).虎story"
