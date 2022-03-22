@@ -20,31 +20,51 @@ public extension UTType {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
-public struct StringsDocument: FileDocument {
+public struct LanguageDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.package] }
-    public var strings: [String : String] = [:]
+    
+    public var stringsDocumentWrappers: [String:FileWrapper]
     
     public init() {
+        stringsDocumentWrappers = [:]
     }
     
     public init(file: FileWrapper) throws {
-        // Todo what happens if multiple .strings files?
-        
-        strings = try PropertyListSerialization.propertyList(from: (file.fileWrappers?.first(where: { $0.key.contains(".strings")})?.value.regularFileContents!)!, format: nil) as! [String : String]
+        stringsDocumentWrappers = file.fileWrappers ?? [:]
     }
     
     public init(configuration: ReadConfiguration) throws {
         try self.init(file: configuration.file)
     }
     
-    public func fileWrapper() throws -> FileWrapper {
-        let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
+    public func fetchStrings(key: String, name: String) -> [String : String] {
+        let wrapperForStringsDocument = stringsDocumentWrappers["\(name).strings"]
+        var strings: [String : String] = [:]
+        if (wrapperForStringsDocument != nil) {
+            strings = try! PropertyListSerialization.propertyList(from: wrapperForStringsDocument!.regularFileContents!, format: nil) as! [String : String]
+        }
+        return strings
+    }
+    
+    public mutating func setStrings(key: String, name: String, strings: [String : String]) {
         var lines = ""
         for stringPair in strings {
             lines.append("\"" + stringPair.key + "\" = \"" + stringPair.value + "\";")
         }
-        let stringsWrapper = FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
-        topDirectory.addFileWrapper(stringsWrapper)
+        let wrapperForStringsDocument = stringsDocumentWrappers["\(name).strings"]
+        if (wrapperForStringsDocument != nil) {
+            stringsDocumentWrappers.removeValue(forKey: "\(name).strings")
+        }
+        let newWrapperForStringsDocument = FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
+        newWrapperForStringsDocument.preferredFilename = "\(name).strings"
+        stringsDocumentWrappers["\(name).strings"] = newWrapperForStringsDocument
+    }
+    
+    public func fileWrapper() throws -> FileWrapper {
+        let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
+        for stringsDocumentWrapper in stringsDocumentWrappers {
+            topDirectory.addFileWrapper(stringsDocumentWrapper.value)
+        }
         return topDirectory
     }
     
@@ -152,12 +172,12 @@ public struct ScriptDocument: FileDocument {
         self.scenesWrapper.preferredFilename = "Scenes.plist"
     }
     
-    public func fetchLanguage(name: String) -> StringsDocument {
+    public func fetchLanguage(name: String) -> LanguageDocument {
         let wrapperForLanguage = languagesWrapper.fileWrappers!["\(name).lproj"]
-        return wrapperForLanguage == nil ? StringsDocument() : try! StringsDocument(file: wrapperForLanguage!)
+        return wrapperForLanguage == nil ? LanguageDocument() : try! LanguageDocument(file: wrapperForLanguage!)
     }
     
-    public func setLanguage(name: String, language: StringsDocument) {
+    public func setLanguage(name: String, language: LanguageDocument) {
         let wrapperForLanguage = languagesWrapper.fileWrappers!["\(name).lproj"]
         if (wrapperForLanguage != nil) {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
@@ -239,12 +259,12 @@ public struct StoryDocument: FileDocument {
         scriptsWrapper.preferredFilename = "Scripts"
     }
     
-    public func fetchLanguage(name: String) -> StringsDocument {
+    public func fetchLanguage(name: String) -> LanguageDocument {
         let wrapperForLanguage = languagesWrapper.fileWrappers!["\(name).lproj"]
-        return wrapperForLanguage == nil ? StringsDocument() : try! StringsDocument(file: wrapperForLanguage!)
+        return wrapperForLanguage == nil ? LanguageDocument() : try! LanguageDocument(file: wrapperForLanguage!)
     }
     
-    public func setLanguage(name: String, language: StringsDocument) {
+    public func setLanguage(name: String, language: LanguageDocument) {
         let wrapperForLanguage = languagesWrapper.fileWrappers!["\(name).lproj"]
         if (wrapperForLanguage != nil) {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
