@@ -309,7 +309,7 @@ public struct ProductDocument: FileDocument {
         storyWrapper = try! story.fileWrapper()
     }
             
-    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+    public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
         let productData = try PropertyListEncoder().encode(product)
         let productWrapper = FileWrapper(regularFileWithContents: productData)
@@ -341,5 +341,9 @@ public struct ProductDocument: FileDocument {
             topDirectory.addFileWrapper(storyWrapper!)
         }
         return topDirectory
+    }
+    
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return try fileWrapper()
     }
 }
