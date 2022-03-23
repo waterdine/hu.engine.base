@@ -40,7 +40,7 @@ public struct LanguageDocument: FileDocument {
     public func fetchStrings(key: String, name: String) -> [String : String] {
         let wrapperForStringsDocument = stringsDocumentWrappers["\(name).strings"]
         var strings: [String : String] = [:]
-        if (wrapperForStringsDocument != nil && wrapperForStringsDocument!.regularFileContents != nil) {
+        if (wrapperForStringsDocument != nil && wrapperForStringsDocument!.regularFileContents != nil && wrapperForStringsDocument!.regularFileContents!.count > 0) {
             strings = try! PropertyListSerialization.propertyList(from: wrapperForStringsDocument!.regularFileContents!, format: nil) as! [String : String]
         }
         return strings
