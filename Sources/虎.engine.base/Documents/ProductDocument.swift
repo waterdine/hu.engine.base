@@ -320,23 +320,23 @@ public struct ProductDocument: FileDocument {
             if (self.backgroundsWrapper!.filename == nil) {
                 self.backgroundsWrapper!.preferredFilename = "Backgrounds"
             }
-            self.characterModelsWrapper! = file.fileWrappers?["Images"]?.fileWrappers?["Characters"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.characterModelsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Characters"] ?? FileWrapper(directoryWithFileWrappers: [:])
             if (self.characterModelsWrapper!.filename == nil) {
                 self.characterModelsWrapper!.preferredFilename = "Characters"
             }
-            self.interfaceWrapper! = file.fileWrappers?["Images"]?.fileWrappers?["Interface"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.interfaceWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Interface"] ?? FileWrapper(directoryWithFileWrappers: [:])
             if (self.interfaceWrapper!.filename == nil) {
                 self.interfaceWrapper!.preferredFilename = "Interface"
             }
-            self.scenesWrapper! = file.fileWrappers?["Scenes"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.scenesWrapper = file.fileWrappers?["Scenes"] ?? FileWrapper(directoryWithFileWrappers: [:])
             if (self.scenesWrapper!.filename == nil) {
                 self.scenesWrapper!.preferredFilename = "Scenes"
             }
-            self.soundsWrapper! = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.soundsWrapper = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
             if (self.soundsWrapper!.filename == nil) {
                 self.soundsWrapper!.preferredFilename = "Sound"
             }
-            self.musicsWrapper! = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            self.musicsWrapper = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
             if (self.musicsWrapper!.filename == nil) {
                 self.musicsWrapper!.preferredFilename = "Music"
             }
