@@ -97,11 +97,9 @@ public struct CharacterModelDocument: FileDocument {
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
         if (mouthOpenWrapper != nil) {
-            mouthOpenWrapper?.preferredFilename = "MouthOpen.png"
             topDirectory.addFileWrapper(mouthOpenWrapper!)
         }
         if (mouthClosedWrapper != nil) {
-            mouthClosedWrapper?.preferredFilename = "MouthClosed.png"
             topDirectory.addFileWrapper(mouthClosedWrapper!)
         }
         return topDirectory
@@ -195,9 +193,7 @@ public struct ScriptDocument: FileDocument {
     
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
-        scenesWrapper.preferredFilename = "Scenes.plist"
         topDirectory.addFileWrapper(scenesWrapper)
-        languagesWrapper.preferredFilename = "Languages"
         topDirectory.addFileWrapper(languagesWrapper)
         return topDirectory
     }
@@ -267,7 +263,7 @@ public struct StoryDocument: FileDocument {
         if (wrapperForScript != nil) {
             scriptsWrapper.removeFileWrapper(wrapperForScript!)
         }
-        var newWrapperForScript = try! script.fileWrapper()
+        let newWrapperForScript = try! script.fileWrapper()
         newWrapperForScript.preferredFilename = "\(name).虎script"
         scriptsWrapper.addFileWrapper(newWrapperForScript)
     }
@@ -289,11 +285,8 @@ public struct StoryDocument: FileDocument {
     
     public func fileWrapper() throws -> FileWrapper {
         let topDirectory = FileWrapper(directoryWithFileWrappers: [:])
-        storyWrapper.preferredFilename = "Story.plist"
         topDirectory.addFileWrapper(storyWrapper)
-        scriptsWrapper.preferredFilename = "Scripts"
         topDirectory.addFileWrapper(scriptsWrapper)
-        languagesWrapper.preferredFilename = "Languages"
         topDirectory.addFileWrapper(languagesWrapper)
         return topDirectory
     }
@@ -324,13 +317,34 @@ public struct ProductDocument: FileDocument {
         self.product = try PropertyListDecoder().decode(Product.self, from: (file.fileWrappers?["Product.plist"]?.regularFileContents)!)
         if (product.library) {
             self.backgroundsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Backgrounds"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.characterModelsWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Characters"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.interfaceWrapper = file.fileWrappers?["Images"]?.fileWrappers?["Interface"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.scenesWrapper = file.fileWrappers?["Scenes"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.soundsWrapper = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
-            self.musicsWrapper = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.backgroundsWrapper!.filename == nil) {
+                self.backgroundsWrapper!.preferredFilename = "Backgrounds"
+            }
+            self.characterModelsWrapper! = file.fileWrappers?["Images"]?.fileWrappers?["Characters"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.characterModelsWrapper!.filename == nil) {
+                self.characterModelsWrapper!.preferredFilename = "Characters"
+            }
+            self.interfaceWrapper! = file.fileWrappers?["Images"]?.fileWrappers?["Interface"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.interfaceWrapper!.filename == nil) {
+                self.interfaceWrapper!.preferredFilename = "Interface"
+            }
+            self.scenesWrapper! = file.fileWrappers?["Scenes"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.scenesWrapper!.filename == nil) {
+                self.scenesWrapper!.preferredFilename = "Scenes"
+            }
+            self.soundsWrapper! = file.fileWrappers?["Sound"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.soundsWrapper!.filename == nil) {
+                self.soundsWrapper!.preferredFilename = "Sound"
+            }
+            self.musicsWrapper! = file.fileWrappers?["Music"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.musicsWrapper!.filename == nil) {
+                self.musicsWrapper!.preferredFilename = "Music"
+            }
         } else {
             self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
+            if (self.storyWrapper!.filename == nil) {
+                self.storyWrapper!.preferredFilename = "\(product.name).虎story"
+            }
         }
     }
     
@@ -353,7 +367,7 @@ public struct ProductDocument: FileDocument {
         if (wrapperForCharacterModel != nil) {
             characterModelsWrapper?.removeFileWrapper(wrapperForCharacterModel!)
         }
-        var newWrapperForCharacterModel = try! characterModel.fileWrapper()
+        let newWrapperForCharacterModel = try! characterModel.fileWrapper()
         newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
         characterModelsWrapper?.addFileWrapper(newWrapperForCharacterModel)
     }
@@ -378,33 +392,26 @@ public struct ProductDocument: FileDocument {
             let imagesDirectory = FileWrapper(directoryWithFileWrappers: [:])
             imagesDirectory.preferredFilename = "Images"
             if (backgroundsWrapper != nil) {
-                backgroundsWrapper?.preferredFilename = "Backgrounds"
                 imagesDirectory.addFileWrapper(backgroundsWrapper!)
             }
             if (characterModelsWrapper != nil) {
-                characterModelsWrapper?.preferredFilename = "Characters"
                 imagesDirectory.addFileWrapper(characterModelsWrapper!)
             }
             if (interfaceWrapper != nil) {
-                interfaceWrapper?.preferredFilename = "Interface"
                 imagesDirectory.addFileWrapper(interfaceWrapper!)
             }
             
             topDirectory.addFileWrapper(imagesDirectory)
             if (soundsWrapper != nil) {
-                soundsWrapper?.preferredFilename = "Sound"
                 topDirectory.addFileWrapper(soundsWrapper!)
             }
             if (musicsWrapper != nil) {
-                musicsWrapper?.preferredFilename = "Music"
                 topDirectory.addFileWrapper(musicsWrapper!)
             }
             if (scenesWrapper != nil) {
-                scenesWrapper?.preferredFilename = "Scenes"
                 topDirectory.addFileWrapper(scenesWrapper!)
             }
         } else {
-            storyWrapper!.preferredFilename = "\(product.name).虎story"
             topDirectory.addFileWrapper(storyWrapper!)
         }
         return topDirectory
