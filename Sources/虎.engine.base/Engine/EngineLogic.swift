@@ -43,6 +43,7 @@ open class GameLogic: NSObject {
 	
 	// current storyline (saveable)
     open var gameState: GameState = GameState()
+    open var autoProgress: Bool = true
     open var sceneLabels: [String:Int] = [:]
 	open var textDelay: Double = 1.0
 	open var textFadeTime: Double = 0.075
@@ -266,7 +267,7 @@ open class GameLogic: NSObject {
                 if (self.gameState.sceneStack.count > 0) {
                     popStack()
                     return
-                } else {
+                } else if (autoProgress) {
                     var scriptIndex = story!.Scripts.firstIndex(where: { $0.name == self.gameState.currentScript }) ?? 0
                     scriptIndex += 1
                     // auto back
@@ -283,6 +284,8 @@ open class GameLogic: NSObject {
                         self.gameState.currentScript = story!.Scripts[scriptIndex].name
                         saveState()
                     }
+                } else {
+                    return
                 }
                 reloadSceneData = true
 			}
