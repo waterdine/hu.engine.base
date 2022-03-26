@@ -318,25 +318,7 @@ public struct ProductDocument: FileDocument {
     public var scenesWrapper: FileWrapper? = nil
     public var interfaceWrapper: FileWrapper? = nil
     
-    public init(product: Product) {
-        self.product = product
-        if (product.library) {
-            self.backgroundsWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.backgroundsWrapper!.preferredFilename = "Backgrounds"
-            self.characterModelsWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.characterModelsWrapper!.preferredFilename = "Characters"
-            self.interfaceWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.interfaceWrapper!.preferredFilename = "Interface"
-            self.scenesWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.scenesWrapper!.preferredFilename = "Scenes"
-            self.soundsWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.soundsWrapper!.preferredFilename = "Sound"
-            self.musicsWrapper = FileWrapper(directoryWithFileWrappers: [:])
-            self.musicsWrapper!.preferredFilename = "Music"
-        } else {
-            self.storyWrapper = FileWrapper(regularFileWithContents: Data())
-            self.storyWrapper!.preferredFilename = "\(product.name).虎story"
-        }
+    public init() {
     }
     
     public init(file: FileWrapper) throws {
@@ -367,10 +349,7 @@ public struct ProductDocument: FileDocument {
                 self.musicsWrapper!.preferredFilename = "Music"
             }
         } else {
-            self.storyWrapper = file.fileWrappers?["\(product.name).虎story"] ?? FileWrapper(regularFileWithContents: Data())
-            if (self.storyWrapper!.filename == nil) {
-                self.storyWrapper!.preferredFilename = "\(product.name).虎story"
-            }
+            self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
         }
     }
     
@@ -406,6 +385,9 @@ public struct ProductDocument: FileDocument {
     
     public mutating func setStory(story: StoryDocument) {
         storyWrapper = try! story.fileWrapper()
+        if (storyWrapper!.filename == nil) {
+            storyWrapper!.preferredFilename = "\(product.name).虎story"
+        }
     }
             
     public func fileWrapper() throws -> FileWrapper {
