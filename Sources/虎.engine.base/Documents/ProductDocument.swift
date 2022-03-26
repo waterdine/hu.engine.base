@@ -56,7 +56,9 @@ public struct LanguageDocument: FileDocument {
             stringsDocumentWrappers.removeValue(forKey: "\(name).strings")
         }
         let newWrapperForStringsDocument = FileWrapper(regularFileWithContents: lines.data(using: .utf8)!)
-        newWrapperForStringsDocument.preferredFilename = "\(name).strings"
+        if (newWrapperForStringsDocument.filename == nil) {
+            newWrapperForStringsDocument.preferredFilename = "\(name).strings"
+        }
         stringsDocumentWrappers["\(name).strings"] = newWrapperForStringsDocument
     }
     
@@ -187,7 +189,9 @@ public struct ScriptDocument: FileDocument {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
         }
         let newWrapperForLanguage = try! language.fileWrapper()
-        newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        if (newWrapperForLanguage.filename == nil) {
+            newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        }
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
     }
     
@@ -264,7 +268,9 @@ public struct StoryDocument: FileDocument {
             scriptsWrapper.removeFileWrapper(wrapperForScript!)
         }
         let newWrapperForScript = try! script.fileWrapper()
-        newWrapperForScript.preferredFilename = "\(name).虎script"
+        if (newWrapperForScript.filename == nil) {
+            newWrapperForScript.preferredFilename = "\(name).虎script"
+        }
         scriptsWrapper.addFileWrapper(newWrapperForScript)
     }
     
@@ -279,7 +285,9 @@ public struct StoryDocument: FileDocument {
             languagesWrapper.removeFileWrapper(wrapperForLanguage!)
         }
         let newWrapperForLanguage = try! language.fileWrapper()
-        newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        if (newWrapperForLanguage.filename == nil) {
+            newWrapperForLanguage.preferredFilename = "\(name).lproj"
+        }
         languagesWrapper.addFileWrapper(newWrapperForLanguage)
     }
     
@@ -310,7 +318,25 @@ public struct ProductDocument: FileDocument {
     public var scenesWrapper: FileWrapper? = nil
     public var interfaceWrapper: FileWrapper? = nil
     
-    public init() {
+    public init(product: Product) {
+        self.product = product
+        if (product.library) {
+            self.backgroundsWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.backgroundsWrapper!.preferredFilename = "Backgrounds"
+            self.characterModelsWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.characterModelsWrapper!.preferredFilename = "Characters"
+            self.interfaceWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.interfaceWrapper!.preferredFilename = "Interface"
+            self.scenesWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.scenesWrapper!.preferredFilename = "Scenes"
+            self.soundsWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.soundsWrapper!.preferredFilename = "Sound"
+            self.musicsWrapper = FileWrapper(directoryWithFileWrappers: [:])
+            self.musicsWrapper!.preferredFilename = "Music"
+        } else {
+            self.storyWrapper = FileWrapper(regularFileWithContents: Data())
+            self.storyWrapper!.preferredFilename = "\(product.name).虎story"
+        }
     }
     
     public init(file: FileWrapper) throws {
@@ -341,7 +367,7 @@ public struct ProductDocument: FileDocument {
                 self.musicsWrapper!.preferredFilename = "Music"
             }
         } else {
-            self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
+            self.storyWrapper = file.fileWrappers?["\(product.name).虎story"] ?? FileWrapper(regularFileWithContents: Data())
             if (self.storyWrapper!.filename == nil) {
                 self.storyWrapper!.preferredFilename = "\(product.name).虎story"
             }
@@ -368,7 +394,9 @@ public struct ProductDocument: FileDocument {
             characterModelsWrapper?.removeFileWrapper(wrapperForCharacterModel!)
         }
         let newWrapperForCharacterModel = try! characterModel.fileWrapper()
-        newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
+        if (newWrapperForCharacterModel.filename == nil) {
+            newWrapperForCharacterModel.preferredFilename = "\(name).虎model"
+        }
         characterModelsWrapper?.addFileWrapper(newWrapperForCharacterModel)
     }
     
