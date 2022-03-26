@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 // Define this document's type.
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
+@available(iOS 14.0, *)
 public extension UTType {
     static let waterdineScriptDocument = UTType(exportedAs: "studio.waterdine.script")
     static let waterdineCharacterModelDocument = UTType(exportedAs: "studio.waterdine.charactermodel")
@@ -20,6 +21,7 @@ public extension UTType {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
+@available(iOS 14.0, *)
 public struct LanguageDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.package] }
     
@@ -77,6 +79,7 @@ public struct LanguageDocument: FileDocument {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
+@available(iOS 14.0, *)
 public struct CharacterModelDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineCharacterModelDocument] }
     public var name: String = ""
@@ -114,6 +117,7 @@ public struct CharacterModelDocument: FileDocument {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
+@available(iOS 14.0, *)
 public struct ScriptDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineScriptDocument] }
     public var name: String = ""
@@ -209,6 +213,7 @@ public struct ScriptDocument: FileDocument {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11, *)
+@available(iOS 14.0, *)
 public struct StoryDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineStoryDocument] }
     
@@ -306,6 +311,7 @@ public struct StoryDocument: FileDocument {
 
 @available(macCatalyst 14.0, *)
 @available(macOS 11.0, *)
+@available(iOS 14.0, *)
 public struct ProductDocument: FileDocument {
     public static var readableContentTypes: [UTType] { [.waterdineProductDocument] }
 
