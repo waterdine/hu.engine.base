@@ -317,6 +317,7 @@ public struct ProductDocument: FileDocument {
     public var musicsWrapper: FileWrapper? = nil
     public var scenesWrapper: FileWrapper? = nil
     public var interfaceWrapper: FileWrapper? = nil
+    public var puzzlesWrapper: FileWrapper? = nil
     
     public init() {
     }
@@ -350,6 +351,10 @@ public struct ProductDocument: FileDocument {
             }
         } else {
             self.storyWrapper = file.fileWrappers?["\(product.name).虎story"]
+            self.puzzlesWrapper = file.fileWrappers?["Puzzles"] ?? FileWrapper(directoryWithFileWrappers: [:])
+            if (self.puzzlesWrapper!.filename == nil) {
+                self.puzzlesWrapper!.preferredFilename = "Puzzles"
+            }
         }
     }
     
@@ -423,6 +428,9 @@ public struct ProductDocument: FileDocument {
             }
         } else {
             topDirectory.addFileWrapper(storyWrapper!)
+            if (puzzlesWrapper != nil) {
+                topDirectory.addFileWrapper(puzzlesWrapper!)
+            }
         }
         return topDirectory
     }

@@ -809,7 +809,7 @@ open class GameLogic: NSObject {
     
     open func loadAction(actionName: String, forResource: String) -> SKAction? {
         
-        let url = loadUrl(forResource: forResource, withExtension: ".sks", subdirectory: "")
+        let url = loadUrl(forResource: forResource, withExtension: ".sks", subdirectory: "Scenes/Actions")
         if url != nil {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)

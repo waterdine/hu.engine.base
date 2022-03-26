@@ -62,7 +62,7 @@ open class GameTexture : SKTexture {
         super.init()
         let fileName: String? = aDecoder.decodeObject(forKey: "_imgName") as! String?
         let gameLogic = (aDecoder as! GameKeyedUnarchiver).gameLogic
-        fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".png", subdirectory: "Images")
+        fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".png", subdirectory: "Images/Interface")
         
         if (fileUrl == nil) {
             fileUrl = gameLogic?.loadUrl(forResource: "Default." + fileName!, withExtension: ".png", subdirectory: "Images/Backgrounds")
