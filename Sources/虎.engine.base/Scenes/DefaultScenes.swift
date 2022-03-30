@@ -76,6 +76,7 @@ public class Story: Identifiable, Codable {
         case Chapters
         case Scripts
         case Characters
+        case Credits
     }
     
     public init() {
@@ -93,10 +94,11 @@ public class Story: Identifiable, Codable {
                 Scripts.append(newChapter)
             }
         } else if (Version! > 1) {
-            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Scripts)!
-            Characters = try container.decodeIfPresent([Character].self, forKey: BaseSceneCodingKeys.Characters)!
+            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Scripts) ?? []
+            Characters = try container.decodeIfPresent([Character].self, forKey: BaseSceneCodingKeys.Characters) ?? []
+            Credits = try container.decodeIfPresent([Credit].self, forKey: BaseSceneCodingKeys.Credits) ?? []
         } else if (Version! > 0) {
-            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Chapters)!
+            Scripts = try container.decodeIfPresent([Script].self, forKey: BaseSceneCodingKeys.Chapters) ?? []
         }
         //id = try container.decode(UUID.self, forKey: BaseSceneCodingKeys.id)
     }
@@ -115,6 +117,7 @@ public class Story: Identifiable, Codable {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
             try container.encode(Scripts, forKey: BaseSceneCodingKeys.Scripts)
             try container.encode(Characters, forKey: BaseSceneCodingKeys.Characters)
+            try container.encode(Credits, forKey: BaseSceneCodingKeys.Credits)
         } else if (Version! > 0) {
             try container.encode(Version, forKey: BaseSceneCodingKeys.Version)
             try container.encode(Scripts, forKey: BaseSceneCodingKeys.Chapters)

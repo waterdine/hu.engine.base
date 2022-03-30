@@ -31,6 +31,16 @@ class CreditsLogic: GameScene {
 		if (!skipable) {
 			finalFade!.run((gameLogic?.loadAction(actionName: "FinalFade", forResource: "Default.MyActions"))!)
 		}
+        
+        for credit in gameLogic!.story!.Credits {
+            let creditNode = credits!.childNode(withName: "//Credit")!.copy() as! SKNode
+            creditNode.position.y -= creditNode.frame.height
+            let titleNode = creditNode.childNode(withName: "//Name") as! SKLabelNode
+            let nameNode = creditNode.childNode(withName: "//Title") as! SKLabelNode
+            titleNode.text = credit.title
+            nameNode.text = credit.name
+            credits?.addChild(creditNode)
+        }
 	}
 	
 	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
