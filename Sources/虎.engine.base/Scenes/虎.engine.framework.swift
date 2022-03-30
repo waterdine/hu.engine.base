@@ -143,6 +143,8 @@ public class SceneWrapper: Identifiable, Codable {
 }
 
 public class Scenes: Codable {
+    public var CreatedBy: String = ""
+    public var Created: Date = Date()
     public var Scenes: [SceneWrapper] = []
     public init() {
     }

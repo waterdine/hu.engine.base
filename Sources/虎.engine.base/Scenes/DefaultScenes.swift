@@ -54,11 +54,21 @@ public struct Character: Identifiable, Codable {
     }
 }
 
+public struct Credit: Identifiable, Codable {
+    public var id: UUID = UUID()
+    public var title: String = ""
+    public var name: String = ""
+    
+    public init() {
+    }
+}
+
 public class Story: Identifiable, Codable {
     public var id: UUID = UUID()
     public var Version: Int? = nil
     public var Scripts: [Script] = []
     public var Characters: [Character] = []
+    public var Credits: [Credit] = []
     
     enum BaseSceneCodingKeys: String, CodingKey {
         case id
