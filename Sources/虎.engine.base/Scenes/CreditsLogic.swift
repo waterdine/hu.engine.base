@@ -32,14 +32,20 @@ class CreditsLogic: GameScene {
 			finalFade!.run((gameLogic?.loadAction(actionName: "FinalFade", forResource: "Default.MyActions"))!)
 		}
         
-        for credit in gameLogic!.story!.Credits {
-            let creditNode = credits!.childNode(withName: "//Credit")!.copy() as! SKNode
-            creditNode.position.y -= creditNode.frame.height
-            let titleNode = creditNode.childNode(withName: "//Name") as! SKLabelNode
-            let nameNode = creditNode.childNode(withName: "//Title") as! SKLabelNode
-            titleNode.text = credit.title
-            nameNode.text = credit.name
-            credits?.addChild(creditNode)
+        let creditNode = credits?.childNode(withName: "//Credit")
+        if (creditNode != nil) {
+            var offset = 0.0
+            for credit in gameLogic!.story!.Credits {
+                let creditNode = credits!.childNode(withName: "//Credit")!.copy() as! SKNode
+                let titleNode = creditNode.childNode(withName: "//Name") as! SKLabelNode
+                let nameNode = creditNode.childNode(withName: "//Title") as! SKLabelNode
+                creditNode.position.y -= offset
+                titleNode.text = credit.title
+                nameNode.text = credit.name
+                credits?.addChild(creditNode)
+                offset += 2 * nameNode.frame.height
+            }
+            creditNode?.isHidden = true
         }
 	}
 	
