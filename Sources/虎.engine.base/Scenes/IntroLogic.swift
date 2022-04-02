@@ -21,6 +21,58 @@ class IntroLogic: GameScene {
 	
 	override func didMove(to view: SKView) {
 		loaded = false
+        let titleNode = scene!.childNode(withName: "//Title") as? SKLabelNode
+        if #available(iOS 11.0, *) {
+            let attributes: [NSAttributedString.Key : Any] = (titleNode?.attributedText?.attributes(at: 0, effectiveRange: nil))!
+            titleNode?.attributedText = NSAttributedString(string: (gameLogic?.localizedString(forKey: "Title", value: nil, table: "Story"))!, attributes: attributes)
+        } else {
+            titleNode?.text = gameLogic?.localizedString(forKey: "Title", value: nil, table: "Story")
+        }
+        let subTitleNode = scene!.childNode(withName: "//Subtitle") as? SKLabelNode
+        subTitleNode?.text = gameLogic?.localizedString(forKey: "Subtitle", value: nil, table: "Story")
+        let publisherNode = scene!.childNode(withName: "//Publisher") as? SKLabelNode
+        publisherNode?.text = gameLogic?.localizedString(forKey: "PublisherText", value: nil, table: "Story")
+        let developerNode = scene!.childNode(withName: "//Developer") as? SKLabelNode
+        developerNode?.text = gameLogic?.localizedString(forKey: "DeveloperText", value: nil, table: "Story")
+        //let eProducerTitleNode = scene!.childNode(withName: "//EProducerTitle") as? SKLabelNode
+        let eProducerNameNode = scene!.childNode(withName: "//EProducerName") as? SKLabelNode
+        eProducerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Executive Producer" })?.name
+        //let producerTitleNode = scene!.childNode(withName: "//ProducerTitle") as? SKLabelNode
+        let producerNameNode = scene!.childNode(withName: "//ProducerName") as? SKLabelNode
+        producerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Produced By" })?.name
+        if (producerNameNode == nil) {
+            producerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Producer" })?.name
+        }
+        if (producerNameNode == nil) {
+            producerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Executive Producer" })?.name
+        }
+        let directorTitleNode = scene!.childNode(withName: "//DirectorTitle") as? SKLabelNode
+        let directorNameNode = scene!.childNode(withName: "//DirectorName") as? SKLabelNode
+        producerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Written and Directed By" })?.name
+        if (producerNameNode == nil) {
+            producerNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Writter and Director" })?.name
+        }
+        if (producerNameNode == nil) {
+            directorTitleNode?.text = "Created By"
+            directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Creator" })?.name
+            if (directorNameNode == nil) {
+                directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Created By" })?.name
+            }
+        }
+        if (producerNameNode == nil) {
+            directorTitleNode?.text = "Directed By"
+            directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Director" })?.name
+            if (directorNameNode == nil) {
+                directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Directed By" })?.name
+            }
+        }
+        if (producerNameNode == nil) {
+            directorTitleNode?.text = "Written By"
+            directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Writer" })?.name
+            if (directorNameNode == nil) {
+                directorNameNode?.text = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Written By" })?.name
+            }
+        }
 	}
 	
 	override func didEvaluateActions() {
