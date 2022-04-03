@@ -49,6 +49,7 @@ public struct Character: Identifiable, Codable {
     public var id: UUID = UUID()
     public var name: String = ""
     public var model: String = ""
+    public var royal: Bool = false
     
     public init() {
     }
