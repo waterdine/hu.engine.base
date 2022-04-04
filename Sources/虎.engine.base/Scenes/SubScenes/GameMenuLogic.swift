@@ -11,7 +11,7 @@ import SpriteKit
 @available(iOS 9.0, *)
 class GameMenuLogic : GameSubScene {
 	
-	// atode: Do not do OOP, until plan for a more functionally driven engine has emerged use OOP.
+	// atode: Convert this to a more functionally driven engine without as much OOP.
 	
 	// GameMenuButtons Popup
 	var mainMenuNode: SKNode? // GameButton (SubScene)
