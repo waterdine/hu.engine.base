@@ -23,7 +23,7 @@ class IntroLogic: GameScene {
 		loaded = false
         let titleNode = scene!.childNode(withName: "//Title") as? SKLabelNode
         if #available(iOS 11.0, *) {
-            let attributes: [NSAttributedString.Key : Any] = (titleNode?.attributedText?.attributes(at: 0, effectiveRange: nil))!
+            let attributes: [NSAttributedString.Key : Any]? = (titleNode?.attributedText?.attributes(at: 0, effectiveRange: nil))
             titleNode?.attributedText = NSAttributedString(string: (gameLogic?.localizedString(forKey: "Title", value: nil, table: "Story"))!, attributes: attributes)
         } else {
             titleNode?.text = gameLogic?.localizedString(forKey: "Title", value: nil, table: "Story")
