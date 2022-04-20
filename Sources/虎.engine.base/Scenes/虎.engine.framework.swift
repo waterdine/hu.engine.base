@@ -146,6 +146,29 @@ public class Scenes: Codable {
     public var CreatedBy: String = ""
     public var Created: Date = Date()
     public var Scenes: [SceneWrapper] = []
+    
+    enum BaseSceneCodingKeys: String, CodingKey {
+        case id
+        case CreatedBy
+        case Created
+        case Scenes
+    }
+    
     public init() {
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: BaseSceneCodingKeys.self)
+        CreatedBy = try container.decodeIfPresent(String.self, forKey: BaseSceneCodingKeys.CreatedBy) ?? ""
+        Created = try container.decodeIfPresent(Date.self, forKey: BaseSceneCodingKeys.Created) ?? Date()
+        Scenes = try container.decodeIfPresent([SceneWrapper].self, forKey: BaseSceneCodingKeys.Scenes) ?? []
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: BaseSceneCodingKeys.self)
+        //try container.encode(id, forKey: BaseSceneCodingKeys.id)
+        try container.encode(CreatedBy, forKey: BaseSceneCodingKeys.CreatedBy)
+        try container.encode(Created, forKey: BaseSceneCodingKeys.Created)
+        try container.encode(Scenes, forKey: BaseSceneCodingKeys.Scenes)
     }
 }
