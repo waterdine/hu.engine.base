@@ -41,6 +41,10 @@ open class GameScene: SKScene {
 	open var defaultMusicFile: String = "Music"
 	
 	open override func didMove(to view: SKView) {
+        if (gameLogic == nil) {
+            return
+        }
+        
 		let logic: GameLogic = gameLogic!
 		if (logic.sceneDebug) {
             let sceneNumber: Int = logic.gameState.currentSceneIndex!

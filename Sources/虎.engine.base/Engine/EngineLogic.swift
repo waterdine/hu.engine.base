@@ -111,6 +111,19 @@ open class GameLogic: NSObject {
 		return gameLogic
 	}
 	
+    deinit {
+        player?.stop()
+        fadePlayer?.stop()
+        loopSound?.stop()
+    }
+    
+    open func quitGame() {
+        transition!(GameScene(), nil)
+        sceneTypes = [:]
+        currentScene = nil
+        tempCutScene = nil
+    }
+    
     func loadStringsTables() {
         if (languagesDir != nil && languages.count > currentLanguageIndex) {
             let storyStringsURL = languagesDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Story").appendingPathExtension("strings")
