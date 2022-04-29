@@ -250,7 +250,7 @@ open class GameLogic: NSObject {
                 let decoder: PropertyListDecoder = PropertyListDecoder()
                 decoder.userInfo[SceneListSerialiser().userInfoKey!] = sceneListSerialiser
                 if (sceneListString != nil && sceneListString!.starts(with: "<?xml")) {
-                    sceneList = try! decoder.decode(Scenes.self, from: sceneListContents)
+                    sceneList = try? decoder.decode(Scenes.self, from: sceneListContents)
                 /*} else {
                     if #available(iOS 13.0, *) {
                         let sealedBox = try! AES.GCM.SealedBox.init(combined: chaptersPlistContents)
