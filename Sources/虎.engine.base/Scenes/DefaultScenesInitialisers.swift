@@ -193,6 +193,10 @@ public func RegisterGameSceneInitialisers(sceneListSerialiser: inout SceneListSe
     sceneListSerialiser.serialisers.append(GameSceneListSerialiser())
 }
 
+public func LoadGameModuleResourceBundle(bundles: inout [String:Bundle]) {
+    bundles["虎.engine.base"] = Bundle.init(url: Bundle.main.resourceURL!.appendingPathComponent("虎.engine.base_虎.engine.base.bundle"))!
+}
+
 public func RegisterGameSettings(settings: inout [String])
 {
     settings.append("Title");

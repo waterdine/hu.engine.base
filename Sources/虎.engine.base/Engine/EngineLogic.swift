@@ -74,6 +74,7 @@ open class GameLogic: NSObject {
         gameLogic.scriptsDir = gameLogic.storyDir!.appendingPathComponent("Scripts")
         gameLogic.languagesDir = gameLogic.storyDir!.appendingPathComponent("Languages")
         gameLogic.bundles["Default"] = (defaultBundle != nil) ? defaultBundle : Bundle.main
+        LoadGameModuleResourceBundle(bundles: &gameLogic.bundles)
         gameLogic.languages = languages
         gameLogic.currentLanguageIndex = 0
         var preferredLanguageIndex: Int? = nil
@@ -141,7 +142,7 @@ open class GameLogic: NSObject {
 		if (musicFile != nil) {
 			do {
 				if (musicFile! != "") {
-					let file = loadUrl(forResource: musicFile!, withExtension: ".mp3", subdirectory: "Music")
+                    let file = loadUrl(forResource: musicFile!, withExtension: ".mp3", subdirectory: "Music")
 					if (file != nil) {
                         let restartMusic: Bool? = sceneData?.RestartMusic
 						let fadeMusic: Bool = (transitionType != nil && (transitionType! == "Fade" || transitionType! == "CrossFade" || transitionType! == "Flash"))
@@ -748,7 +749,7 @@ open class GameLogic: NSObject {
         stringsTables[table] = stringsTable
     }
     
-    open func loadUrl(forResource: String, withExtension: String, subdirectory: String) -> URL?
+    open func loadUrl(forResource: String, resourceBundle: String? = nil, withExtension: String, subdirectory: String) -> URL?
     {
         var resourceName = forResource
         var bundleName = "Default"
@@ -760,9 +761,15 @@ open class GameLogic: NSObject {
             }
         }
         
-        let bundle = bundles[bundleName]
+        var bundle = bundles[bundleName]
         if (bundle != nil) {
-            let url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+            var url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+            if (url == nil && resourceBundle != nil) {
+                bundle = bundles[resourceBundle!]
+                if (bundle != nil) {
+                    url = bundle!.url(forResource: resourceName, withExtension: withExtension, subdirectory: subdirectory)
+                }
+            }
             return url
         } else {
             return nil
@@ -780,8 +787,8 @@ open class GameLogic: NSObject {
         }
     }
     
-    open func loadScene(scene: String, classType: AnyClass?) -> Any? {
-        let url = loadUrl(forResource: appendAspectSuffix(scene: scene), withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
+    open func loadScene(scene: String, resourceBundle: String? = nil, classType: AnyClass?) -> Any? {
+        let url = loadUrl(forResource: appendAspectSuffix(scene: scene), resourceBundle: resourceBundle, withExtension: ".sks", subdirectory: "Scenes/" + getAspectSuffix())
         if url != nil {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
@@ -803,7 +810,7 @@ open class GameLogic: NSObject {
     }
     
     open func loadEffectOverlay(scene: String) -> Any? {
-        let url = loadUrl(forResource: scene, withExtension: ".sks", subdirectory: "Scenes/EffectOverlays")
+        let url = loadUrl(forResource: "Default." + scene, withExtension: ".sks", subdirectory: "Scenes/EffectOverlays")
         if url != nil {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)
@@ -821,8 +828,7 @@ open class GameLogic: NSObject {
     }
     
     open func loadAction(actionName: String, forResource: String) -> SKAction? {
-        
-        let url = loadUrl(forResource: forResource, withExtension: ".sks", subdirectory: "Scenes/Actions")
+        let url = loadUrl(forResource: forResource, resourceBundle: "虎.engine.base", withExtension: ".sks", subdirectory: "Scenes/Actions")
         if url != nil {
             if let sceneData = FileManager.default.contents(atPath: url!.path) {
                 let unarchiver = GameKeyedUnarchiver(forReadingWith: sceneData, gameLogic: self)

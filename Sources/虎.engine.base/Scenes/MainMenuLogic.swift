@@ -42,7 +42,7 @@ class MainMenuLogic: GameScene {
 	var pressToContinue: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> MainMenuLogic {
-        let scene: MainMenuLogic = gameLogic.loadScene(scene: "Default.MainMenu", classType: MainMenuLogic.classForKeyedUnarchiver()) as! MainMenuLogic
+        let scene: MainMenuLogic = gameLogic.loadScene(scene: "Default.MainMenu", resourceBundle: "虎.engine.base", classType: MainMenuLogic.classForKeyedUnarchiver()) as! MainMenuLogic
 		scene.requiresMusic = true
 		scene.defaultMusicFile = "Main"
 		return scene

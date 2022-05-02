@@ -15,7 +15,7 @@ class IntroLogic: GameScene {
 	var loaded: Bool = false
 	
 	class func newScene(gameLogic: GameLogic) -> IntroLogic {
-        let scene: IntroLogic = gameLogic.loadScene(scene: "Default.Intro", classType: IntroLogic.classForKeyedUnarchiver()) as! IntroLogic
+        let scene: IntroLogic = gameLogic.loadScene(scene: "Default.Intro", resourceBundle: "虎.engine.base", classType: IntroLogic.classForKeyedUnarchiver()) as! IntroLogic
         return scene
     }
 	
@@ -88,7 +88,7 @@ class IntroLogic: GameScene {
 	override func update(_ currentTime: TimeInterval) {
 		let node = self.childNode(withName: "//ThirdFade")
 		if (!loaded && node!.alpha > 0) {
-			let file = gameLogic?.loadUrl(forResource: "Default.Music", withExtension: ".mp3", subdirectory: "Music")
+            let file = gameLogic?.loadUrl(forResource: "Default.Music", resourceBundle: "", withExtension: ".mp3", subdirectory: "Music")
 			if (file != nil) {
 				if (self.gameLogic!.player != nil) {
 					self.gameLogic!.player?.stop()
