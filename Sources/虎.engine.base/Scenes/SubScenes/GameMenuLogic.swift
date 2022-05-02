@@ -40,7 +40,7 @@ class GameMenuLogic : GameSubScene {
 	   // That is then aligned to a physical layer format, which can be loaded into memory in chunks as requested. Or all at once.
 	   // Etc.
        let buttonFont = gameLogic!.localizedString(forKey: "ButtonFontName", value: nil, table: "Story")
-       let subScene: SKNode? = gameLogic?.loadScene(scene: "Default.GameMenu", classType: SKNode.classForKeyedUnarchiver()) as? SKNode
+       let subScene: SKNode? = gameLogic?.loadScene(scene: "Default.GameMenu", resourceBundle: "虎.engine.base", classType: SKNode.classForKeyedUnarchiver()) as? SKNode
 	   let gameMenu = subScene?.childNode(withName: "//ConfigPopup")
 	   gameMenu?.removeFromParent()
 	   self.addChild(gameMenu!)
