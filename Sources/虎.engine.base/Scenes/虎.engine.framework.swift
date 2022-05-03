@@ -86,7 +86,7 @@ public class SceneWrapper: Identifiable, Codable {
         let container = try decoder.container(keyedBy: SceneKeys.self)
         let scene = try container.decodeIfPresent(String.self, forKey: SceneKeys.Scene) ?? "Unknown"
         for serialiser in (decoder.userInfo[SceneListSerialiser().userInfoKey!] as! SceneListSerialiser).serialisers {
-            let newData = try! serialiser.decode(from: decoder, sceneType: scene)
+            let newData = try serialiser.decode(from: decoder, sceneType: scene)
             if (newData != nil) {
                 data = newData!
             }

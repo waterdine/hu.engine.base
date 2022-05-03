@@ -186,12 +186,16 @@ open class TextLine: Identifiable, Codable {
     }
     
     public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: TextLineCodingKeys.self)
-        character = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.Character) ?? ""
-        characterAction = try container.decodeIfPresent(CharacterActionWrapper.self, forKey: TextLineCodingKeys.CharacterAction)
-        textString = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.TextString)
-        textEvent = try container.decodeIfPresent(TextEventWrapper.self, forKey: TextLineCodingKeys.TextEvent)
-        languages = try container.decodeIfPresent([String].self, forKey: TextLineCodingKeys.Languages) ?? []
+        if let container = try? decoder.container(keyedBy: TextLineCodingKeys.self) {
+            character = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.Character) ?? ""
+            characterAction = try container.decodeIfPresent(CharacterActionWrapper.self, forKey: TextLineCodingKeys.CharacterAction)
+            textString = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.TextString)
+            textEvent = try container.decodeIfPresent(TextEventWrapper.self, forKey: TextLineCodingKeys.TextEvent)
+            languages = try container.decodeIfPresent([String].self, forKey: TextLineCodingKeys.Languages) ?? []
+        } else {
+            let singleContainer = try decoder.singleValueContainer()
+            textString = try singleContainer.decode(String.self)
+        }
     }
     
     public func encode(to encoder: Encoder) throws {
