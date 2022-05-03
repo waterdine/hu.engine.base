@@ -17,8 +17,20 @@ public enum TextEvent: String, Codable {
     case None, Instant
 }
 
-public enum Operator: String, Codable {
+public enum OperatorType: String, Codable {
     case Equal, Greater, Less, GreaterOrEqual, LessOrEqual
+}
+
+public struct CharacterActionWrapper : Codable {
+    let type: CharacterAction
+}
+
+public struct TextEventWrapper: Codable {
+    let type: TextEvent
+}
+
+public struct Operator: Codable {
+    let type: OperatorType
 }
 
 public struct Product: Identifiable, Codable {
@@ -155,24 +167,41 @@ public class Story: Identifiable, Codable {
 
 open class TextLine: Identifiable, Codable {
     public var id: UUID = UUID()
-    public var character: String = ""
-    public var characterAction: CharacterAction = CharacterAction.None
-    public var textString: String = ""
-    public var textEvent: TextEvent = TextEvent.None
+    public var character: String? = nil
+    public var characterAction: CharacterActionWrapper? = nil
+    public var textString: String? = nil
+    public var textEvent: TextEventWrapper? = nil
+    public var languages: [String] = []
+    
+    enum TextLineCodingKeys: String, CodingKey {
+        case id
+        case Character
+        case CharacterAction
+        case TextString
+        case TextEvent
+        case Languages
+    }
     
     public init() {
     }
     
     public required init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        textString = try container.decode(String.self)
+        let container = try decoder.container(keyedBy: TextLineCodingKeys.self)
+        character = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.Character) ?? ""
+        characterAction = try container.decodeIfPresent(CharacterActionWrapper.self, forKey: TextLineCodingKeys.CharacterAction)
+        textString = try container.decodeIfPresent(String.self, forKey: TextLineCodingKeys.TextString)
+        textEvent = try container.decodeIfPresent(TextEventWrapper.self, forKey: TextLineCodingKeys.TextEvent)
+        languages = try container.decodeIfPresent([String].self, forKey: TextLineCodingKeys.Languages) ?? []
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        //try container.encode(id, forKey: BaseSceneCodingKeys.id)
-        //try container.encode(label, forKey: BaseSceneCodingKeys.label)
-        try container.encode(textString)
+        var container = encoder.container(keyedBy: TextLineCodingKeys.self)
+        //try container.encode(id, forKey: TextLineCodingKeys.id)
+        try container.encodeIfPresent(character, forKey: TextLineCodingKeys.Character)
+        try container.encodeIfPresent(characterAction, forKey: TextLineCodingKeys.CharacterAction)
+        try container.encodeIfPresent(textString, forKey: TextLineCodingKeys.TextString)
+        try container.encodeIfPresent(textEvent, forKey: TextLineCodingKeys.TextEvent)
+        try container.encodeIfPresent(languages, forKey: TextLineCodingKeys.Languages)
     }
 }
 
