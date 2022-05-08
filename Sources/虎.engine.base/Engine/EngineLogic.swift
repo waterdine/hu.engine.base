@@ -663,6 +663,10 @@ open class GameLogic: NSObject {
         alignVolumeLevel()
     }
     
+    open func languageCode() -> String {
+        return languages[currentLanguageIndex]
+    }
+    
     open func nextLanguage() {
         currentLanguageIndex = (currentLanguageIndex + 1) % languages.count
         saveGlobalState()
