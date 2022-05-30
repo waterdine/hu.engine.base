@@ -559,6 +559,7 @@ open class GameLogic: NSObject {
 	}
 	
 	open func backToMenu() {
+        loadStringsTables()
 		loadMusic(musicFile: "Main", transitionType: nil, sceneData: nil)
 		self.transition?(self.sceneTypes["MainMenu"]!, SKTransition.fade(withDuration: 1.0))
 		currentScene = self.sceneTypes["MainMenu"]
