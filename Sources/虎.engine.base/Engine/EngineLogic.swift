@@ -263,9 +263,9 @@ open class GameLogic: NSObject {
                     sceneList = try! decoder.decode(Scenes.self, from: sceneListContents)
                 }
                 if (scriptLanguagesDir != nil && languages.count > currentLanguageIndex) {
-                    let scriptStringsURL = scriptLanguagesDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent(scriptFileName).appendingPathExtension("strings")
+                    let scriptStringsURL = scriptLanguagesDir!.appendingPathComponent(languages[currentLanguageIndex]).appendingPathExtension("lproj").appendingPathComponent("Scenes").appendingPathExtension("strings")
 
-                    if (FileManager.default.fileExists(atPath: scriptStringsURL.path)) {
+                    if (true) { //FileManager.default.fileExists(atPath: scriptStringsURL.path)) {
                         let string = NSDictionary.init(contentsOf: scriptStringsURL)
                         if (string != nil) {
                             stringsTables[scriptFileName] = (NSDictionary.init(contentsOf: scriptStringsURL) as! [String:String])
