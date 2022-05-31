@@ -189,6 +189,13 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
     }
 }
 
+public func RegisterGameScenes(gameLogic: GameLogic) {
+    gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
+    gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
+    gameLogic.sceneTypes["SkipTo"] = SkipToLogic.newScene(gameLogic: gameLogic)
+    gameLogic.sceneTypes["Credits"] = CreditsLogic.newScene(gameLogic: gameLogic)
+}
+
 public func RegisterGameSceneInitialisers(sceneListSerialiser: inout SceneListSerialiser) {
     sceneListSerialiser.serialisers.append(GameSceneListSerialiser())
 }

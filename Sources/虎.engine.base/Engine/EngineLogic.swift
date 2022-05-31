@@ -92,13 +92,8 @@ open class GameLogic: NSObject {
         }
         gameLogic.loadGlobalState()
         gameLogic.loadStringsTables()
-        
-		// atode: this probably does not need to be instances, could just be state struct + a static class.
-		gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["SkipTo"] = SkipToLogic.newScene(gameLogic: gameLogic)
-		gameLogic.sceneTypes["Credits"] = CreditsLogic.newScene(gameLogic: gameLogic)
 
+        RegisterGameScenes(gameLogic: gameLogic)
         RegisterGameSceneInitialisers(sceneListSerialiser: &gameLogic.sceneListSerialiser)
 		
 		//gameLogic.tempCutScene = CutSceneLogic.newScene(gameLogic: gameLogic)
