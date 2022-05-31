@@ -49,8 +49,12 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override func didMove(to view: SKView) {
-        let title = gameLogic!.localizedString(forKey: "Title", value: nil, table: "Story")
+        var title = gameLogic!.localizedString(forKey: "Title", value: nil, table: "Story")
         let titleLabel = self.childNode(withName: "//Title") as? SKLabelNode
+        if (title.isEmpty) {
+            title = "Title"
+        }
+        
         if #available(iOS 11.0, *) {
             titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
         } else {
@@ -69,7 +73,10 @@ class MainMenuLogic: GameScene {
             // Fallback on earlier versions
         }
         
-        let subTitle = gameLogic!.localizedString(forKey: "Subtitle", value: nil, table: "Story")
+        var subTitle = gameLogic!.localizedString(forKey: "Subtitle", value: nil, table: "Story")
+        if (subTitle.isEmpty) {
+            subTitle = "Subtitle"
+        }
         let subTitleLabel = self.childNode(withName: "//Subtitle") as? SKLabelNode
         subTitleLabel?.text = subTitle
         let subTitleShadow1Label = self.childNode(withName: "//SubtitleShadow1") as? SKLabelNode
