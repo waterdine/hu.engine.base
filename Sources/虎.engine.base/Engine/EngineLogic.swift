@@ -134,6 +134,7 @@ open class GameLogic: NSObject {
     }
     
 	func loadMusic(musicFile: String?, transitionType: String?, sceneData: VisualScene?) {
+        loopSound?.stop()
 		if (musicFile != nil) {
 			do {
 				if (musicFile! != "") {
