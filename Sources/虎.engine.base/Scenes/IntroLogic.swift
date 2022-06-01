@@ -35,8 +35,11 @@ class IntroLogic: GameScene {
         let developerNode = scene!.childNode(withName: "//Developer") as? SKLabelNode
         developerNode?.text = gameLogic?.localizedString(forKey: "DeveloperText", value: nil, table: "Story")
         //let eProducerTitleNode = scene!.childNode(withName: "//EProducerTitle") as? SKLabelNode
-        let eProducerNameNode = scene!.childNode(withName: "//EProducerName") as? SKLabelNode
-        var eProducerCredit = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Executive Producer" })?.name
+        var eProducerNameNode = scene!.childNode(withName: "//EProducerName") as? SKLabelNode
+        if (eProducerNameNode == nil) {
+            eProducerNameNode = scene!.childNode(withName: "//EProducerName1") as? SKLabelNode
+        }
+        let eProducerCredit = gameLogic?.story?.Credits.first(where: { $0.title.trimmingCharacters(in: [":"]) == "Executive Producer" })?.name
         eProducerNameNode?.text = eProducerCredit
         //let producerTitleNode = scene!.childNode(withName: "//ProducerTitle") as? SKLabelNode
         let producerNameNode = scene!.childNode(withName: "//ProducerName") as? SKLabelNode

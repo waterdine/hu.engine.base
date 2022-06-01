@@ -214,6 +214,8 @@ public func RegisterGameSettings(settings: inout [String])
     //settings.append("CharacterFontName");
     //settings.append("CharacterFontScale");
     //settings.append("EncodeFontScale");
+    settings.append("DeveloperText");
+    settings.append("PublisherText");
 }
 
 public func RegisterGameTranslatableStrings(strings: inout [String])
