@@ -134,7 +134,6 @@ open class GameLogic: NSObject {
     }
     
 	func loadMusic(musicFile: String?, transitionType: String?, sceneData: VisualScene?) {
-        loopSound?.stop()
 		if (musicFile != nil) {
 			do {
 				if (musicFile! != "") {
@@ -532,14 +531,17 @@ open class GameLogic: NSObject {
 	}
 
 	open func start() {
-        self.gameState.currentSceneIndex! += 1
+        if (self.gameState.currentScript == nil) {
+            self.gameState.currentScript = self.story?.Scripts.first?.name ?? nil
+            self.gameState.currentSceneIndex! = 0
+        }
 		saveState()
 		transitionToScene(forceTransition: SKTransition.fade(withDuration: 1.0))
 	}
 	
 	open func restart() {
         self.gameState.currentSceneIndex! = 0
-        self.gameState.currentScript = nil
+        self.gameState.currentScript = self.story?.Scripts.first?.name ?? nil
         self.gameState.flags = []
         self.gameState.variables = [:]
         self.gameState.sceneStack = []
