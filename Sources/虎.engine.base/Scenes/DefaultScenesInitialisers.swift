@@ -189,6 +189,8 @@ open class GameSceneListSerialiser : BaseSceneSerialiser
     }
 }
 
+@available(OSX 10.13, *)
+@available(iOS 9.0, *)
 public func RegisterGameScenes(gameLogic: GameLogic) {
     gameLogic.sceneTypes["MainMenu"] = MainMenuLogic.newScene(gameLogic: gameLogic)
     gameLogic.sceneTypes["Intro"] = IntroLogic.newScene(gameLogic: gameLogic)
