@@ -147,7 +147,7 @@ open class GameLogic: NSObject {
 									fadePlayer?.stop()
 								}
 								fadePlayer = player
-                                if #available(iOS 10.0, *) {
+                                if #available(iOS 10.0, tvOS 10.0, *) {
                                     fadePlayer?.setVolume(0, fadeDuration: 1.0)
                                 } else {
                                     fadePlayer?.volume = 0;
@@ -589,7 +589,7 @@ open class GameLogic: NSObject {
     open func alignVolumeLevel() {
         switch volumeLevel {
         case .Off:
-            if #available(iOS 10.0, *) {
+            if #available(iOS 10.0, tvOS 10.0, *) {
                 player?.setVolume(0.0, fadeDuration: 0.0)
                 loopSound?.setVolume(0.0, fadeDuration: 0.0)
             } else {
@@ -598,7 +598,7 @@ open class GameLogic: NSObject {
             }
             break
         case .Low:
-            if #available(iOS 10.0, *) {
+            if #available(iOS 10.0, tvOS 10.0, *) {
                 player?.setVolume(0.1, fadeDuration: 0.0)
                 loopSound?.setVolume(0.1, fadeDuration: 0.0)
             } else {
@@ -607,7 +607,7 @@ open class GameLogic: NSObject {
             }
             break
         case .Medium:
-            if #available(iOS 10.0, *) {
+            if #available(iOS 10.0, tvOS 10.0, *) {
                 player?.setVolume(0.5, fadeDuration: 0.0)
                 loopSound?.setVolume(0.5, fadeDuration: 0.0)
             } else {
@@ -616,7 +616,7 @@ open class GameLogic: NSObject {
             }
             break
         case .High:
-            if #available(iOS 10.0, *) {
+            if #available(iOS 10.0, tvOS 10.0, *) {
                 player?.setVolume(1.0, fadeDuration: 0.0)
                 loopSound?.setVolume(1.0, fadeDuration: 0.0)
             } else {

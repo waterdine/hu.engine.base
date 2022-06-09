@@ -55,19 +55,19 @@ class MainMenuLogic: GameScene {
             title = "Title"
         }
         
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
             titleLabel?.attributedText = NSMutableAttributedString(string: title, attributes: titleLabel?.attributedText?.attributes(at: 0, effectiveRange: nil))
         } else {
             // Fallback on earlier versions
         }
         let titleShadow1Label = self.childNode(withName: "//TitleShadow1") as? SKLabelNode
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
             titleShadow1Label?.attributedText = NSMutableAttributedString(string: title, attributes: titleShadow1Label?.attributedText?.attributes(at: 0, effectiveRange: nil))
         } else {
             // Fallback on earlier versions
         }
         let titleShadow2Label = self.childNode(withName: "//TitleShadow2") as? SKLabelNode
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
             titleShadow2Label?.attributedText = titleShadow1Label?.attributedText
         } else {
             // Fallback on earlier versions
