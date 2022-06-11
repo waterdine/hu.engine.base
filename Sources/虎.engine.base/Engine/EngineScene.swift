@@ -192,18 +192,28 @@ open class GameScene: SKScene {
 	}
 	
 	open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
-#if os(OSX)
+#if os(OSX) || os(tvOS)
 		if (button == GamePadButton.CROSS) {
 			if (gameMenu?.isHidden == false) {
 				gameMenu?.isHidden = true
-            } else if (view != nil && view!.window != nil && view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
-				view?.window?.toggleFullScreen(self)
-			}
-		}
+                return
+            }
+#if os(OSX)
+            if (view != nil && view!.window != nil && view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
+                view?.window?.toggleFullScreen(self)
+            }
+#endif
+        } else {
+            if (gameMenu?.isHidden == false) {
+                gameMenu!.interactionButton(button, timestamp: timestamp)
+            } else {
+                gameLogic?.nextScene()
+            }
+        }
 #endif
 	}
 	
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if (touches.first != nil) {
 			let point: CGPoint = (touches.first?.location(in: self))!
@@ -227,31 +237,6 @@ open class GameScene: SKScene {
 	
 	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
 	}
-    
-/*    open override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses {
-            guard let key = press.key else { continue }
-            print(key)
-            var button: GamePadButton
-            switch key.charactersIgnoringModifiers {
-            case UIKeyCommand.inputUpArrow:
-                button = GamePadButton.UP
-            case UIKeyCommand.inputDownArrow:
-                button = GamePadButton.DOWN
-            case UIKeyCommand.inputLeftArrow:
-                button = GamePadButton.LEFT
-            case UIKeyCommand.inputRightArrow:
-                button = GamePadButton.RIGHT
-            //case 76,  36, 49:
-            //    button = GamePadButton.CIRCLE
-            case UIKeyCommand.inputEscape:
-                button = GamePadButton.CROSS
-            default:
-                button = GamePadButton.UNKNOWN
-            }
-            interactionButton(button, timestamp: event!.timestamp)
-        }
-    }*/
 #endif
 
 #if os(OSX)

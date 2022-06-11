@@ -40,6 +40,8 @@ class MainMenuLogic: GameScene {
 	
 	var loaded: Bool = false
 	var pressToContinue: Bool = false
+    
+    var selectedNode: SKNode? = nil
 	
 	class func newScene(gameLogic: GameLogic) -> MainMenuLogic {
         let scene: MainMenuLogic = gameLogic.loadScene(scene: "Default.MainMenu", resourceBundle: "虎.engine.base", classType: MainMenuLogic.classForKeyedUnarchiver()) as! MainMenuLogic
@@ -209,8 +211,38 @@ class MainMenuLogic: GameScene {
 		pressNode?.removeAllActions()
 		//pressNode?.run(SKAction(named: "PressToContinueFade")!)
 		restartPopupNode?.isHidden = true
+        selectedNode = playResumeNode
 	}
 	
+    open func nextNode() {
+        if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
+            if (selectedNode == playResumeNode) {
+                selectedNode = fromTheTopNode
+            } else if (selectedNode == fromTheTopNode) {
+                selectedNode = configNode
+            } else if (selectedNode == configNode) {
+                selectedNode = creditsNode
+            } else if (selectedNode == creditsNode) {
+                selectedNode = playResumeNode
+            }
+        } else if (buttonsNode!.alpha >= 0.5) {
+        }
+    }
+    
+    open func prevNode() {
+        if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
+            if (selectedNode == playResumeNode) {
+                selectedNode = creditsNode
+            } else if (selectedNode == fromTheTopNode) {
+                selectedNode = playResumeNode
+            } else if (selectedNode == configNode) {
+                selectedNode = fromTheTopNode
+            } else if (selectedNode == creditsNode) {
+                selectedNode = configNode
+            }
+        }
+    }
+    
 	// atode: combine the GameMenu and MainMenuConfig into a coherant menu system.
 	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 		if (pressToContinue) {
@@ -228,37 +260,37 @@ class MainMenuLogic: GameScene {
 				pressNode?.run(SKAction.fadeIn(withDuration: 0.3))
 			}
 		} else if (!restartPopupNode!.isHidden) {
-			if (yesNode!.frame.contains(point)) {
+			if (yesNode!.frame.contains(point) || selectedNode == yesNode) {
 				self.gameLogic?.restart()
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = true
-			} else if (noNode!.frame.contains(point)) {
+			} else if (noNode!.frame.contains(point) || selectedNode == noNode) {
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = false
 			}
 		} else if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
-			if (playResumeNode!.frame.contains(point)) {
+			if (playResumeNode!.frame.contains(point) || selectedNode == playResumeNode) {
 				self.gameLogic?.start()
-			} else if (!fromTheTopNode!.isHidden && fromTheTopNode!.frame.contains(point)) {
+			} else if (!fromTheTopNode!.isHidden && (fromTheTopNode!.frame.contains(point) || selectedNode == fromTheTopNode)) {
 				restartPopupNode?.isHidden = false
 				buttonsNode!.isHidden = true
-			} else if (configNode!.frame.contains(point)) {
+			} else if (configNode!.frame.contains(point) || selectedNode == configNode) {
 				configPopupNode?.isHidden = false
-			} else if (creditsNode!.frame.contains(point)) {
+			} else if (creditsNode!.frame.contains(point) || selectedNode == creditsNode) {
 				self.gameLogic?.rollCredits()
 			}
 		} else if (buttonsNode!.alpha >= 0.5) {
-			if (configCloseNode!.frame.contains(point)) {
+			if (configCloseNode!.frame.contains(point) || selectedNode == configCloseNode) {
 				configPopupNode?.isHidden = true
-			} else if (debugModeNode!.frame.contains(point)) {
+			} else if (debugModeNode!.frame.contains(point) || selectedNode == debugModeNode) {
 				self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
 				self.gameLogic!.saveGlobalState()
 				debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-			} else if (puzzleModeNode!.frame.contains(point)) {
+			} else if (puzzleModeNode!.frame.contains(point) || selectedNode == puzzleModeNode) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 				self.gameLogic!.saveGlobalState()
 				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
-			} else if (textSpeedNode!.frame.contains(point)) {
+			} else if (textSpeedNode!.frame.contains(point) || selectedNode == textSpeedNode) {
 				self.gameLogic!.nextTextSpeed()
 				switch self.gameLogic!.textSpeed {
 				case .Slow:
@@ -271,7 +303,7 @@ class MainMenuLogic: GameScene {
 					textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 					break
 				}
-			} else if (volumeNode!.frame.contains(point)) {
+			} else if (volumeNode!.frame.contains(point) || selectedNode == volumeNode) {
                 self.gameLogic!.nextVolumeLevel()
                 switch self.gameLogic!.volumeLevel {
                 case .Off:
@@ -287,7 +319,7 @@ class MainMenuLogic: GameScene {
                     volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
-            } else if (languageNode!.frame.contains(point)) {
+            } else if (languageNode!.frame.contains(point) || selectedNode == languageNode) {
                 self.gameLogic!.nextLanguage()
                 languageLabel?.text = gameLogic!.localizedString(forKey: "Language: " + gameLogic!.languages[gameLogic!.currentLanguageIndex], value: nil, table: "Story")
                 self.didMove(to: self.view!)
@@ -296,13 +328,14 @@ class MainMenuLogic: GameScene {
 	}
 	
 	override open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
-#if os(OSX)
 		if (button == GamePadButton.CROSS) {
 			if (restartPopupNode!.isHidden == false) {
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = false
+                return
 			} else if (configPopupNode!.isHidden == false) {
 				configPopupNode!.isHidden = true
+                return
 			} else if (buttonsNode!.alpha > 0) {
 				pressToContinue = true
 				pressNode?.isHidden = false
@@ -314,11 +347,20 @@ class MainMenuLogic: GameScene {
 				buttonsNode!.isHidden = false
 				pressNode?.removeAllActions()
                 pressNode?.run((gameLogic?.loadAction(actionName: "PressToContinueFade", forResource: "Default.MyActions"))!)
-			} else if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
+                return
+            }
+#if os(OSX)
+			if (view!.window!.styleMask.contains(NSWindow.StyleMask.fullScreen)) {
 				view?.window?.toggleFullScreen(self)
 			}
-		}
 #endif
+        } else if (button == GamePadButton.UP){
+            prevNode()
+        } else if (button == GamePadButton.DOWN) {
+            nextNode()
+        } else if (button == GamePadButton.CIRCLE) {
+            interactionEnded(CGPoint(x: Int.max, y: Int.max), timestamp: timestamp)
+        }
 	}
 	
 	override func update(_ currentTime: TimeInterval) {

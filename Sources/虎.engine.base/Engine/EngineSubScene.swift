@@ -31,4 +31,7 @@ open class GameSubScene : SKNode { // atode: Move more of SKNode's functionality
 	
 	open func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
 	}
+    
+    open func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+    }
 }

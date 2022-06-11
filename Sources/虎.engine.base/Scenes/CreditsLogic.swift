@@ -57,4 +57,8 @@ class CreditsLogic: GameScene {
 			self.gameLogic?.nextScene()
 		}
 	}
+    
+    override func interactionButton(_ button: GamePadButton, timestamp: TimeInterval) {
+        interactionEnded(CGPoint(), timestamp: timestamp)
+    }
 }
