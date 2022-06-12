@@ -216,29 +216,88 @@ class MainMenuLogic: GameScene {
 	
     open func nextNode() {
         if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
-            if (selectedNode == playResumeNode) {
-                selectedNode = fromTheTopNode
-            } else if (selectedNode == fromTheTopNode) {
+            selectedNode?.run(SKAction.scale(to: 0.75, duration: 0.3))
+            if (selectedNode == fromTheTopNode) {
+                selectedNode = playResumeNode
+            } else if (selectedNode == playResumeNode) {
                 selectedNode = configNode
             } else if (selectedNode == configNode) {
                 selectedNode = creditsNode
             } else if (selectedNode == creditsNode) {
-                selectedNode = playResumeNode
+                if (fromTheTopNode?.isHidden ?? true) {
+                    selectedNode = playResumeNode
+                } else {
+                    selectedNode = fromTheTopNode
+                }
             }
+            selectedNode?.run(SKAction.scale(to: 0.85, duration: 0.3))
         } else if (buttonsNode!.alpha >= 0.5) {
+            if #available(tvOS 10.0, *) {
+                selectedNode?.run(SKAction.scale(to: CGSize(width: 3, height: 0.8), duration: 0.3))
+            } else {
+                // Fallback on earlier versions
+            }
+            if (selectedNode == configCloseNode) {
+                selectedNode = debugModeNode
+            } else if (selectedNode == debugModeNode) {
+                selectedNode = puzzleModeNode
+            } else if (selectedNode == puzzleModeNode) {
+                selectedNode = textSpeedNode
+            } else if (selectedNode == textSpeedNode) {
+                selectedNode = volumeNode
+            } else if (selectedNode == volumeNode) {
+                selectedNode = languageNode
+            } else if (selectedNode == languageNode) {
+                selectedNode = configCloseNode
+            }
+            if #available(tvOS 10.0, *) {
+                selectedNode?.run(SKAction.scale(to: CGSize(width: 3.1, height: 0.9), duration: 0.3))
+            } else {
+                // Fallback on earlier versions
+            }
         }
     }
     
     open func prevNode() {
         if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
-            if (selectedNode == playResumeNode) {
+            selectedNode?.run(SKAction.scale(to: 0.75, duration: 0.3))
+            if (selectedNode == fromTheTopNode) {
                 selectedNode = creditsNode
-            } else if (selectedNode == fromTheTopNode) {
-                selectedNode = playResumeNode
+            } else if (selectedNode == playResumeNode) {
+                if (fromTheTopNode?.isHidden ?? true) {
+                    selectedNode = creditsNode
+                } else {
+                    selectedNode = fromTheTopNode
+                }
             } else if (selectedNode == configNode) {
-                selectedNode = fromTheTopNode
+                selectedNode = playResumeNode
             } else if (selectedNode == creditsNode) {
                 selectedNode = configNode
+            }
+            selectedNode?.run(SKAction.scale(to: 0.85, duration: 0.3))
+        } else if (buttonsNode!.alpha >= 0.5) {
+            if #available(tvOS 10.0, *) {
+                selectedNode?.run(SKAction.scale(to: CGSize(width: 3, height: 0.8), duration: 0.3))
+            } else {
+                // Fallback on earlier versions
+            }
+            if (selectedNode == configCloseNode) {
+                selectedNode = languageNode
+            } else if (selectedNode == debugModeNode) {
+                selectedNode = configCloseNode
+            } else if (selectedNode == puzzleModeNode) {
+                selectedNode = debugModeNode
+            } else if (selectedNode == textSpeedNode) {
+                selectedNode = puzzleModeNode
+            } else if (selectedNode == volumeNode) {
+                selectedNode = textSpeedNode
+            } else if (selectedNode == languageNode) {
+                selectedNode = volumeNode
+            }
+            if #available(tvOS 10.0, *) {
+                selectedNode?.run(SKAction.scale(to: CGSize(width: 3.1, height: 0.9), duration: 0.3))
+            } else {
+                // Fallback on earlier versions
             }
         }
     }
