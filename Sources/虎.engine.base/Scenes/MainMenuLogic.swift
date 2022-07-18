@@ -304,6 +304,10 @@ class MainMenuLogic: GameScene {
     
 	// atode: combine the GameMenu and MainMenuConfig into a coherant menu system.
 	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
+        var currentSelectedNode: SKNode? = nil
+        if (point.x == CGFloat.infinity && point.y == CGFloat.infinity) {
+            currentSelectedNode = selectedNode
+        }
 		if (pressToContinue) {
 			if (pressNode!.alpha > 0.0) {
 				pressToContinue = false
@@ -319,37 +323,37 @@ class MainMenuLogic: GameScene {
 				pressNode?.run(SKAction.fadeIn(withDuration: 0.3))
 			}
 		} else if (!restartPopupNode!.isHidden) {
-			if (yesNode!.frame.contains(point) || selectedNode == yesNode) {
+			if (yesNode!.frame.contains(point) || currentSelectedNode == yesNode) {
 				self.gameLogic?.restart()
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = true
-			} else if (noNode!.frame.contains(point) || selectedNode == noNode) {
+			} else if (noNode!.frame.contains(point) || currentSelectedNode == noNode) {
 				restartPopupNode?.isHidden = true
 				buttonsNode!.isHidden = false
 			}
 		} else if (buttonsNode!.alpha >= 0.5 && configPopupNode!.isHidden) {
-			if (playResumeNode!.frame.contains(point) || selectedNode == playResumeNode) {
+			if (playResumeNode!.frame.contains(point) || currentSelectedNode == playResumeNode) {
 				self.gameLogic?.start()
 			} else if (!fromTheTopNode!.isHidden && (fromTheTopNode!.frame.contains(point) || selectedNode == fromTheTopNode)) {
 				restartPopupNode?.isHidden = false
 				buttonsNode!.isHidden = true
-			} else if (configNode!.frame.contains(point) || selectedNode == configNode) {
+			} else if (configNode!.frame.contains(point) || currentSelectedNode == configNode) {
 				configPopupNode?.isHidden = false
-			} else if (creditsNode!.frame.contains(point) || selectedNode == creditsNode) {
+			} else if (creditsNode!.frame.contains(point) || currentSelectedNode == creditsNode) {
 				self.gameLogic?.rollCredits()
 			}
 		} else if (buttonsNode!.alpha >= 0.5) {
-			if (configCloseNode!.frame.contains(point) || selectedNode == configCloseNode) {
+			if (configCloseNode!.frame.contains(point) || currentSelectedNode == configCloseNode) {
 				configPopupNode?.isHidden = true
-			} else if (debugModeNode!.frame.contains(point) || selectedNode == debugModeNode) {
+			} else if (debugModeNode!.frame.contains(point) || currentSelectedNode == debugModeNode) {
 				self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
 				self.gameLogic!.saveGlobalState()
 				debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-			} else if (puzzleModeNode!.frame.contains(point) || selectedNode == puzzleModeNode) {
+			} else if (puzzleModeNode!.frame.contains(point) || currentSelectedNode == puzzleModeNode) {
 				self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 				self.gameLogic!.saveGlobalState()
 				puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
-			} else if (textSpeedNode!.frame.contains(point) || selectedNode == textSpeedNode) {
+			} else if (textSpeedNode!.frame.contains(point) || currentSelectedNode == textSpeedNode) {
 				self.gameLogic!.nextTextSpeed()
 				switch self.gameLogic!.textSpeed {
 				case .Slow:
@@ -362,7 +366,7 @@ class MainMenuLogic: GameScene {
 					textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
 					break
 				}
-			} else if (volumeNode!.frame.contains(point) || selectedNode == volumeNode) {
+			} else if (volumeNode!.frame.contains(point) || currentSelectedNode == volumeNode) {
                 self.gameLogic!.nextVolumeLevel()
                 switch self.gameLogic!.volumeLevel {
                 case .Off:
@@ -378,7 +382,7 @@ class MainMenuLogic: GameScene {
                     volumeLabel!.text = gameLogic!.localizedString(forKey: "Volume: High", value: nil, table: "Story")
                     break
                 }
-            } else if (languageNode!.frame.contains(point) || selectedNode == languageNode) {
+            } else if (languageNode!.frame.contains(point) || currentSelectedNode == languageNode) {
                 self.gameLogic!.nextLanguage()
                 languageLabel?.text = gameLogic!.localizedString(forKey: "Language: " + gameLogic!.languages[gameLogic!.currentLanguageIndex], value: nil, table: "Story")
                 self.didMove(to: self.view!)
@@ -418,7 +422,7 @@ class MainMenuLogic: GameScene {
         } else if (button == GamePadButton.DOWN) {
             nextNode()
         } else if (button == GamePadButton.CIRCLE) {
-            interactionEnded(CGPoint(x: Int.max, y: Int.max), timestamp: timestamp)
+            interactionEnded(CGPoint(x: CGFloat.infinity, y: CGFloat.infinity), timestamp: timestamp)
         }
 	}
 	
