@@ -113,20 +113,24 @@ class GameMenuLogic : GameSubScene {
     }
     
 	override func interactionEnded(_ point: CGPoint, timestamp: TimeInterval) {
-		if (mainMenuNode!.frame.contains(point) || selectedNode == mainMenuNode) {
+        var currentSelectedNode: SKNode? = nil
+        if (point.x == CGFloat.infinity && point.y == CGFloat.infinity) {
+            currentSelectedNode = selectedNode
+        }
+        if (mainMenuNode!.frame.contains(point) || currentSelectedNode == mainMenuNode) {
 			self.isHidden = true
 			gameLogic?.backToMenu()
-		} else if (closeNode!.frame.contains(point) || selectedNode == closeNode) {
+		} else if (closeNode!.frame.contains(point) || currentSelectedNode == closeNode) {
 			self.isHidden = true
-		} else if (debugModeNode!.frame.contains(point) || selectedNode == debugModeNode) {
+		} else if (debugModeNode!.frame.contains(point) || currentSelectedNode == debugModeNode) {
 			self.gameLogic!.sceneDebug = !self.gameLogic!.sceneDebug
 			self.gameLogic!.saveGlobalState()
 			debugModeLabel!.text = self.gameLogic!.sceneDebug ? "Debug Mode is On" : "Debug Mode is Off"
-		} else if (puzzleModeNode!.frame.contains(point) || selectedNode == puzzleModeNode) {
+		} else if (puzzleModeNode!.frame.contains(point) || currentSelectedNode == puzzleModeNode) {
 			self.gameLogic!.skipPuzzles = !self.gameLogic!.skipPuzzles
 			self.gameLogic!.saveGlobalState()
 			puzzleModeLabel!.text = self.gameLogic!.skipPuzzles ? gameLogic!.localizedString(forKey: "Skip Puzzles is On", value: nil, table: "Story") : gameLogic!.localizedString(forKey: "Skip Puzzles is Off", value: nil, table: "Story")
-		} else if (textSpeedNode!.frame.contains(point) || selectedNode == textSpeedNode) {
+		} else if (textSpeedNode!.frame.contains(point) || currentSelectedNode == textSpeedNode) {
 			self.gameLogic!.nextTextSpeed()
 			switch self.gameLogic!.textSpeed {
             case .Slow:
@@ -139,7 +143,7 @@ class GameMenuLogic : GameSubScene {
                 textSpeedLabel!.text = gameLogic!.localizedString(forKey: "Text Speed: Fast", value: nil, table: "Story")
                 break
 			}
-		} else if (volumeNode!.frame.contains(point) || selectedNode == volumeNode) {
+		} else if (volumeNode!.frame.contains(point) || currentSelectedNode == volumeNode) {
             self.gameLogic!.nextVolumeLevel()
             switch self.gameLogic!.volumeLevel {
             case .Off:
@@ -164,7 +168,7 @@ class GameMenuLogic : GameSubScene {
         } else if (button == GamePadButton.DOWN) {
             nextNode()
         } else if (button == GamePadButton.CIRCLE) {
-            interactionEnded(CGPoint(), timestamp: timestamp)
+            interactionEnded(CGPoint(x: CGFloat.infinity, y: CGFloat.infinity), timestamp: timestamp)
         }
     }
 }
