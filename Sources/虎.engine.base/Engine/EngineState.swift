@@ -15,7 +15,7 @@ public struct SceneFlow: Codable {
 public class GameState: Codable {
     var version: Int = 0
     open var currentSceneIndex: Int? = nil
-    open var CurrentScript: String? = nil
+    open var currentScript: String? = nil
     //open var log: [ChoiceFlow]
     open var sceneStack: [SceneFlow] = []
     open var flags: [String] = []

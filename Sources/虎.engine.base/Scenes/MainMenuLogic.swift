@@ -232,7 +232,7 @@ class MainMenuLogic: GameScene {
             }
             selectedNode?.run(SKAction.scale(to: 0.85, duration: 0.3))
         } else if (buttonsNode!.alpha >= 0.5) {
-            if #available(tvOS 10.0, *) {
+            if #available(tvOS 10.0, iOS 10.0, *) {
                 selectedNode?.run(SKAction.scale(to: CGSize(width: 3, height: 0.8), duration: 0.3))
             } else {
                 // Fallback on earlier versions
@@ -250,7 +250,7 @@ class MainMenuLogic: GameScene {
             } else if (selectedNode == languageNode) {
                 selectedNode = configCloseNode
             }
-            if #available(tvOS 10.0, *) {
+            if #available(tvOS 10.0, iOS 10.0, *) {
                 selectedNode?.run(SKAction.scale(to: CGSize(width: 3.1, height: 0.9), duration: 0.3))
             } else {
                 // Fallback on earlier versions
@@ -276,7 +276,7 @@ class MainMenuLogic: GameScene {
             }
             selectedNode?.run(SKAction.scale(to: 0.85, duration: 0.3))
         } else if (buttonsNode!.alpha >= 0.5) {
-            if #available(tvOS 10.0, *) {
+            if #available(tvOS 10.0, iOS 10.0, *) {
                 selectedNode?.run(SKAction.scale(to: CGSize(width: 3, height: 0.8), duration: 0.3))
             } else {
                 // Fallback on earlier versions
@@ -294,7 +294,7 @@ class MainMenuLogic: GameScene {
             } else if (selectedNode == languageNode) {
                 selectedNode = volumeNode
             }
-            if #available(tvOS 10.0, *) {
+            if #available(tvOS 10.0, iOS 10.0, *) {
                 selectedNode?.run(SKAction.scale(to: CGSize(width: 3.1, height: 0.9), duration: 0.3))
             } else {
                 // Fallback on earlier versions
